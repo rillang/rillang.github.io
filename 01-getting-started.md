@@ -14,7 +14,7 @@ x86-64 is not supported. Windows is not supported.
 There are no releases yet; build from the repository:
 
 ```sh
-git clone https://github.com/rill-lang/rill.git
+git clone https://github.com/rillang/rill.git
 cd rill
 sh bootstrap.sh
 ```
