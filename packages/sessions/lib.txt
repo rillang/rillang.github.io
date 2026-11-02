@@ -14,3 +14,4 @@ ok   classes
 $ rill api
 fn slug(_ s: String) -> String
 fn words(_ s: String) -> Int
+wrap.fn lines(_ s: String, width: Int) -> [String]

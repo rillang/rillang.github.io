@@ -177,11 +177,12 @@ ok   classes
 $ rill api
 fn slug(_ s: String) -> String
 fn words(_ s: String) -> Int
+wrap.fn lines(_ s: String, width: Int) -> [String]
 ```
 
 `rill test <dir>` runs the tests of one package. `rill api` prints the public surface of
-the module's root package: what callers may depend on. `ascii.lower` is `pub` but not part
-of the API, because it is internal.
+the module, its packages prefixed with their path (`wrap.fn lines…`): what callers may
+depend on. `ascii.lower` is `pub` but not part of the API, because it is internal.
 
 ## Publishing v1.0.0
 
@@ -424,9 +425,6 @@ The release waits for the changelog section
 ### Added
 - `slug`, `words`, and the `wrap` package.
 ```
-
-Note: `rill api` and the release check cover the module's root package only. Changes to
-`wrap` are not compared, so review those yourself.
 
 ## Upgrading the app
 
