@@ -1,0 +1,5 @@
+error[E0025]: 'spawn' cannot capture 'var' total: tasks would share it; capture a 'let' copy
+ --> docs/book/examples/capture_var.err.rl:5:11
+  |
+5 |     spawn { print("$total") }
+  |           ^

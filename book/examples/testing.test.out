@@ -1,0 +1,6 @@
+ok   add
+ok   clamp keeps values in range
+FAIL a failing test reports every failed expect
+  expect failed at docs/book/examples/testing.test.rl:28
+  expect failed at docs/book/examples/testing.test.rl:29
+2 passed, 1 failed
