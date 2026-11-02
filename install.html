@@ -1,0 +1,129 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Install Rill</title>
+<meta name="description" content="Build Rill from source on arm64 macOS or Linux and run your first program.">
+<link rel="stylesheet" href="style.css">
+<script src="site.js"></script>
+</head>
+<body>
+<header class="site-header">
+  <div class="wrap">
+    <a class="wordmark" href="index.html"><svg viewBox="0 0 34 20" aria-hidden="true"><path d="M2 13 C8 3, 12 3, 17 10 S27 17, 32 7" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"/></svg>rill</a>
+    <nav class="site-nav" aria-label="Main">
+      <a href="learn.html">Learn</a>
+      <a href="install.html" aria-current="page">Install</a>
+      <a href="roadmap.html">Roadmap</a>
+      <a href="community.html">Community</a>
+    </nav>
+    <button class="theme-toggle" type="button">Dark</button>
+  </div>
+</header>
+
+<main class="wrap">
+  <div class="page-head">
+    <h1>Get started</h1>
+    <p>There are no releases yet: you build Rill from source. It takes one command and
+      nothing but the repository.</p>
+  </div>
+
+  <h2>Requirements</h2>
+  <ul>
+    <li>An <strong>arm64</strong> computer running <strong>macOS</strong> (Apple silicon)
+      or <strong>Linux</strong>.</li>
+    <li>Git, to get the source. No C compiler, linker, Python or package manager.</li>
+  </ul>
+  <p>x86-64 and Windows are not supported.</p>
+
+  <h2>Build</h2>
+  <div class="code">
+    <div class="file">shell</div>
+    <pre><code>git clone &lt;repository&gt; rill
+cd rill
+sh bootstrap.sh
+export PATH="$PWD/out:$PATH"</code></pre>
+  </div>
+  <p><code>bootstrap.sh</code> builds the compiler with the checked-in seed (a previous
+    Rill compiler), then with itself twice, checks that the last two builds are
+    byte-identical, and runs the test suite. The compiler is <code>out/rill</code>.</p>
+
+  <h2>Your first program</h2>
+  <div class="code">
+    <div class="file">hello.rl</div>
+    <!-- include: ../docs/book/examples/hello.rl -->
+    <pre><code class="rill">fn main() {
+  let name = "Rill"
+  print("Hello, $name!")
+}</code></pre>
+    <div class="run">
+      <div class="file">$ rill run hello.rl</div>
+      <!-- include: ../docs/book/examples/hello.out -->
+      <pre><code>Hello, Rill!</code></pre>
+    </div>
+  </div>
+
+  <div class="table-scroll">
+    <table>
+      <tr><th>Command</th><th>What it does</th></tr>
+      <tr><td><code>rill run app.rl [args]</code></td><td>compile and run</td></tr>
+      <tr><td><code>rill build app.rl -o app</code></td><td>compile to an executable</td></tr>
+      <tr><td><code>rill build app.rl --target=linux-arm64</code></td><td>cross-compile (static ELF from a Mac, or the other way)</td></tr>
+      <tr><td><code>rill test app.rl</code></td><td>run the file's <code>test</code> blocks</td></tr>
+      <tr><td><code>rill fmt app.rl</code></td><td>format in place</td></tr>
+      <tr><td><code>rill debug app.rl</code></td><td>debug in lldb with Rill's formatters</td></tr>
+      <tr><td><code>rill lsp</code></td><td>language server for your editor</td></tr>
+    </table>
+  </div>
+
+  <h2>Editor</h2>
+  <p>Any editor with an LSP client works: point it at <code>rill lsp</code> for
+    <code>*.rl</code> files. Diagnostics, hover, go to definition, formatting and document
+    symbols are supported. Helix (<code>languages.toml</code>):</p>
+  <div class="code">
+    <div class="file">languages.toml</div>
+    <pre><code>[[language]]
+name = "rill"
+scope = "source.rill"
+file-types = ["rl"]
+language-servers = ["rill-lsp"]
+
+[language-server.rill-lsp]
+command = "rill"
+args = ["lsp"]</code></pre>
+  </div>
+  <p>Neovim: <code>vim.lsp.start({ name = "rill", cmd = { "rill", "lsp" } })</code> in a
+    <code>FileType rl</code> autocommand. More in
+    <a href="../docs/book/11-tooling.md">the tooling chapter</a>.</p>
+
+  <h2 id="speed">How fast is it?</h2>
+  <p>Measured on an Apple M4 on 2026-11-02, single runs:</p>
+  <div class="table-scroll">
+    <table>
+      <tr><th>Task</th><th>Time</th></tr>
+      <tr><td><code>rill build hello.rl</code></td><td>0.22 s (623 KB executable with runtime and debug info)</td></tr>
+      <tr><td>the compiler building itself: ~19 000 lines of Rill plus a 4 500-line runtime</td><td>2.1 s</td></tr>
+    </table>
+  </div>
+  <p>The optimizer is young and the garbage collector takes a large share of a
+    self-compile; <a href="../docs/perf.md">docs/perf.md</a> keeps the history and the
+    analysis. We have not benchmarked Rill against other languages.</p>
+
+  <h2>Coming</h2>
+  <ul>
+    <li><span class="tag">planned</span> Downloadable releases with signed checksums for
+      macOS and Linux.</li>
+    <li><span class="tag">planned</span> A toolchain version manager built into
+      <code>rill</code>, and integration with tools like mise (version files).</li>
+  </ul>
+</main>
+
+<footer class="site-footer">
+  <div class="wrap">
+    <span>Rill · MIT OR Apache-2.0</span>
+    <span><a href="learn.html">Learn</a> · <a href="install.html">Install</a> · <a href="roadmap.html">Roadmap</a> · <a href="community.html">Community</a></span>
+  </div>
+</footer>
+</body>
+</html>

@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Rill Community</title>
+<meta name="description" content="How Rill is developed and decided, and how to contribute.">
+<link rel="stylesheet" href="style.css">
+<script src="site.js"></script>
+</head>
+<body>
+<header class="site-header">
+  <div class="wrap">
+    <a class="wordmark" href="index.html"><svg viewBox="0 0 34 20" aria-hidden="true"><path d="M2 13 C8 3, 12 3, 17 10 S27 17, 32 7" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"/></svg>rill</a>
+    <nav class="site-nav" aria-label="Main">
+      <a href="learn.html">Learn</a>
+      <a href="install.html">Install</a>
+      <a href="roadmap.html">Roadmap</a>
+      <a href="community.html" aria-current="page">Community</a>
+    </nav>
+    <button class="theme-toggle" type="button">Dark</button>
+  </div>
+</header>
+
+<main class="wrap">
+  <div class="page-head">
+    <h1>Community and governance</h1>
+    <p>Rill is a young project with a single maintainer. This page says how it is run
+      today and how that is meant to grow.</p>
+  </div>
+
+  <div class="note">
+    <p>The governance documents below are <strong>proposals awaiting the maintainer's
+      approval</strong>. They describe the intended process, not settled policy.</p>
+  </div>
+
+  <h2>How decisions are made</h2>
+  <p>Changes to the language, the standard library and the tools are written up as
+    <strong>RFCs</strong>: Markdown documents in the repository, reviewed in a pull request,
+    decided after a final comment period with written reasons. Today the maintainer
+    decides; a path to a core team is written down in advance.</p>
+  <ul>
+    <li><a href="../docs/governance/rfc-process.md">The RFC process</a> and the
+      <a href="../docs/rfcs/README.md">RFC index</a>, with
+      <a href="../docs/rfcs/0000-template.md">the template</a></li>
+    <li><a href="../docs/governance/evolution-and-stability.md">Evolution and stability</a>:
+      versions, deprecation, the compatibility promise planned for 1.0</li>
+    <li><a href="../docs/governance/comparison.md">How Rust, Go, Python, Swift and Zig do
+      it</a>, and what Rill takes from each</li>
+  </ul>
+
+  <h2>Contributing</h2>
+  <p>Every change starts with a failing golden test, keeps the compiler building itself to
+    a byte-identical fixpoint, and passes <code>rill fmt</code> and
+    <code>rill lsp --check</code>. AI-assisted contributions are welcome under the same
+    rules, with a human who has reviewed them.</p>
+  <ul>
+    <li><a href="../docs/governance/CONTRIBUTING.md">Contributing guide</a> (draft)</li>
+    <li><a href="../AGENTS.md">AGENTS.md</a>: the guide to the compiler for humans and AI agents</li>
+    <li><a href="../docs/governance/triage.md">Issue labels and triage</a> (draft)</li>
+  </ul>
+
+  <h2>Conduct, security, license</h2>
+  <ul>
+    <li><a href="../docs/governance/CODE_OF_CONDUCT.md">Code of conduct</a> (draft)</li>
+    <li><a href="../docs/governance/SECURITY.md">Security policy</a> (draft): how to report
+      a vulnerability privately, and the supply-chain rules for packages</li>
+    <li><a href="../docs/governance/release-process.md">Release process</a> (draft): signed
+      tags, reproducible binaries, changelog</li>
+    <li>License: MIT OR Apache-2.0, at your option
+      (<a href="../docs/governance/licensing.md">notes and open questions</a>)</li>
+  </ul>
+</main>
+
+<footer class="site-footer">
+  <div class="wrap">
+    <span>Rill · MIT OR Apache-2.0</span>
+    <span><a href="learn.html">Learn</a> · <a href="install.html">Install</a> · <a href="roadmap.html">Roadmap</a> · <a href="community.html">Community</a></span>
+  </div>
+</footer>
+</body>
+</html>
