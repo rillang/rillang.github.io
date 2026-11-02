@@ -1,8 +1,8 @@
 # 7. Modules
 
-## Today: one file is one module
+## A directory is a module
 
-<!-- include: examples/lib/geometry.rl -->
+<!-- include: examples/lib/geometry/geometry.rl -->
 ```swift
 // A module: one file. Only `pub` items are visible to importers.
 
@@ -55,24 +55,26 @@ fn main() {
 25
 ```
 
-- `import "lib/geometry"` loads `lib/geometry.rl`, relative to the importing file. The
-  module's name is the last path segment: `geometry`.
+- `import "lib/geometry"` loads the directory `lib/geometry/`: every `.rl` file in it
+  belongs to the module and sees the others' names. The path is relative to the nearest
+  `rill.mod` above the program, or to the program's own directory if there is none. The
+  module's name is the last path segment (`geometry`); `import "lib/geometry" as geo`
+  picks another one.
+- Paths under `internal/` (`a/internal/b`) can only be imported from inside `a/`.
 - Only `pub` declarations are visible outside the module (E0016 otherwise). Inside a module,
   order does not matter: everything can use everything.
 - Imported names are always qualified: `geometry.area(s)`, `geometry.Vec2(x: 3, y: 4)`.
   UFCS (`v.length2()`) does not find functions of another module; call them as
   `geometry.length2(v)`.
 - Import cycles are an error (E0017).
-- `test` blocks in a module run with `rill test lib/geometry.rl` and can see private
+- `test` blocks in a module run with `rill test lib/geometry` and can see private
   functions.
 
-## Planned: directory modules, standard library, packages
+## Planned: standard library, packages
 
 The approved [packages and standard library spec](../specs/2026-11-02-rill-packages-stdlib-design.md)
-changes this. **None of it exists yet.** In short:
+adds the rest. Directory modules (above) are done; **the standard library and packages are not yet.** In short:
 
-- **A module is a directory**: every `.rl` file directly in it, sharing one namespace.
-  `import "x" as y` resolves name clashes; `internal/` paths are private to their tree.
 - **A standard library embedded in the compiler**: `import "std/strings"`, `std/fs`,
   `std/os`, `std/json`, `std/time`, `std/fmt`, `std/utf8`, `std/slices`, `std/math`,
   `std/path`, `std/hash/sha256`. Today's global builtins `readFile`, `writeFile`,

@@ -1,8 +1,8 @@
 # Modules
 
-`import "lib/greet"` loads `lib/greet.rl` next to this file. Only `pub` items are visible. The module:
+`import "lib/greet"` loads the directory `lib/greet/` next to this file (every `.rl` file in it is part of the module). Only `pub` items are visible. The module:
 
-<!-- include: examples/lib/greet.rl -->
+<!-- include: examples/lib/greet/greet.rl -->
 ```swift
 pub fn hello(_ name: String) -> String = "${prefix()}, $name"
 

@@ -30,9 +30,7 @@ bad() {
   fail=$((fail + 1))
 }
 
-# check <file> <command> <exit code> <stream: out|err> <expected file>
-# "run" builds into $tmp and runs that binary: `rill run` writes /tmp/rill-native-<name>,
-# which races with other runs of a file with the same name (e.g. tests/run/structs.rl).
+# "run" builds into $tmp and runs that binary, so parallel checks never share one.
 check() {
   if [ "$2" = run ]; then
     if "$RILL" build "$1" -o "$tmp/bin" >"$tmp/out" 2>"$tmp/err"; then

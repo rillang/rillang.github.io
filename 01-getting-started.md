@@ -48,7 +48,7 @@ rill run hello.rl
 Hello, Rill!
 ```
 
-`rill run` compiles the file to `/tmp/rill-native-<name>` and runs it; arguments after the
+`rill run` compiles the file to `~/.cache/rill/run/` and runs it; arguments after the
 file name go to the program. A program starts at `fn main()`. (Two `rill run`s of files
 with the same name at the same time share that path; use `rill build -o` for parallel
 scripts.)
