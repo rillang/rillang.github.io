@@ -75,15 +75,30 @@ fn main() {
 `import "std/strings"`, `std/fs`, `std/os`, … are embedded in the compiler; see
 [chapter 15](15-standard-library.md).
 
-## Planned: packages
+## Packages
 
-The approved [packages and standard library spec](../specs/2026-11-02-rill-packages-stdlib-design.md)
-adds packages next. **They do not exist yet.** In short:
+Modules from Git repositories, named by their path (Go style):
 
-- **Packages from Git URLs**, Go style: `rill.mod` lists requirements, `rill.sum` pins
-  commit and content hashes, minimal version selection picks versions, `rill get` is the
-  only command that touches the network, and no code of a dependency runs while it is
-  fetched. Signed tags can be required per dependency.
+```sh
+rill mod init github.com/you/app     # writes rill.mod
+rill get github.com/acme/lib         # newest release into rill.mod, hashes into rill.sum
+rill run .                           # import "github.com/acme/lib" works offline
+rill mod tidy                        # requirements follow the imports
+```
+
+- `rill.mod` lists requirements (`require github.com/acme/lib v1.1.0`); `rill.sum` pins the
+  commit and a content hash of every version. A changed hash or a moved tag is an error.
+- Minimal version selection: every module comes in the highest version that anyone
+  requires; no ranges, no solver.
+- Builds never fetch: a missing module is E0101 (`rill mod download`). `rill mod vendor`
+  copies the build's modules into `vendor/`.
+- Major versions >= 2 have their own path: `import "github.com/acme/lib/v2"`.
+- `signers <module> "ssh-ed25519 …"` in `rill.mod` requires signed tags.
+- `replace <module> => ../dir` or a `rill.work` file (`use ./app`, `use ./lib`) puts a local
+  directory in place of a module.
+
+**Planned** ([spec](../specs/2026-11-02-rill-packages-stdlib-design.md)):
+
 - **Update tooling**: `rill api diff`, `rill release` (semver from the API diff, signed
   tag), `rill mod outdated`, `rill update` (changelog, API diff, automatic migration with
   `fix: inline`), `rill mod audit`.

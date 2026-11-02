@@ -12,9 +12,10 @@ way. Items marked **planned** have a spec or are on the roadmap.
 
 ## Language
 
-- No packages yet (**planned** next, [spec](../specs/2026-11-02-rill-packages-stdlib-design.md));
-  the [standard library](15-standard-library.md) is a first version (no networking, no
-  regular expressions).
+- Packages work (chapter 7), but the update tooling (`rill update`, `rill mod outdated`,
+  `rill mod audit`, `rill release`) is **planned**; GPG signers are not supported yet (SSH
+  keys are). The [standard library](15-standard-library.md) is a first version (no
+  networking, no regular expressions).
 - Strings are bytes: no character type, no Unicode-aware functions; a character literal is
   an `Int`.
 - No string formatting beyond interpolation (widths, precision); no `replace`, `toUpper`.
