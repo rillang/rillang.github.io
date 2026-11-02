@@ -1,0 +1,16 @@
+{%- comment -%} The page list of the current section; include.nav is site.data.nav[page.nav]. {%- endcomment -%}
+<nav class="doc-sections" aria-label="Documentation">
+  {%- for s in site.data.nav %}
+  <a href="{{ s[1].pages[0].url | relative_url }}"{% if s[0] == page.nav %} aria-current="true"{% endif %}>{% case s[0] %}{% when "book" %}Book{% when "by-example" %}By Example{% else %}Tutorials{% endcase %}</a>
+  {%- endfor %}
+</nav>
+<ul class="doc-pages">
+  {%- assign group = "" -%}
+  {%- for p in include.nav.pages -%}
+  {%- if p.group != group %}
+  {%- assign group = p.group %}
+  <li class="doc-group">{{ group }}</li>
+  {%- endif %}
+  <li><a href="{{ p.url | relative_url }}"{% if p.path == page.path %} aria-current="page"{% endif %}>{% if forloop.first %}Overview{% else %}{{ p.title }}{% endif %}</a></li>
+  {%- endfor %}
+</ul>

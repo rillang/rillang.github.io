@@ -1,5 +1,17 @@
 # GitHub Pages (Jekyll): Markdown pages of the book and tutorials become HTML, relative
-# .md links are rewritten to .html (jekyll-relative-links, part of GitHub Pages).
+# .md links are rewritten to .html (jekyll-relative-links), a README.md becomes its
+# directory's index (jekyll-readme-index) and the first heading the page title
+# (jekyll-titles-from-headings); all part of GitHub Pages, no Gemfile needed.
+# The pages use _layouts/doc.html with the website's style.css and site.js; their sidebar
+# and previous/next links come from _data/nav.yml (generated: sh tools/nav.sh).
+# The website itself (site/*.html) is plain HTML and is copied as it is.
 title: Rill
 description: A small, fast, self-hosting systems language
-exclude: ["*.sh", "README.md", "LICENSE*"]
+exclude: ["*.sh", "README.md", "LICENSE*", "tools", "Gemfile*"]
+defaults:
+  - scope: { path: "book" }
+    values: { layout: doc, nav: book }
+  - scope: { path: "book/by-example" }
+    values: { layout: doc, nav: by-example }
+  - scope: { path: "tutorials" }
+    values: { layout: doc, nav: tutorials }

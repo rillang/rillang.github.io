@@ -445,6 +445,262 @@ th {
   border-color: var(--water);
 }
 
+/* documentation pages (book, by-example, tutorials: _layouts/doc.html) */
+
+.doc-layout {
+  display: grid;
+  grid-template-columns: 14.5rem minmax(0, 1fr);
+  gap: 3rem;
+  align-items: start;
+}
+
+.doc {
+  min-width: 0;
+  max-width: 46rem;
+  padding-top: 2.5rem;
+}
+
+.doc h1 {
+  font-size: clamp(2rem, 4vw, 2.6rem);
+  margin-bottom: 1.2rem;
+}
+
+.doc h2 {
+  font-size: clamp(1.45rem, 2.6vw, 1.75rem);
+  margin: 2.6rem 0 0.7rem;
+}
+
+.doc h3 {
+  margin-top: 1.9rem;
+}
+
+.doc h1 code,
+.doc h2 code,
+.doc h3 code {
+  background: none;
+  padding: 0;
+  font-size: 0.85em;
+}
+
+.doc h2, .doc h3, .doc h4 {
+  scroll-margin-top: 1rem;
+}
+
+.doc .anchor {
+  margin-left: 0.4rem;
+  color: var(--line);
+  text-decoration: none;
+  font-weight: 400;
+}
+
+.doc h2:hover .anchor,
+.doc h3:hover .anchor,
+.doc .anchor:focus {
+  color: var(--muted);
+}
+
+.doc li > ul,
+.doc li > ol {
+  margin-bottom: 0;
+}
+
+.doc blockquote {
+  margin: 0 0 1rem;
+  padding: 0.1rem 1rem;
+  border-left: 3px solid var(--line);
+  color: var(--muted);
+}
+
+.doc hr {
+  border: 0;
+  border-top: 1px solid var(--line);
+  margin: 2rem 0;
+}
+
+.doc img {
+  max-width: 100%;
+}
+
+.doc table {
+  display: block;
+  overflow-x: auto;
+  width: max-content;
+  max-width: 100%;
+}
+
+.doc pre {
+  margin: 0 0 1.2rem;
+  padding: 0.9rem;
+  overflow-x: auto;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: var(--code-bg);
+  color: var(--code-ink);
+  font: 0.86rem/1.55 var(--mono);
+}
+
+.doc pre code {
+  background: none;
+  padding: 0;
+  font-size: inherit;
+  border-radius: 0;
+}
+
+/* program output and shell sessions, like the website's "run" boxes */
+.doc .language-text pre {
+  background: var(--bg-raised);
+  border-style: dashed;
+  color: var(--muted);
+}
+
+.doc .cmd {
+  color: var(--ink);
+}
+
+.doc-side {
+  position: sticky;
+  top: 0;
+  max-height: 100vh;
+  overflow-y: auto;
+  padding: 2.5rem 0 2rem;
+  font-size: 0.92rem;
+}
+
+.doc-sections {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.3rem;
+  margin-bottom: 1.2rem;
+}
+
+.doc-sections a {
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  padding: 0.1rem 0.6rem;
+  color: var(--muted);
+  text-decoration: none;
+  font-size: 0.82rem;
+}
+
+.doc-sections a:hover {
+  color: var(--ink);
+}
+
+.doc-sections a[aria-current] {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.doc-pages {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.doc-pages a {
+  display: block;
+  padding: 0.22rem 0 0.22rem 0.7rem;
+  border-left: 2px solid var(--line);
+  color: var(--muted);
+  text-decoration: none;
+  line-height: 1.35;
+}
+
+.doc-pages a:hover {
+  color: var(--ink);
+}
+
+.doc-pages a[aria-current="page"] {
+  border-left-color: var(--accent);
+  color: var(--ink);
+  font-weight: 600;
+}
+
+.doc-group {
+  margin: 1rem 0 0.3rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.doc-menu {
+  display: none;
+  margin-top: 1rem;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: var(--bg-raised);
+  font-size: 0.95rem;
+}
+
+.doc-menu summary {
+  cursor: pointer;
+  padding: 0.6rem 0.9rem;
+  font-weight: 600;
+}
+
+.doc-menu[open] summary {
+  border-bottom: 1px solid var(--line);
+}
+
+.doc-menu .doc-sections,
+.doc-menu .doc-pages {
+  margin: 0.8rem 0.9rem;
+}
+
+.doc-pager {
+  display: flex;
+  gap: 1rem;
+  margin-top: 3rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--line);
+}
+
+.doc-pager a {
+  flex: 0 1 calc(50% - 0.5rem);
+  min-width: 0;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: var(--bg-raised);
+  padding: 0.7rem 1rem;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.doc-pager a:hover {
+  border-color: var(--accent);
+}
+
+.doc-pager .next {
+  margin-left: auto;
+  text-align: right;
+}
+
+.doc-pager span {
+  display: block;
+  font-size: 0.8rem;
+  font-weight: 400;
+  color: var(--muted);
+}
+
+.doc-pager .prev span::before {
+  content: "\2190  ";
+}
+
+.doc-pager .next span::after {
+  content: "  \2192";
+}
+
+.doc-edit {
+  margin-top: 1.5rem;
+  font-size: 0.85rem;
+}
+
+.doc-edit a {
+  color: var(--muted);
+}
+
 .site-footer {
   margin-top: 4rem;
   border-top: 1px solid var(--line);
@@ -474,5 +730,30 @@ th {
     width: 100%;
     order: 3;
     padding-bottom: 0.7rem;
+  }
+  .doc-layout {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0;
+  }
+  .doc-side {
+    display: none;
+  }
+  .doc-menu {
+    display: block;
+  }
+  .doc {
+    padding-top: 1.5rem;
+  }
+}
+
+@media (max-width: 30rem) {
+  .doc-pager {
+    flex-direction: column;
+  }
+  .doc-pager a {
+    flex-basis: auto;
+  }
+  .doc-pager .next {
+    margin-left: 0;
   }
 }

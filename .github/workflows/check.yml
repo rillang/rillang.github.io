@@ -14,6 +14,8 @@ jobs:
     runs-on: ubuntu-24.04-arm
     steps:
       - uses: actions/checkout@v4
+      # the sidebar and previous/next links list every page (needs no compiler)
+      - run: sh tools/nav.sh --check
       # the compiler; while rillang/rill is private, RILL_REPO_TOKEN (a fine-grained token
       # with read access to its contents) lets this repository check it out
       - uses: actions/checkout@v4

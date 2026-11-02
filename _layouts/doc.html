@@ -1,0 +1,80 @@
+<!doctype html>
+{%- assign nav = site.data.nav[page.nav] -%}
+{%- assign title = page.title | default: site.title | remove: "`" -%}
+{%- assign cur = -1 -%}
+{%- for p in nav.pages -%}{%- if p.path == page.path -%}{%- assign cur = forloop.index0 -%}{%- endif -%}{%- endfor -%}
+{%- assign prev = nil -%}{%- assign next = nil -%}
+{%- if cur > 0 -%}{%- assign i = cur | minus: 1 -%}{%- assign prev = nav.pages[i] -%}{%- endif -%}
+{%- if cur >= 0 -%}{%- assign i = cur | plus: 1 -%}{%- assign next = nav.pages[i] -%}{%- endif %}
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{{ title }}{% if nav and nav.title != title %} · {{ nav.title }}{% endif %}</title>
+<meta name="description" content="{{ site.description }}">
+<link rel="canonical" href="{{ page.url | absolute_url }}">
+{%- if prev %}
+<link rel="prev" href="{{ prev.url | relative_url }}">
+{%- endif %}
+{%- if next %}
+<link rel="next" href="{{ next.url | relative_url }}">
+{%- endif %}
+<link rel="stylesheet" href="{{ '/site/style.css' | relative_url }}">
+<script src="{{ '/site/site.js' | relative_url }}"></script>
+</head>
+<body>
+{% include header.html %}
+
+<div class="wrap doc-layout">
+  {%- if nav %}
+  <details class="doc-menu">
+    <summary>{{ nav.title }}: contents</summary>
+    {% include docnav.html nav=nav %}
+  </details>
+  <aside class="doc-side">
+    {% include docnav.html nav=nav %}
+  </aside>
+  {%- endif %}
+  <main class="doc">
+{%- comment -%}
+  Relative links to directories (examples/, cli-tool/) and to excluded *.sh files work on
+  GitHub but not here: they point to the repository instead. Links to .md pages are
+  already absolute (jekyll-relative-links).
+{%- endcomment -%}
+{%- assign parts = content | split: 'href="' -%}
+{%- for part in parts -%}
+  {%- if forloop.first -%}{{ part }}{%- continue -%}{%- endif -%}
+  {%- assign target = part | split: '"' | first -%}
+  {%- assign last = target | split: "/" | last -%}
+  {%- assign head = target | slice: 0, 1 -%}
+  {%- assign ext = last | split: "." -%}
+  {%- assign repo = false -%}
+  {%- if head != "/" and head != "#" and target != "" -%}
+    {%- unless target contains ":" -%}
+      {%- if ext.size <= 1 or last contains ".sh" -%}{%- assign repo = true -%}{%- endif -%}
+    {%- endunless -%}
+  {%- endif -%}
+  {%- if repo -%}
+    {%- assign n = target | size -%}{%- assign m = part | size -%}
+    href="https://github.com/rillang/rillang.github.io/tree/main{{ page.dir }}{{ target }}{{ part | slice: n, m }}
+    {%- continue -%}
+  {%- endif -%}
+  href="{{ part }}
+{%- endfor %}
+    {%- if prev or next %}
+    <nav class="doc-pager" aria-label="Previous and next page">
+      {%- if prev %}
+      <a class="prev" href="{{ prev.url | relative_url }}"><span>Previous</span>{{ prev.title }}</a>
+      {%- endif %}
+      {%- if next %}
+      <a class="next" href="{{ next.url | relative_url }}"><span>Next</span>{{ next.title }}</a>
+      {%- endif %}
+    </nav>
+    {%- endif %}
+    <p class="doc-edit"><a href="https://github.com/rillang/rillang.github.io/blob/main/{{ page.path }}">View this page on GitHub</a></p>
+  </main>
+</div>
+
+{% include footer.html %}
+</body>
+</html>
