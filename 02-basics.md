@@ -390,9 +390,8 @@ true
 escapes: "quoted" $5 tab	end
 ```
 
-Strings compare with `==`, `!=`, `<`, `<=`, `>`, `>=` (bytewise). `+` concatenates. Text
-processing beyond these functions (Unicode, formatting widths, `replace`, case
-conversion) is part of the **planned** standard library (`std/strings`, `std/utf8`,
-`std/fmt`; see the [packages and standard library spec](../specs/2026-11-02-rill-packages-stdlib-design.md)).
+Strings compare with `==`, `!=`, `<`, `<=`, `>`, `>=` (bytewise). `+` concatenates. More text
+processing (Unicode, formatting widths, `replace`, case conversion) is in the standard
+library: `std/strings`, `std/utf8`, `std/fmt` ([chapter 15](15-standard-library.md)).
 
 Next: [Structs and enums](03-structs-and-enums.md).

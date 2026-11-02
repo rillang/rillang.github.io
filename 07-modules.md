@@ -70,15 +70,16 @@ fn main() {
 - `test` blocks in a module run with `rill test lib/geometry` and can see private
   functions.
 
-## Planned: standard library, packages
+## The standard library
+
+`import "std/strings"`, `std/fs`, `std/os`, … are embedded in the compiler; see
+[chapter 15](15-standard-library.md).
+
+## Planned: packages
 
 The approved [packages and standard library spec](../specs/2026-11-02-rill-packages-stdlib-design.md)
-adds the rest. Directory modules (above) are done; **the standard library and packages are not yet.** In short:
+adds packages next. **They do not exist yet.** In short:
 
-- **A standard library embedded in the compiler**: `import "std/strings"`, `std/fs`,
-  `std/os`, `std/json`, `std/time`, `std/fmt`, `std/utf8`, `std/slices`, `std/math`,
-  `std/path`, `std/hash/sha256`. Today's global builtins `readFile`, `writeFile`,
-  `fileExists`, `mkdirAll`, `args`, `env`, `run`, `runCapture` move there.
 - **Packages from Git URLs**, Go style: `rill.mod` lists requirements, `rill.sum` pins
   commit and content hashes, minimal version selection picks versions, `rill get` is the
   only command that touches the network, and no code of a dependency runs while it is

@@ -5,8 +5,11 @@
 <!-- include: examples/args.rl -->
 ```swift
 // try: rill run args.rl one two
+
+import "std/os"
+
 fn main() {
-  let a = args()
+  let a = os.args()
   if a.len() == 0 {
     eprint("usage: args <words...>")
     print("no arguments")
@@ -23,6 +26,6 @@ fn main() {
 no arguments
 ```
 
-`args` moves to `std/os` with the planned standard library.
+`os.args()` comes from `std/os`.
 
 [Index](README.md)

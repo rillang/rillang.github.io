@@ -1,5 +1,7 @@
+import "std/fs"
+
 fn load(_ path: String) -> String! {
-  let text = readFile(path)?
+  let text = fs.readFile(path)?
   return text.trim()
 }
 

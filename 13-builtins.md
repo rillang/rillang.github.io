@@ -1,8 +1,9 @@
 # 13. Built-in reference
 
-Everything below is built into the compiler today (from `builtinCall` in
-`compiler/check.rl`). Functions marked *moves* are planned to move into the standard
-library (`std/fs`, `std/os`) by the [packages spec](../specs/2026-11-02-rill-packages-stdlib-design.md).
+Everything below is built into the compiler (from `builtinCall` in
+`compiler/check/check.rl`). Files, processes and the environment live in the
+[standard library](15-standard-library.md) (`std/fs`, `std/os`); using one of the former
+global names (`readFile`, `args`, …) is error E0039, which names the replacement.
 
 ## Global functions
 
@@ -15,20 +16,7 @@ library (`std/fs`, `std/os`) by the [packages spec](../specs/2026-11-02-rill-pac
 | `Float(n)` | `(Int) -> Float` | |
 | `fail(msg)` | `(String) -> Error` | used as `return fail("…")` in a `T!` function |
 | `panic(msg)` | `(String) -> Void` | exit 101 |
-| `exit(code)` | `(Int) -> Void` | |
 | `expect(cond)` | `(Bool) -> Void` | only in `test` blocks |
-| `args()` | `() -> [String]` | program arguments, without the program name; *moves* to `std/os` |
-| `env(name)` | `(String) -> String?` | *moves* to `std/os` |
-| `readFile(path)` | `(String) -> String!` | *moves* to `std/fs` |
-| `writeFile(path, s)` | `(String, String) -> Void!` | *moves* to `std/fs` |
-| `fileExists(path)` | `(String) -> Bool` | *moves* to `std/fs` as `exists` |
-| `mkdirAll(path)` | `(String) -> Void!` | *moves* to `std/fs` |
-| `readDir(path)` | `(String) -> [String]!` | sorted names; *moves* to `std/fs` |
-| `run(argv)` | `([String]) -> Int!` | runs a program, returns its exit code; *moves* to `std/os` |
-| `runCapture(argv)` | `([String]) -> String!` | runs a program, returns its stdout; error on non-zero exit; *moves* to `std/os` |
-| `readStdin(n)` | `(Int) -> String` | up to `n` bytes from stdin |
-| `writeStdout(s)` | `(String) -> Void` | without a newline |
-| `makeExecutable(path)` | `(String) -> Void!` | |
 
 ## Constructors
 

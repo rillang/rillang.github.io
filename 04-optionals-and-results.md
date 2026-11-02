@@ -137,8 +137,10 @@ as `error: <msg>` and the program exits with code 1:
 
 <!-- include: examples/main_error.fail.rl -->
 ```swift
+import "std/fs"
+
 fn load(_ path: String) -> String! {
-  let text = readFile(path)?
+  let text = fs.readFile(path)?
   return text.trim()
 }
 

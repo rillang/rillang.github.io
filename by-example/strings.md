@@ -32,6 +32,6 @@ line b
 true
 ```
 
-More string functions are planned for `std/strings`.
+More string functions are in `std/strings` (`replace`, `index`, `toUpper`, …).
 
 [Index](README.md)

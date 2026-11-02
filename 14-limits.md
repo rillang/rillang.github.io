@@ -12,8 +12,9 @@ way. Items marked **planned** have a spec or are on the roadmap.
 
 ## Language
 
-- No standard library beyond the [builtins](13-builtins.md) and no packages. **Planned**
-  next ([spec](../specs/2026-11-02-rill-packages-stdlib-design.md)).
+- No packages yet (**planned** next, [spec](../specs/2026-11-02-rill-packages-stdlib-design.md));
+  the [standard library](15-standard-library.md) is a first version (no networking, no
+  regular expressions).
 - Strings are bytes: no character type, no Unicode-aware functions; a character literal is
   an `Int`.
 - No string formatting beyond interpolation (widths, precision); no `replace`, `toUpper`.
