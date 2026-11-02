@@ -1,0 +1,10 @@
+$ ./cfg bad.json
+bad.json: invalid configuration:
+  compres: unknown key (known: name, sources, target, retention, compress, exclude)
+  name: must not be empty
+  sources[1]: expected a string, got a number
+  target.host: missing
+  target.port: must be in 1...65535, got 70000
+  retention.daily: expected a whole number, got 2.5
+  retention.weekly: must be in 0...52, got -1
+[exit 1]

@@ -1,0 +1,15 @@
+$ rill build wc.rl
+$ ./wc testdata/fox.txt testdata/rill.txt
+      3       9      45 testdata/fox.txt
+      4      11      66 testdata/rill.txt
+      7      20     111 total
+$ ./wc -l testdata/fox.txt missing.txt
+      3 testdata/fox.txt
+wc: cannot open file: missing.txt
+      3 total
+[exit 1]
+$ printf "one two\nthree\n" | ./wc -w
+      3
+$ ./wc -q
+error: unknown flag -q (use -l, -w, -c)
+[exit 1]

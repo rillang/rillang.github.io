@@ -1,0 +1,4 @@
+$ rill test wc.rl
+ok   count
+ok   parseArgs
+2 passed, 0 failed

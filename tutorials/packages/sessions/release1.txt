@@ -1,0 +1,9 @@
+$ git init -q && git add -A && git commit -qm "textkit 1.0"
+$ rill release --dry-run
+error[E0111]: CHANGELOG.md has no section for v0.1.0 (## [0.1.0] - YYYY-MM-DD)
+[exit 1]
+$ rill release v1.0.0 --unsigned
+release v1.0.0 (previous: none, API change: minor)
+created tag v1.0.0; publish it with: git push origin v1.0.0
+$ git init -q --bare ~/remote/textkit && git -C ~/remote/textkit config uploadpack.allowFilter true
+$ git remote add origin ~/remote/textkit && git push -q origin main v1.0.0

@@ -1,0 +1,4 @@
+$ rill test cfg.rl
+ok   defaults
+ok   problems
+2 passed, 0 failed

@@ -1,0 +1,32 @@
+$ cd ~/src/greeter
+$ rill mod init github.com/ada/greeter
+$ rill run .
+error[E0017]: cannot import 'github.com/ada/textkit': no requirement provides it (run: rill get <module>)
+ --> main.rl:1:1
+  |
+1 | import "github.com/ada/textkit"
+  | ^
+
+error[E0017]: cannot import 'github.com/ada/textkit/wrap': no requirement provides it (run: rill get <module>)
+ --> main.rl:2:1
+  |
+2 | import "github.com/ada/textkit/wrap"
+  | ^
+[exit 1]
+$ rill get github.com/ada/textkit
+rill get: github.com/ada/textkit v1.0.0
+$ cat rill.mod
+module github.com/ada/greeter
+rill 0.1
+require github.com/ada/textkit v1.0.0
+$ cat rill.sum
+github.com/ada/textkit v1.0.0 commit=3b6f18f015ebdcbf6838ccaff5815f8c167208cf tree=sha256:f75fc8b671037c0ca4eb525b1d7ddbec1124415734e089f0a024ee2861b4fa3b
+github.com/ada/textkit v1.0.0/rill.mod sha256:a4bb9152af35730505a7f44d294036a9b92d4e1e9060be1a578e9d97c6d7a17a
+$ rill run .
+/posts/packages-in-rill-a-hands-on-tour (7 words)
+  Packages in
+  Rill: A Hands-On
+  Tour
+$ rill lsp --check main.rl
+$ ls ~/.rill/mod/github.com/ada
+textkit@v1.0.0

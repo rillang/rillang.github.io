@@ -1,0 +1,42 @@
+$ cd ~/src/greeter
+$ rill get github.com/ada/textkit
+rill get: github.com/ada/textkit v1.1.0
+$ rill run .
+warning[W0001]: 'slug' is deprecated: use slugify(s, sep: "-") (rill fix rewrites this call)
+ --> main.rl:6:31
+  |
+6 |   print("/posts/${textkit.slug(title)} (${textkit.words(title)} words)")
+  |                               ^
+/posts/packages-in-rill-a-hands-on-tour (7 words)
+  Packages in
+  Rill: A Hands-On
+  Tour
+$ rill build --deny-warnings . -o greeter
+error[W0001]: 'slug' is deprecated: use slugify(s, sep: "-") (rill fix rewrites this call)
+ --> main.rl:6:31
+  |
+6 |   print("/posts/${textkit.slug(title)} (${textkit.words(title)} words)")
+  |                               ^
+[exit 1]
+$ rill fix --list
+main.rl:6: textkit.slug(title) -> textkit.slugify(title, sep: "-")
+$ rill fix
+main.rl: rewrote 1 call(s)
+$ cat main.rl
+import "github.com/ada/textkit"
+import "github.com/ada/textkit/wrap"
+
+fn main() {
+  let title = "Packages in Rill: A Hands-On Tour"
+  print("/posts/${textkit.slugify(title, sep: "-")} (${textkit.words(title)} words)")
+  for line in wrap.lines(title, width: 16) {
+    print("  $line")
+  }
+}
+$ rill build --deny-warnings . -o greeter && ./greeter
+/posts/packages-in-rill-a-hands-on-tour (7 words)
+  Packages in
+  Rill: A Hands-On
+  Tour
+$ rill mod tidy && rill mod verify
+all modules verified

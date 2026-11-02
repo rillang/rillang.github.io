@@ -1,0 +1,7 @@
+{
+  "name": "",
+  "sources": ["/home/ada", 42],
+  "target": { "port": 70000 },
+  "retention": { "daily": 2.5, "weekly": -1 },
+  "compres": true
+}

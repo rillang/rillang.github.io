@@ -1,0 +1,20 @@
+$ cd ~/src/textkit
+$ rill lsp --check textkit.rl && rill test .
+ok   slugify
+ok   words
+2 passed, 0 failed
+$ rill api diff v1.0.0 .
++ fn slugify(_ s: String, sep: String) -> String
+change: minor
+$ git commit -qam "slugify; slug deprecated" && rill release --dry-run
+error[E0111]: CHANGELOG.md has no section for v1.1.0 (## [1.1.0] - YYYY-MM-DD)
+[exit 1]
+$ git commit -qam "changelog for 1.1.0" && rill release --dry-run
+release v1.1.0 (previous: v1.0.0, API change: minor)
++ fn slugify(_ s: String, sep: String) -> String
+dry run: would create the signed tag v1.1.0
+$ rill release --unsigned
+release v1.1.0 (previous: v1.0.0, API change: minor)
++ fn slugify(_ s: String, sep: String) -> String
+created tag v1.1.0; publish it with: git push origin v1.1.0
+$ git push -q origin main v1.1.0

@@ -1,0 +1,8 @@
+$ rill run peek.rl
+error[E0038]: cannot import 'github.com/ada/textkit/internal/ascii': only modules under 'github.com/ada/textkit' may
+ --> peek.rl:1:1
+  |
+1 | import "github.com/ada/textkit/internal/ascii"
+  | ^
+[exit 1]
+$ rm peek.rl

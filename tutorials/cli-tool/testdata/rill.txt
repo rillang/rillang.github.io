@@ -1,0 +1,4 @@
+Rill compiles to native arm64.
+No C compiler needed.
+
+One binary.

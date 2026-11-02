@@ -1,0 +1,4 @@
+$ export RILL_MOD_TEST=1
+$ git config --global url."file://$HOME/remote/".insteadOf "https://github.com/ada/"
+$ git config --global init.defaultBranch main
+$ git config --global user.name Ada && git config --global user.email ada@example.com
