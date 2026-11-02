@@ -97,10 +97,20 @@ rill mod tidy                        # requirements follow the imports
 - `replace <module> => ../dir` or a `rill.work` file (`use ./app`, `use ./lib`) puts a local
   directory in place of a module.
 
-**Planned** ([spec](../specs/2026-11-02-rill-packages-stdlib-design.md)):
+## Evolving an API
 
-- **Update tooling**: `rill api diff`, `rill release` (semver from the API diff, signed
-  tag), `rill mod outdated`, `rill update` (changelog, API diff, automatic migration with
-  `fix: inline`), `rill mod audit`.
+- `rill api` prints the module's public surface; `rill api diff v1.2.0 .` says what changed
+  and whether it breaks callers (a removed or changed item, a new enum case, a new struct
+  field or interface method).
+- `rill release` picks the next version from that diff, refuses a bump that is too small,
+  needs a `CHANGELOG.md` section for the version and creates a signed tag.
+- `/// deprecated: use parseStrict` above a function makes its callers' builds warn
+  (W0001); with `/// fix: inline` as well, `rill fix` rewrites every call into the
+  function's body. A last v1 release can implement its API by calling v2, so `rill fix`
+  moves callers to the new major version.
+
+**Planned** ([spec](../specs/2026-11-02-rill-packages-stdlib-design.md)): `rill mod
+outdated`, `rill update` (changelog and API diff of an upgrade, then `rill fix`, build and
+tests), `rill mod audit` (retractions, security advisories).
 
 Next: [Testing](08-testing.md).

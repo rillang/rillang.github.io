@@ -12,9 +12,8 @@ way. Items marked **planned** have a spec or are on the roadmap.
 
 ## Language
 
-- Packages work (chapter 7), but the update tooling (`rill update`, `rill mod outdated`,
-  `rill mod audit`, `rill release`) is **planned**; GPG signers are not supported yet (SSH
-  keys are). The [standard library](15-standard-library.md) is a first version (no
+- Packages work (chapter 7), but `rill update`, `rill mod outdated` and `rill mod audit` are
+  **planned**; GPG signers are not supported yet (SSH keys are). The [standard library](15-standard-library.md) is a first version (no
   networking, no regular expressions).
 - Strings are bytes: no character type, no Unicode-aware functions; a character literal is
   an `Int`.
