@@ -109,8 +109,28 @@ rill mod tidy                        # requirements follow the imports
   function's body. A last v1 release can implement its API by calling v2, so `rill fix`
   moves callers to the new major version.
 
-**Planned** ([spec](https://github.com/rillang/rill/blob/main/docs/specs/2026-11-02-rill-packages-stdlib-design.md)): `rill mod
-outdated`, `rill update` (changelog and API diff of an upgrade, then `rill fix`, build and
-tests), `rill mod audit` (retractions, security advisories).
+### Staying up to date
+
+```sh
+rill mod outdated                 # newest patch, minor and major release per requirement
+rill update                       # newest minor releases: changelog, API diff, rill fix, build, tests
+rill update github.com/a/yaml --patch
+rill update --pr                  # the same on a new branch, as a pull request (gh)
+rill update --major github.com/a/lib   # to lib/v2: the v1 wrappers migrate your calls
+rill mod audit                    # retracted versions and security advisories
+```
+
+`rill update` shows the changelog sections between your version and the new one and the
+API diff, marking breaking changes to functions your code calls. It then runs `rill fix`
+(deprecated calls migrate), builds and runs your tests; `--dry-run` only shows the plan.
+
+An author withdraws a bad release with a `retract` line in a newer release's `rill.mod`
+(`retract v1.0.3 "parse loops on empty input"`, `retract [v1.1.0, v1.1.4] security
+"…"`). Retracted versions are never picked as `latest`, and `outdated`, `update` and
+`audit` point at them. `rill mod audit` also reads advisories in the
+[OSV](https://ossf.github.io/osv-schema/) format from `RILL_VULNDB` (a directory or an
+`https` URL); an advisory that names symbols (`yaml.parse`) is "reachable" only if your
+code's call graph reaches one, otherwise "present, not called". It exits 1 when something
+needs action.
 
 Next: [Testing](08-testing.md).

@@ -94,10 +94,9 @@ intermediate forms ([dump formats](https://github.com/rillang/rill/blob/main/doc
 
 ## Planned tooling
 
-From the [packages spec](https://github.com/rillang/rill/blob/main/docs/specs/2026-11-02-rill-packages-stdlib-design.md) and the
-[roadmap notes](https://github.com/rillang/rill/blob/main/docs/notes/2026-11-02-findings.md): `rill doc` (rendering `///` comments),
-warnings with `--deny-warnings`, `rill fix` (automatic migrations), `rill api`,
-`rill release`, `rill get` / `rill mod …`, `rill update`, an interactive `rill tour`, a
-toolchain version manager, a WebAssembly target and a browser playground.
+From the [roadmap](https://github.com/rillang/rill/blob/main/docs/ROADMAP.md): `rill doc`
+(rendering `///` comments, with doctests), `--json` for every command, `rill mcp`, an
+interactive `rill tour`, a toolchain version manager, a WebAssembly target and a browser
+playground. Packages, updates and audits are in [chapter 7](07-modules.md).
 
 Next: [Diagnostics](12-diagnostics.md).
