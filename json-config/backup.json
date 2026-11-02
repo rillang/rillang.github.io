@@ -1,0 +1,8 @@
+{
+  "name": "nightly",
+  "sources": ["/home/ada/docs", "/home/ada/photos"],
+  "target": { "host": "backup.example.com", "port": 2222 },
+  "retention": { "daily": 14 },
+  "compress": true,
+  "exclude": ["*.tmp", ".cache"]
+}

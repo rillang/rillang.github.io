@@ -1,0 +1,16 @@
+$ cd ~/src/textkit
+$ rill mod init github.com/ada/textkit
+$ cat rill.mod
+module github.com/ada/textkit
+rill 0.1
+$ rill test . && rill test wrap && rill test internal/ascii
+ok   slug
+ok   words
+2 passed, 0 failed
+ok   lines
+1 passed, 0 failed
+ok   classes
+1 passed, 0 failed
+$ rill api
+fn slug(_ s: String) -> String
+fn words(_ s: String) -> Int

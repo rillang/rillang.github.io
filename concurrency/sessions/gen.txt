@@ -1,0 +1,12 @@
+$ rill run gen.rl tree 400
+wrote 400 files, 12362088 bytes
+$ rill build hash1.rl && rill build hash2.rl && rill build hashtree.rl
+$ ./hash1 tree 2>/dev/null | tail -2
+f351d07c910e86b972e16a353bb836dfff2d6afc44fcab596bacdd181f625ed1  tree/d03/f0398.txt
+2c57273ec0d3f32236f0c303fbe8705d5082e76ac2d0117802084217af6b512b  tree/d03/f0399.txt
+$ ./hash1 tree 2>/dev/null | cksum
+3511771960 34000
+$ ./hash2 tree 2>/dev/null | cksum
+3511771960 34000
+$ ./hashtree tree 2>/dev/null | cksum
+3511771960 34000

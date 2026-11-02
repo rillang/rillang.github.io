@@ -1,0 +1,8 @@
+$ ./hash1 tree >/dev/null
+12362088 bytes in <time>
+$ ./hash2 tree >/dev/null
+12362088 bytes in <time>
+$ ./hashtree -j 1 tree >/dev/null
+400 files, 12362088 bytes, 1 tasks, <time>
+$ ./hashtree -j 4 tree >/dev/null
+400 files, 12362088 bytes, 4 tasks, <time>

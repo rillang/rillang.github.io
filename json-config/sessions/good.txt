@@ -1,0 +1,18 @@
+$ rill build cfg.rl
+$ ./cfg minimal.json
+{
+  "name": "quick",
+  "sources": [
+    "/srv"
+  ],
+  "target": {
+    "host": "nas.local",
+    "port": 22
+  },
+  "retention": {
+    "daily": 7,
+    "weekly": 4
+  },
+  "compress": false,
+  "exclude": []
+}

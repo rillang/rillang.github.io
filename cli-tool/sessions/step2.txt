@@ -1,0 +1,6 @@
+$ rill test wc2.rl
+ok   count
+1 passed, 0 failed
+$ rill run wc2.rl testdata/fox.txt testdata/rill.txt
+3 9 45 testdata/fox.txt
+4 11 66 testdata/rill.txt

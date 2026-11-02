@@ -1,0 +1,11 @@
+$ rill run explore.rl backup.json
+name: string "nightly"
+sources: array of 2
+target: object with 2 keys
+retention: object with 1 keys
+compress: bool true
+exclude: array of 2
+port: 2222
+$ rill run explore.rl broken.json
+error: invalid JSON at byte 58
+[exit 1]

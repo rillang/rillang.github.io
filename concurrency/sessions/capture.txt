@@ -1,0 +1,8 @@
+$ sed "s/0..<n {/0..<workers {/" hashtree.rl >capture.rl
+$ rill build capture.rl
+error[E0025]: 'spawn' cannot capture 'var' workers: tasks would share it; capture a 'let' copy
+  --> capture.rl:35:11
+   |
+35 |     spawn {
+   |           ^
+[exit 1]

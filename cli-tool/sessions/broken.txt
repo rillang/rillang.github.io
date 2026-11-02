@@ -1,0 +1,7 @@
+$ sed "s/c.words += 1/c.words += 2/" wc2.rl >broken.rl
+$ rill test broken.rl
+FAIL count
+  expect failed at broken.rl:36
+  expect failed at broken.rl:37
+0 passed, 1 failed
+[exit 1]
