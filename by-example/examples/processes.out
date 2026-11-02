@@ -1,0 +1,4 @@
+from a child process
+exit code 3
+HOME set: true
+unset

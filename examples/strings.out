@@ -1,0 +1,8 @@
+Hello, Rill
+11 Hello true true
+a|b||c
+2 lines
+42 -1 2.5
+true true
+true
+escapes: "quoted" $5 tab	end

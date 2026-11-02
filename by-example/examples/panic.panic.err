@@ -1,0 +1,2 @@
+panic: negative age: -1
+ --> docs/book/by-example/examples/panic.panic.rl:5
