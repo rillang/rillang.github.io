@@ -19,6 +19,9 @@
 {%- if next %}
 <link rel="next" href="{{ next.url | relative_url }}">
 {%- endif %}
+<link rel="icon" href="{{ '/site/logo/favicon.svg' | relative_url }}" type="image/svg+xml">
+<link rel="apple-touch-icon" href="{{ '/site/logo/apple-touch-icon.png' | relative_url }}">
+<meta property="og:image" content="https://rillang.github.io/site/logo/social.png">
 <link rel="stylesheet" href="{{ '/site/style.css' | relative_url }}">
 <script src="{{ '/site/site.js' | relative_url }}"></script>
 </head>

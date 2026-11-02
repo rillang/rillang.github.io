@@ -5,6 +5,10 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Rill Roadmap</title>
 <meta name="description" content="What Rill can do today, what comes next, and what is planned.">
+<link rel="icon" href="logo/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="logo/apple-touch-icon.png">
+<meta property="og:image" content="https://rillang.github.io/site/logo/social.png">
+<meta name="twitter:card" content="summary_large_image">
 <link rel="stylesheet" href="style.css">
 <script src="site.js"></script>
 </head>
@@ -25,8 +29,8 @@
 <main class="wrap">
   <div class="page-head">
     <h1>Roadmap</h1>
-    <p>Where Rill stands and where it is going. Nothing below "next" has a date; the order
-      may change. Sources: the <a href="https://github.com/rillang/rill/blob/main/docs/notes/2026-11-02-findings.md">findings
+    <p><strong>Code like Swift, build like Go, go as deep as Rust</strong> — where Rill stands
+      and where it is going. Milestones have no dates; the order may change. Sources: the <a href="https://github.com/rillang/rill/blob/main/docs/notes/2026-11-02-findings.md">findings
       notes</a>, the <a href="https://github.com/rillang/rill/blob/main/docs/ROADMAP.md">roadmap</a> and the <a href="https://github.com/rillang/rill/blob/main/docs/rfcs/README.md">RFC index</a>.</p>
   </div>
 
@@ -37,7 +41,7 @@
         <li class="done"><span class="tag done">done</span> Self-hosted compiler emitting
           native arm64 Mach-O and ELF, with no external tools</li>
         <li class="done"><span class="tag done">done</span> Bootstrapping from a checked-in
-          Rill seed; the original Zig compiler is gone</li>
+          Rill seed; the first bootstrap compiler is gone</li>
         <li class="done"><span class="tag done">done</span> Conservative parallel garbage
           collector; green-thread scheduler on all cores</li>
         <li class="done"><span class="tag done">done</span> Structured concurrency:
@@ -62,39 +66,24 @@
       </ul>
     </div>
     <div>
-      <h2>Next</h2>
+      <h2>Milestones</h2>
       <ul class="timeline">
-        <li class="next"><span class="tag next">next</span> <strong>Updates and
-          security</strong>: <code>rill mod outdated</code>, <code>rill update</code>
-          (changelog, API diff, automatic migration, pull request), retractions,
-          <code>rill mod audit</code></li>
-        <li class="next"><span class="tag next">next</span> <strong>Incremental
-          builds</strong>: per-module summaries, a content-addressed cache, parallel
-          compilation along the module graph</li>
-        <li class="next"><span class="tag next">next</span> <code>///</code> doc comments,
-          <code>rill doc</code> and doctests</li>
-        <li class="next"><span class="tag next">next</span> Language rough edges:
-          <code>if let</code> on results, <code>?</code> in tests, annotated closure
-          parameters, explicit type arguments</li>
+        <li class="next"><span class="tag next">next</span> <strong>v0.2 Instant</strong> — speed and scripts<br>
+          Incremental builds, cached binaries for <code>rill run</code>, <code>#!/usr/bin/env rill</code>, fast start; package updates and security (<code>rill update</code>, <code>rill mod outdated</code>, <code>rill mod audit</code>). <em>Showcase: Scripts replace shell and Python one-offs.</em></li>
+        <li class=""><span class="tag planned">planned</span> <strong>v0.3 Batteries</strong> — the standard library<br>
+          <code>net/http</code> (server and client), command-line flags, logging, regular expressions, crypto, encodings, time formats, test helpers with diffs; error types and Unicode strings. <em>Showcase: A web service with a JSON API.</em></li>
+        <li class=""><span class="tag planned">planned</span> <strong>v0.4 Metal</strong> — as deep as Rust<br>
+          <code>nogc</code> functions, files and modules; arenas and pools; <code>unsafe</code> and C libraries; SIMD; tasks the collector never stops (<code>spawn nogc</code>) and binaries without a collector (<code>--nogc</code>). <em>Showcase: A simulation or game loop without GC pauses.</em></li>
+        <li class=""><span class="tag planned">planned</span> <strong>v0.5 Agent-native</strong> — the toolchain for agents<br>
+          <code>rill doc</code> with doctests, <code>--json</code> for every command, <code>rill mcp</code> (an MCP server), completion, rename and code actions in the language server. <em>Showcase: An agent builds and migrates a project end to end.</em></li>
+        <li class=""><span class="tag planned">planned</span> <strong>v0.6 Everywhere</strong> — platforms<br>
+          An x86-64 backend for Linux and macOS, WebAssembly and a browser playground, then Windows; cross-compiling between all of them. <em>Showcase: The same program everywhere.</em></li>
+        <li class=""><span class="tag planned">planned</span> <strong>1.0</strong> — the promise<br>
+          A compatibility guarantee, signed reproducible releases, a toolchain version manager.</li>
       </ul>
-
-      <h2>Planned</h2>
-      <ul class="timeline">
-        <li><span class="tag">planned</span> <strong>WebAssembly</strong> target (WASI,
-          single-threaded first)</li>
-        <li><span class="tag">planned</span> A <strong>playground</strong> in the browser,
-          on top of the WebAssembly target</li>
-        <li><span class="tag">planned</span> <code>rill tour</code> and exercises</li>
-        <li><span class="tag">planned</span> A <strong>toolchain version manager</strong>
-          in <code>rill</code>, and mise integration</li>
-        <li><span class="tag">planned</span> <code>std/net</code> and
-          <code>std/http</code></li>
-        <li><span class="tag">idea</span> Language: a character type and Unicode strings,
-          error types, <code>select</code> and timeouts on channels, annotated closure
-          parameters</li>
-        <li><span class="tag">idea</span> Supervised tasks and actors in the standard
-          library, a REPL</li>
-      </ul>
+      <p>Not planned: ownership and lifetimes as in Rust (the escape check of <code>nogc</code>
+        arenas is the deliberate alternative), macros, inheritance, a VM. The details:
+        <a href="https://github.com/rillang/rill/blob/main/docs/rfcs/0008-direction.md">RFC 0008</a>.</p>
     </div>
   </div>
 </main>

@@ -4,7 +4,11 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Rill</title>
-<meta name="description" content="Rill: a small, explicit programming language that compiles itself to native arm64 code. Early and experimental.">
+<meta name="description" content="Rill: code like Swift, build like Go, go as deep as Rust. One language from scripts to engines, built for people and AI agents. Early and experimental.">
+<link rel="icon" href="logo/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="logo/apple-touch-icon.png">
+<meta property="og:image" content="https://rillang.github.io/site/logo/social.png">
+<meta name="twitter:card" content="summary_large_image">
 <link rel="stylesheet" href="style.css">
 <script src="site.js"></script>
 </head>
@@ -26,10 +30,12 @@
   <section class="hero">
     <div>
       <span class="status-pill">Experimental · arm64 macOS and Linux</span>
-      <h1>A small, explicit language that compiles itself.</h1>
-      <p class="lede">Rill has Swift-like syntax, Go's simplicity, value semantics, pattern
-        matching and structured concurrency. Its compiler is written in Rill and writes
-        native executables on its own: no C compiler, assembler or linker anywhere.</p>
+      <h1>Code like Swift. Build like Go. Go as deep as Rust.</h1>
+      <p class="lede">One language from scripts to engines: scripts, tools, web services,
+        games and simulations. Rill grows with your program — a script needs nothing but
+        <code>print</code>, an engine adds <code>nogc</code> code, arenas and SIMD — and it is
+        built so that people and AI agents can work on the same code with confidence.
+        One self-contained toolchain: no C compiler, assembler or linker anywhere.</p>
       <div class="actions">
         <a class="button primary" href="install.html">Get started</a>
         <a class="button" href="../book/">Read the book</a>
@@ -74,6 +80,19 @@ test "eval follows the tree" {
 
   <h2>Why Rill</h2>
   <div class="features">
+    <div class="card">
+      <h3>Grows with your program</h3>
+      <p>A script needs nothing but <code>print</code>. A service adds types, packages and
+        concurrency. An engine adds <code>nogc</code> code, arenas, SIMD and
+        <code>unsafe</code> — each step opt-in, local and as readable as the rest
+        <span class="tag">planned</span>.</p>
+    </div>
+    <div class="card">
+      <h3>Built for people and AI agents</h3>
+      <p>One obvious way to write things, diagnostics with stable codes, one formatter,
+        and migrations as code (<code>rill fix</code>): what makes code easy for an agent
+        to write and review helps every reader.</p>
+    </div>
     <div class="card">
       <h3>One binary, whole toolchain</h3>
       <p><code>rill</code> runs, builds, tests, formats, debugs and serves your editor
