@@ -19,7 +19,7 @@ RILL=${RILL:-out/rill}
 tmp=$(mktemp -d)
 pass=0
 fail=0
-dirs="docs/book/examples docs/book/by-example/examples"
+dirs="docs/book/examples docs/book/by-example/examples site/examples"
 
 ok() {
   pass=$((pass + 1))
@@ -78,7 +78,7 @@ for d in $dirs; do
 done
 
 srcs=$(ls docs/book/examples/*.rl docs/book/examples/lib/*.rl docs/book/by-example/examples/*.rl \
-  docs/book/by-example/examples/lib/*.rl 2>/dev/null)
+  docs/book/by-example/examples/lib/*.rl site/examples/*.rl 2>/dev/null)
 if "$RILL" fmt --check $srcs >"$tmp/out" 2>&1; then ok; else
   bad "formatting (run rill fmt on these):"
   sed 's/^/  /' "$tmp/out"
