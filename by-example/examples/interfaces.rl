@@ -8,7 +8,7 @@ fn sound(_ d: Dog) -> String = "${d.name}: woof"
 
 struct Cat {}
 
-fn sound(_ c: Cat) -> String = "meow"
+fn sound(_ _c: Cat) -> String = "meow"
 
 fn chorus(_ xs: [Animal]) -> String = xs.map { $.sound() }.join(", ")
 

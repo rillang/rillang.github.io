@@ -118,13 +118,13 @@ struct Circle { r: Float }
 
 fn area(_ c: Circle) -> Float = 3.14159 * c.r * c.r
 
-fn name(_ c: Circle) -> String = "circle"
+fn name(_ _c: Circle) -> String = "circle"
 
 struct Square { side: Float }
 
 fn area(_ s: Square) -> Float = s.side * s.side
 
-fn name(_ s: Square) -> String = "square"
+fn name(_ _s: Square) -> String = "square"
 
 // static dispatch: one copy of the function per concrete S
 fn total<S: Shape>(_ xs: [S]) -> Float {

@@ -41,7 +41,6 @@ way. Items marked **planned** have a spec or are on the roadmap.
 - No completion, rename or references in the language server.
 - The debugger shows closures and interface values in their raw form, and optimized builds
   hide variables kept in registers.
-- No warnings yet (**planned**: `W0001`–`W0005`).
 
 The maintainers' own list, with context, is in
 [docs/notes/2026-11-02-findings.md](../notes/2026-11-02-findings.md).
