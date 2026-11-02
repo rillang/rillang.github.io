@@ -26,6 +26,8 @@ that are designed but not built yet are marked **planned** and link to their spe
 
 Also: **[Rill by Example](by-example/README.md)**, short runnable programs, one topic each.
 
+And: **[Tutorials](../tutorials/README.md)**, small real programs built step by step.
+
 ## The examples are checked
 
 Every program in this book lives in [`examples/`](examples/) (and
