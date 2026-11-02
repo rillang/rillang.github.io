@@ -27,7 +27,7 @@
     <h1>Roadmap</h1>
     <p>Where Rill stands and where it is going. Nothing below "next" has a date; the order
       may change. Sources: the <a href="../docs/notes/2026-11-02-findings.md">findings
-      notes</a> and the <a href="../docs/rfcs/README.md">RFC index</a>.</p>
+      notes</a>, the <a href="../docs/ROADMAP.md">roadmap</a> and the <a href="../docs/rfcs/README.md">RFC index</a>.</p>
   </div>
 
   <div class="split">
@@ -51,29 +51,31 @@
         <li class="done"><span class="tag done">done</span> Pattern matching</li>
         <li class="done"><span class="tag done">done</span> <code>rill fmt</code>,
           <code>rill lsp</code>, DWARF line tables, <code>rill debug</code></li>
+        <li class="done"><span class="tag done">done</span> Directory modules and a standard
+          library embedded in the compiler (<code>std/strings</code>, <code>fs</code>,
+          <code>os</code>, <code>json</code>, <code>time</code>, …)</li>
+        <li class="done"><span class="tag done">done</span> Packages from Git:
+          <code>rill.mod</code>, <code>rill.sum</code>, minimal version selection, pinned
+          tags, signatures, vendoring; builds never fetch</li>
+        <li class="done"><span class="tag done">done</span> Warnings and enforced lints;
+          <code>rill api</code>, <code>rill release</code>, <code>rill fix</code></li>
       </ul>
     </div>
     <div>
       <h2>Next</h2>
       <ul class="timeline">
-        <li class="next"><span class="tag next">next</span> <strong>Modules, standard
-          library and packages</strong> (<a href="../docs/specs/2026-11-02-rill-packages-stdlib-design.md">spec</a>),
-          in five phases:
-          <ol>
-            <li>directory modules <span class="tag done">done</span></li>
-            <li>a standard library embedded in the compiler (<code>std/strings</code>,
-              <code>fs</code>, <code>os</code>, <code>json</code>, <code>time</code>,
-              <code>fmt</code>, …) <span class="tag done">done</span></li>
-            <li>packages from Git URLs: <code>rill.mod</code>, <code>rill.sum</code>,
-              minimal version selection, signatures, no code run at install time <span class="tag done">done</span></li>
-            <li>warnings and lints, <code>rill api</code>, <code>rill release</code>,
-              deprecation with automatic fixes</li>
-            <li><code>rill mod outdated</code>, <code>rill update</code>,
-              <code>rill mod audit</code></li>
-          </ol>
-        </li>
-        <li class="next"><span class="tag next">next</span> Performance: instruction
-          selection, the collector's time budget</li>
+        <li class="next"><span class="tag next">next</span> <strong>Updates and
+          security</strong>: <code>rill mod outdated</code>, <code>rill update</code>
+          (changelog, API diff, automatic migration, pull request), retractions,
+          <code>rill mod audit</code></li>
+        <li class="next"><span class="tag next">next</span> <strong>Incremental
+          builds</strong>: per-module summaries, a content-addressed cache, parallel
+          compilation along the module graph</li>
+        <li class="next"><span class="tag next">next</span> <code>///</code> doc comments,
+          <code>rill doc</code> and doctests</li>
+        <li class="next"><span class="tag next">next</span> Language rough edges:
+          <code>if let</code> on results, <code>?</code> in tests, annotated closure
+          parameters, explicit type arguments</li>
       </ul>
 
       <h2>Planned</h2>
@@ -85,8 +87,8 @@
         <li><span class="tag">planned</span> <code>rill tour</code> and exercises</li>
         <li><span class="tag">planned</span> A <strong>toolchain version manager</strong>
           in <code>rill</code>, and mise integration</li>
-        <li><span class="tag">planned</span> <code>///</code> doc comments,
-          <code>rill doc</code> and doctests</li>
+        <li><span class="tag">planned</span> <code>std/net</code> and
+          <code>std/http</code></li>
         <li><span class="tag">idea</span> Language: a character type and Unicode strings,
           error types, <code>select</code> and timeouts on channels, annotated closure
           parameters</li>
