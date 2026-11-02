@@ -30,17 +30,17 @@ And: **[Tutorials](../tutorials/README.md)**, small real programs built step by 
 
 ## The examples are checked
 
-Every program in this book lives in [`examples/`](examples/) (and
-[`by-example/examples/`](by-example/examples/)) next to its expected output. The pages show
+Every program in this book lives in [`examples/`](examples) (and
+[`by-example/examples/`](by-example/examples)) next to its expected output. The pages show
 copies of those files.
 
 ```sh
-sh docs/book/check.sh       # run every example, compare output, fmt and lsp checks
-sh docs/book/sync.sh        # copy changed examples into the pages
+sh book/check.sh       # run every example, compare output, fmt and lsp checks
+sh book/sync.sh        # copy changed examples into the pages
 ```
 
 `check.sh` uses the same file conventions as the golden tests: `name.rl` + `name.out`,
 `name.test.rl` (run with `rill test`), `name.panic.rl` / `name.fail.rl` + `name.err` (exit 101
 / exit 1), `name.err.rl` + `name.err` (a compile error). To change an example, edit the
-`.rl` file, run `UPDATE=1 sh docs/book/check.sh`, review the new expected output, then run
+`.rl` file, run `UPDATE=1 sh book/check.sh`, review the new expected output, then run
 `sync.sh`.

@@ -8,15 +8,15 @@
 #                                   "[exit N]" when it fails
 #   *.warn.rl, *.fmt.rl             deliberately unclean inputs (skipped by fmt/lsp checks)
 #
-# Commands run with `rill` on PATH (out/rill, or $RILL), in a copy of the tutorial directory,
+# Commands run with `rill` on PATH (../rill/out/rill, or $RILL), in a copy of the tutorial directory,
 # with HOME pointing into the scratch directory: nothing outside it is touched.
 #
-# Usage: sh docs/tutorials/check.sh            (RILL=... for another compiler)
-#        UPDATE=1 sh docs/tutorials/check.sh   rewrite the transcripts (review the diff!)
-cd "$(dirname "$0")/../.." || exit 1
+# Usage: sh tutorials/check.sh            (RILL=... for another compiler)
+#        UPDATE=1 sh tutorials/check.sh   rewrite the transcripts (review the diff!)
+cd "$(dirname "$0")/.." || exit 1
 repo=$(pwd)
-T="$repo/docs/tutorials"
-RILL=${RILL:-out/rill}
+T="$repo/tutorials"
+RILL=${RILL:-../rill/out/rill} # the compiler: a checkout of rillang/rill next to this one
 case "$RILL" in /*) ;; *) RILL="$repo/$RILL" ;; esac
 tmp=$(mktemp -d "${TMPDIR:-/tmp}/rill-tutorials.XXXXXX")
 tmp=$(cd "$tmp" && pwd -P)
@@ -37,7 +37,7 @@ bad() {
   fail=$((fail + 1))
 }
 
-# session <tutorial>: a fresh copy of docs/tutorials/<tutorial> becomes the current directory
+# session <tutorial>: a fresh copy of tutorials/<tutorial> becomes the current directory
 session() {
   finish
   rm -rf "$tmp/work"
@@ -49,7 +49,7 @@ session() {
 }
 
 # expect <file>: the following x commands are recorded and compared with
-# docs/tutorials/<tutorial>/sessions/<file>.txt
+# tutorials/<tutorial>/sessions/<file>.txt
 expect() {
   finish
   cur="$name/sessions/$1.txt"
@@ -236,7 +236,7 @@ finish
 
 # ---------------------------------------------------------------- source checks
 cd "$repo" || exit 1
-srcs=$(find docs/tutorials -name '*.rl' ! -name '*.warn.rl' ! -name '*.fmt.rl' | sort)
+srcs=$(find tutorials -name '*.rl' ! -name '*.warn.rl' ! -name '*.fmt.rl' | sort)
 # the packages tutorial's app and v1.1 files resolve imports only in their session (above)
 lspsrcs=$(echo "$srcs" | grep -v -e '/packages/greeter/' -e '/packages/snippets/' -e '/packages/v1.1/')
 if "$RILL" fmt --check $srcs >"$tmp/out" 2>&1; then pass=$((pass + 1)); else
@@ -247,8 +247,8 @@ if "$RILL" lsp --check $lspsrcs >"$tmp/out" 2>&1; then pass=$((pass + 1)); else
   bad "language server diagnostics:"
   sed 's/^/  /' "$tmp/out"
 fi
-if sh docs/tutorials/sync.sh --check >"$tmp/out" 2>&1; then pass=$((pass + 1)); else
-  bad "pages out of date (run sh docs/tutorials/sync.sh):"
+if sh tutorials/sync.sh --check >"$tmp/out" 2>&1; then pass=$((pass + 1)); else
+  bad "pages out of date (run sh tutorials/sync.sh):"
   sed 's/^/  /' "$tmp/out"
 fi
 

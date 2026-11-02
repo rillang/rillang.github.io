@@ -6,7 +6,7 @@ directory modules, `pub`, `internal/`, `rill get`, `rill.sum`, `rill mod tidy`, 
 `rill release` with a changelog, and retiring a function with `/// deprecated:` and
 `rill fix`.
 
-Files: [`packages/`](packages/) (copy commands below run from `docs/tutorials`). Everything else happens in your home directory: the two
+Files: [`packages/`](packages) (copy commands below run from `tutorials`). Everything else happens in your home directory: the two
 projects in `~/src`, and a bare Git repository in `~/remote` that plays GitHub. To keep your
 real `~` clean, run the tutorial with a throw-away one:
 

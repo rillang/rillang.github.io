@@ -109,7 +109,7 @@ rill mod tidy                        # requirements follow the imports
   function's body. A last v1 release can implement its API by calling v2, so `rill fix`
   moves callers to the new major version.
 
-**Planned** ([spec](../specs/2026-11-02-rill-packages-stdlib-design.md)): `rill mod
+**Planned** ([spec](https://github.com/rillang/rill/blob/main/docs/specs/2026-11-02-rill-packages-stdlib-design.md)): `rill mod
 outdated`, `rill update` (changelog and API diff of an upgrade, then `rill fix`, build and
 tests), `rill mod audit` (retractions, security advisories).
 

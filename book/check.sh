@@ -12,14 +12,14 @@
 #   name.err.rl   + name.err   build, exit 1, stderr (a compile error)
 #   lib/*.rl                   modules imported by examples; their test blocks must pass
 #
-# Usage: sh docs/book/check.sh            (RILL=... for another compiler, default out/rill)
-#        UPDATE=1 sh docs/book/check.sh   rewrite the expected files (review the diff!)
-cd "$(dirname "$0")/../.." || exit 1
-RILL=${RILL:-out/rill}
+# Usage: sh book/check.sh            (RILL=... for another compiler, default ../rill/out/rill)
+#        UPDATE=1 sh book/check.sh   rewrite the expected files (review the diff!)
+cd "$(dirname "$0")/.." || exit 1
+RILL=${RILL:-../rill/out/rill} # the compiler: a checkout of rillang/rill next to this one
 tmp=$(mktemp -d)
 pass=0
 fail=0
-dirs="docs/book/examples docs/book/by-example/examples site/examples"
+dirs="book/examples book/by-example/examples site/examples"
 
 ok() {
   pass=$((pass + 1))
@@ -75,8 +75,8 @@ for d in $dirs; do
   done
 done
 
-srcs=$(ls docs/book/examples/*.rl docs/book/examples/lib/*.rl docs/book/by-example/examples/*.rl \
-  docs/book/by-example/examples/lib/*.rl site/examples/*.rl 2>/dev/null)
+srcs=$(ls book/examples/*.rl book/examples/lib/*.rl book/by-example/examples/*.rl \
+  book/by-example/examples/lib/*.rl site/examples/*.rl 2>/dev/null)
 if "$RILL" fmt --check $srcs >"$tmp/out" 2>&1; then ok; else
   bad "formatting (run rill fmt on these):"
   sed 's/^/  /' "$tmp/out"
@@ -85,8 +85,8 @@ if "$RILL" lsp --check $(echo "$srcs" | grep -v '\.err\.rl$') >"$tmp/out" 2>&1; 
   bad "language server diagnostics:"
   sed 's/^/  /' "$tmp/out"
 fi
-if sh docs/book/sync.sh --check >"$tmp/out" 2>&1; then ok; else
-  bad "pages out of date (run sh docs/book/sync.sh):"
+if sh book/sync.sh --check >"$tmp/out" 2>&1; then ok; else
+  bad "pages out of date (run sh book/sync.sh):"
   sed 's/^/  /' "$tmp/out"
 fi
 

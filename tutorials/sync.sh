@@ -1,15 +1,15 @@
 #!/bin/sh
 # Copies source files and recorded transcripts into the tutorial pages, so pages never
 # drift from what check.sh runs. A page marks a copied block with an include comment; the
-# fenced block right after it is replaced (path relative to docs/tutorials/):
+# fenced block right after it is replaced (path relative to tutorials/):
 #
 #   <!-- include: cli-tool/wc.rl -->
 #   ```swift
 #   …
 #   ```
 #
-# Usage: sh docs/tutorials/sync.sh            rewrite the pages
-#        sh docs/tutorials/sync.sh --check    only report pages that are out of date
+# Usage: sh tutorials/sync.sh            rewrite the pages
+#        sh tutorials/sync.sh --check    only report pages that are out of date
 cd "$(dirname "$0")" || exit 1
 status=0
 check=0
@@ -53,11 +53,11 @@ for page in *.md; do
   ' "$page" >"$tmp/page" || { status=1; continue; }
   if ! cmp -s "$page" "$tmp/page"; then
     if [ "$check" = 1 ]; then
-      echo "docs/tutorials/$page"
+      echo "tutorials/$page"
       status=1
     else
       cp "$tmp/page" "$page"
-      echo "updated docs/tutorials/$page"
+      echo "updated tutorials/$page"
     fi
   fi
 done

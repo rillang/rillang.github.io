@@ -5,7 +5,7 @@ with `std/json`, takes the value tree apart with pattern matching, fills in defa
 collects **every** problem instead of stopping at the first, and prints the effective
 configuration as pretty JSON.
 
-Files: [`json-config/`](json-config/). Run the commands from that directory.
+Files: [`json-config/`](json-config). Run the commands from that directory.
 
 The configuration we want to accept:
 

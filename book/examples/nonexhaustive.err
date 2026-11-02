@@ -1,5 +1,5 @@
 error[E0011]: switch must be exhaustive, missing: .add(_, _), .neg(_)
- --> docs/book/examples/nonexhaustive.err.rl:8:3
+ --> book/examples/nonexhaustive.err.rl:8:3
   |
 8 |   switch e {
   |   ^

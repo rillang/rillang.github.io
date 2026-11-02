@@ -5,7 +5,7 @@ A compile error looks like this:
 <!-- include: examples/nonexhaustive.err -->
 ```text
 error[E0011]: switch must be exhaustive, missing: .add(_, _), .neg(_)
- --> docs/book/examples/nonexhaustive.err.rl:8:3
+ --> book/examples/nonexhaustive.err.rl:8:3
   |
 8 |   switch e {
   |   ^
@@ -16,7 +16,7 @@ error[E0011]: switch must be exhaustive, missing: .add(_, _), .neg(_)
 - `--json` prints the same as JSON lines ([chapter 11](11-tooling.md#diagnostics-as-data)).
 
 The full table of codes with a one-line example each is
-**[docs/errors.md](../errors.md)**. Summary by area:
+**[docs/errors.md](https://github.com/rillang/rill/blob/main/docs/errors.md)**. Summary by area:
 
 | Codes | Area |
 |---|---|

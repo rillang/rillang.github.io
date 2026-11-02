@@ -90,12 +90,12 @@ are not shown. Closures and interface values show their raw representation.
 ## Inspecting the compiler
 
 `--dump-tokens`, `--dump-ast`, `--dump-ir`, `--dump-opt` and `--dump-asm` print the
-intermediate forms ([dump formats](../dump-format.md), [IR](../ir.md)) and exit.
+intermediate forms ([dump formats](https://github.com/rillang/rill/blob/main/docs/dump-format.md), [IR](https://github.com/rillang/rill/blob/main/docs/ir.md)) and exit.
 
 ## Planned tooling
 
-From the [packages spec](../specs/2026-11-02-rill-packages-stdlib-design.md) and the
-[roadmap notes](../notes/2026-11-02-findings.md): `rill doc` (rendering `///` comments),
+From the [packages spec](https://github.com/rillang/rill/blob/main/docs/specs/2026-11-02-rill-packages-stdlib-design.md) and the
+[roadmap notes](https://github.com/rillang/rill/blob/main/docs/notes/2026-11-02-findings.md): `rill doc` (rendering `///` comments),
 warnings with `--deny-warnings`, `rill fix` (automatic migrations), `rill api`,
 `rill release`, `rill get` / `rill mod …`, `rill update`, an interactive `rill tour`, a
 toolchain version manager, a WebAssembly target and a browser playground.

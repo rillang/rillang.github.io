@@ -1,2 +1,2 @@
 panic: index out of bounds: 5 (len 3)
- --> docs/book/examples/bounds.panic.rl:1
+ --> book/examples/bounds.panic.rl:1

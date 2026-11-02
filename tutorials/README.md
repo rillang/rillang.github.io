@@ -31,7 +31,7 @@ is the reference for everything they touch.
 Each page says which directory it works in; run its commands from there:
 
 ```sh
-cd docs/tutorials/cli-tool
+cd tutorials/cli-tool
 rill run wc1.rl testdata/fox.txt
 ```
 
@@ -41,9 +41,9 @@ Tutorial 4 creates projects in your home directory; the page shows how to use a 
 ## How the tutorials are checked
 
 ```sh
-sh docs/tutorials/check.sh          # replay every tutorial, compare the transcripts
-UPDATE=1 sh docs/tutorials/check.sh # re-record the transcripts (review the diff!)
-sh docs/tutorials/sync.sh           # copy changed files and transcripts into the pages
+sh tutorials/check.sh          # replay every tutorial, compare the transcripts
+UPDATE=1 sh tutorials/check.sh # re-record the transcripts (review the diff!)
+sh tutorials/sync.sh           # copy changed files and transcripts into the pages
 ```
 
 `check.sh` copies each tutorial directory to a scratch directory, runs the commands listed

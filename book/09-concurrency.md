@@ -63,7 +63,7 @@ fn main() {
 <!-- include: examples/capture_var.err -->
 ```text
 error[E0025]: 'spawn' cannot capture 'var' total: tasks would share it; capture a 'let' copy
- --> docs/book/examples/capture_var.err.rl:5:11
+ --> book/examples/capture_var.err.rl:5:11
   |
 5 |     spawn { print("$total") }
   |           ^
@@ -226,6 +226,6 @@ Tasks are green threads, scheduled Go-style (tasks, processors, OS threads) with
 stealing and preemption, on `RILL_WORKERS` threads (default: number of cores). Each task
 gets a 1 MiB stack reservation (`RILL_STACK`) with a guard page; a stack overflow is a
 panic. Blocking system calls hand their processor to another thread. Details:
-[GC and concurrency design](../specs/2026-11-01-rill-gc-concurrency-design.md).
+[GC and concurrency design](https://github.com/rillang/rill/blob/main/docs/specs/2026-11-01-rill-gc-concurrency-design.md).
 
 Next: [Memory](10-memory.md).

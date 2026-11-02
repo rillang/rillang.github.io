@@ -5,7 +5,7 @@ cores, and prints `hash  path` lines in a stable order (like `shasum -a 256`). F
 sequentially, then with `parMap`, then with a pool of worker tasks connected by channels,
 with shared statistics behind a `Mutex`. We measure each version with `std/time`.
 
-Files: [`concurrency/`](concurrency/). Run the commands from that directory.
+Files: [`concurrency/`](concurrency). Run the commands from that directory.
 
 ## Step 1: sequential
 

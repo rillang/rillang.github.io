@@ -177,7 +177,7 @@ fn main() {
 <!-- include: examples/bounds.panic.err -->
 ```text
 panic: index out of bounds: 5 (len 3)
- --> docs/book/examples/bounds.panic.rl:1
+ --> book/examples/bounds.panic.rl:1
 ```
 
 With `RILL_BACKTRACE=1` the panic also prints the call chain (function names with

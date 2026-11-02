@@ -52,14 +52,14 @@ export PATH="$PWD/out:$PATH"</code></pre>
   <h2>Your first program</h2>
   <div class="code">
     <div class="file">hello.rl</div>
-    <!-- include: ../docs/book/examples/hello.rl -->
+    <!-- include: ../book/examples/hello.rl -->
     <pre><code class="rill">fn main() {
   let name = "Rill"
   print("Hello, $name!")
 }</code></pre>
     <div class="run">
       <div class="file">$ rill run hello.rl</div>
-      <!-- include: ../docs/book/examples/hello.out -->
+      <!-- include: ../book/examples/hello.out -->
       <pre><code>Hello, Rill!</code></pre>
     </div>
   </div>
@@ -95,7 +95,7 @@ args = ["lsp"]</code></pre>
   </div>
   <p>Neovim: <code>vim.lsp.start({ name = "rill", cmd = { "rill", "lsp" } })</code> in a
     <code>FileType rl</code> autocommand. More in
-    <a href="../docs/book/11-tooling.md">the tooling chapter</a>.</p>
+    <a href="../book/11-tooling.md">the tooling chapter</a>.</p>
 
   <h2 id="speed">How fast is it?</h2>
   <p>Measured on an Apple M4 on 2026-11-02, single runs:</p>
@@ -107,7 +107,7 @@ args = ["lsp"]</code></pre>
     </table>
   </div>
   <p>The optimizer is young and the garbage collector takes a large share of a
-    self-compile; <a href="../docs/perf.md">docs/perf.md</a> keeps the history and the
+    self-compile; <a href="https://github.com/rillang/rill/blob/main/docs/perf.md">docs/perf.md</a> keeps the history and the
     analysis. We have not benchmarked Rill against other languages.</p>
 
   <h2>Coming</h2>

@@ -1,0 +1,5 @@
+# GitHub Pages (Jekyll): Markdown pages of the book and tutorials become HTML, relative
+# .md links are rewritten to .html (jekyll-relative-links, part of GitHub Pages).
+title: Rill
+description: A small, fast, self-hosting systems language
+exclude: ["*.sh", "README.md", "LICENSE*"]

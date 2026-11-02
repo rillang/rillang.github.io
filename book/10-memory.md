@@ -79,7 +79,7 @@ crossing into a task are deep copies ([chapter 9](09-concurrency.md)).
   last one. `RILL_GC=off` disables collection, `RILL_GC=stress:N` collects every N
   allocations and poisons freed memory (for testing the runtime).
 
-Costs today, from [`docs/perf.md`](../perf.md): when the compiler compiles itself, roughly
+Costs today, from [`docs/perf.md`](https://github.com/rillang/rill/blob/main/docs/perf.md): when the compiler compiles itself, roughly
 30 MB stay live and collection takes a large share of the build time (about 0.8 s of
 1.5 s on the machine measured there). The collector is unoptimized and memory is not yet
 returned to the operating system.

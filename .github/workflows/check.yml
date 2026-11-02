@@ -1,0 +1,33 @@
+name: check
+on:
+  pull_request:
+  push:
+    branches: [main]
+  schedule:
+    - cron: "17 3 * * *" # nightly: the newest compiler against every sample
+  workflow_dispatch:
+permissions:
+  contents: read
+  issues: write
+jobs:
+  samples:
+    runs-on: ubuntu-24.04-arm
+    steps:
+      - uses: actions/checkout@v4
+      # the compiler; while rillang/rill is private, RILL_REPO_TOKEN (a fine-grained token
+      # with read access to its contents) lets this repository check it out
+      - uses: actions/checkout@v4
+        with:
+          repository: rillang/rill
+          path: rill-src
+          token: ${{ secrets.RILL_REPO_TOKEN || github.token }}
+      - run: cd rill-src && sh bootstrap.sh
+      - run: RILL=rill-src/out/rill sh book/check.sh
+      - run: RILL=rill-src/out/rill sh tutorials/check.sh
+      - if: failure() && github.event_name == 'schedule'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh issue create --repo "$GITHUB_REPOSITORY" --label kind/docs \
+            --title "Nightly check failed against rillang/rill $(cd rill-src && git rev-parse --short HEAD)" \
+            --body "A sample no longer matches the compiler: $GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID"

@@ -1,10 +1,10 @@
 # Rill by Example
 
-Short, runnable programs, one topic each. Every program is in [`examples/`](examples/) with
-its expected output and is checked by `sh docs/book/check.sh`. For explanations, read
+Short, runnable programs, one topic each. Every program is in [`examples/`](examples) with
+its expected output and is checked by `sh book/check.sh`. For explanations, read
 [the book](../README.md).
 
-Run any of them with `rill run docs/book/by-example/examples/<name>.rl`.
+Run any of them with `rill run book/by-example/examples/<name>.rl`.
 
 ## Basics
 

@@ -24,7 +24,7 @@ fn main() {
 <!-- include: examples/panic.panic.err -->
 ```text
 panic: negative age: -1
- --> docs/book/by-example/examples/panic.panic.rl:5
+ --> book/by-example/examples/panic.panic.rl:5
 ```
 
 [Index](README.md)

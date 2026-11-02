@@ -5,7 +5,7 @@ standard input), takes `-l`, `-w` and `-c` flags, prints a total for several fil
 reports unreadable files without stopping. Along the way: `std/os`, `std/fs`, results
 (`T!`) and `?`, `test` blocks, `rill build`, warnings and `rill fmt`.
 
-All files are in [`cli-tool/`](cli-tool/). Run the commands from that directory.
+All files are in [`cli-tool/`](cli-tool). Run the commands from that directory.
 
 ## Step 1: one file, its lines
 
@@ -372,7 +372,7 @@ error[W0003]: 'unused' is never used (name it _unused if that is intended)
 
 Fix each one (remove the import, `let name`, remove or rename to `_unused`), or silence a
 warning on purpose with `/// allow: W0003` on the declaration. The full list is in
-[docs/errors.md](../errors.md).
+[docs/errors.md](https://github.com/rillang/rill/blob/main/docs/errors.md).
 
 ## Formatting
 

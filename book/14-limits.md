@@ -42,4 +42,4 @@ way. Items marked **planned** have a spec or are on the roadmap.
   hide variables kept in registers.
 
 The maintainers' own list, with context, is in
-[docs/notes/2026-11-02-findings.md](../notes/2026-11-02-findings.md).
+[docs/notes/2026-11-02-findings.md](https://github.com/rillang/rill/blob/main/docs/notes/2026-11-02-findings.md).

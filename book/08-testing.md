@@ -43,8 +43,8 @@ test "a failing test reports every failed expect" {
 ok   add
 ok   clamp keeps values in range
 FAIL a failing test reports every failed expect
-  expect failed at docs/book/examples/testing.test.rl:28
-  expect failed at docs/book/examples/testing.test.rl:29
+  expect failed at book/examples/testing.test.rl:28
+  expect failed at book/examples/testing.test.rl:29
 2 passed, 1 failed
 ```
 
@@ -61,7 +61,7 @@ structs, enums, arrays and optionals.
 ## The compiler's own tests
 
 The repository uses golden tests: a program next to its expected output, compiled and
-compared by `sh tests/golden.sh` (conventions in [AGENTS.md](../../AGENTS.md)). The book's
+compared by `sh tests/golden.sh` (conventions in [AGENTS.md](https://github.com/rillang/rill/blob/main/AGENTS.md)). The book's
 examples use the same conventions ([check.sh](check.sh)).
 
 Not yet: doctests, richer failure output for `expect` (showing both sides), filtering

@@ -87,7 +87,7 @@ Measured on an Apple M4 (2026-11-02, single runs, `rill` built by `bootstrap.sh`
 | the compiler building itself (~19 000 lines of Rill plus the 4 500-line runtime) | 2.1 s |
 
 The history of these numbers, and what the collector costs, is in
-[`docs/perf.md`](../perf.md). No comparisons with other languages have been measured.
+[`docs/perf.md`](https://github.com/rillang/rill/blob/main/docs/perf.md). No comparisons with other languages have been measured.
 
 ## Runtime settings
 

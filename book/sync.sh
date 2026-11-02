@@ -4,15 +4,15 @@
 # block right after it is replaced (path relative to the page):
 #
 #   Markdown:                          HTML:
-#   <!-- include: examples/x.rl -->    <!-- include: ../docs/book/examples/x.rl -->
+#   <!-- include: examples/x.rl -->    <!-- include: ../book/examples/x.rl -->
 #   ```swift                           <pre><code class="rill">…
 #   …                                  …</code></pre>
 #   ```
 #
 # In HTML the content starts on the <pre> line and ends with </code></pre>; it is escaped.
-# Usage: sh docs/book/sync.sh            rewrite the pages
-#        sh docs/book/sync.sh --check    only report pages that are out of date
-cd "$(dirname "$0")/../.." || exit 1
+# Usage: sh book/sync.sh            rewrite the pages
+#        sh book/sync.sh --check    only report pages that are out of date
+cd "$(dirname "$0")/.." || exit 1
 status=0
 tmp=$(mktemp -d)
 
@@ -97,7 +97,7 @@ sync_page() {
 
 check=0
 [ "$1" = "--check" ] && check=1
-for page in $(grep -rl '<!-- include: ' docs/book site 2>/dev/null | grep -E '\.(md|html)$'); do
+for page in $(grep -rl '<!-- include: ' book site 2>/dev/null | grep -E '\.(md|html)$'); do
   case "$page" in
     *.html) sync_page "$page" 1 ;;
     *) sync_page "$page" 0 ;;
