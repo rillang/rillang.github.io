@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Learn Rill</title>
+<meta name="description" content="The Rill Book, Rill by Example, the specs and the error reference.">
+<link rel="stylesheet" href="style.css">
+<script src="site.js"></script>
+</head>
+<body>
+<header class="site-header">
+  <div class="wrap">
+    <a class="wordmark" href="index.html"><svg viewBox="0 0 34 20" aria-hidden="true"><path d="M2 13 C8 3, 12 3, 17 10 S27 17, 32 7" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"/></svg>rill</a>
+    <nav class="site-nav" aria-label="Main">
+      <a href="learn.html" aria-current="page">Learn</a>
+      <a href="install.html">Install</a>
+      <a href="roadmap.html">Roadmap</a>
+      <a href="community.html">Community</a>
+    </nav>
+    <button class="theme-toggle" type="button">Dark</button>
+  </div>
+</header>
+
+<main class="wrap">
+  <div class="page-head">
+    <h1>Learn Rill</h1>
+    <p>Everything here runs with the compiler in the repository: every program in the book
+      and in Rill by Example is checked against its expected output.</p>
+  </div>
+
+  <div class="features">
+    <div class="card">
+      <h3><a href="../docs/book/README.md">The Rill Book</a></h3>
+      <p>The language from the ground up, in fourteen short chapters: from building the
+        compiler to concurrency, memory and tooling, with a built-in reference and an honest
+        list of what is missing.</p>
+    </div>
+    <div class="card">
+      <h3><a href="../docs/book/by-example/README.md">Rill by Example</a></h3>
+      <p>35 small runnable programs, one topic each, with their output. Good for a quick
+        look at the syntax or a reminder.</p>
+    </div>
+    <div class="card">
+      <h3><a href="../docs/tutorials/README.md">Tutorials</a></h3>
+      <p>Four small real programs built step by step: a <code>wc</code> clone, a parallel
+        file hasher, a JSON config loader, and a library published as a package.</p>
+    </div>
+    <div class="card">
+      <h3><a href="../docs/errors.md">Error reference</a></h3>
+      <p>Every compiler diagnostic has a stable code (E0001…) with a one-line example.</p>
+    </div>
+    <div class="card">
+      <h3><a href="../docs/rfcs/README.md">Specs and RFCs</a></h3>
+      <p>The design documents behind each feature: generics, pattern matching, the GC and
+        scheduler, the native backend, and the planned packages.</p>
+    </div>
+  </div>
+
+  <h2>The book</h2>
+  <ol>
+    <li><a href="../docs/book/01-getting-started.md">Getting started</a></li>
+    <li><a href="../docs/book/02-basics.md">Basics</a>: values, control flow, functions and labels, closures, UFCS, collections, strings</li>
+    <li><a href="../docs/book/03-structs-and-enums.md">Structs and enums</a></li>
+    <li><a href="../docs/book/04-optionals-and-results.md">Optionals and results</a></li>
+    <li><a href="../docs/book/05-pattern-matching.md">Pattern matching</a></li>
+    <li><a href="../docs/book/06-generics-and-interfaces.md">Generics and interfaces</a></li>
+    <li><a href="../docs/book/07-modules.md">Modules</a></li>
+    <li><a href="../docs/book/08-testing.md">Testing</a></li>
+    <li><a href="../docs/book/09-concurrency.md">Concurrency</a></li>
+    <li><a href="../docs/book/10-memory.md">Memory</a></li>
+    <li><a href="../docs/book/11-tooling.md">Tooling</a></li>
+    <li><a href="../docs/book/12-diagnostics.md">Diagnostics</a></li>
+    <li><a href="../docs/book/13-builtins.md">Built-in reference</a></li>
+    <li><a href="../docs/book/14-limits.md">Known limits</a></li>
+  </ol>
+
+  <h2>Planned</h2>
+  <p>On the <a href="roadmap.html">roadmap</a>, not built yet:</p>
+  <ul>
+    <li><span class="tag">planned</span> <strong>A tour</strong>: <code>rill tour</code>,
+      an interactive introduction in the terminal, in the spirit of A Tour of Go.</li>
+    <li><span class="tag">planned</span> <strong>Exercises</strong>: small broken programs
+      to fix until the tests pass, in the spirit of Rustlings.</li>
+    <li><span class="tag">planned</span> <strong>A playground</strong> in the browser, after
+      the WebAssembly target.</li>
+    <li><span class="tag">planned</span> <strong>Standard library documentation</strong>,
+      rendered from <code>///</code> comments by <code>rill doc</code>.</li>
+  </ul>
+</main>
+
+<footer class="site-footer">
+  <div class="wrap">
+    <span>Rill · MIT OR Apache-2.0</span>
+    <span><a href="learn.html">Learn</a> · <a href="install.html">Install</a> · <a href="roadmap.html">Roadmap</a> · <a href="community.html">Community</a></span>
+  </div>
+</footer>
+</body>
+</html>

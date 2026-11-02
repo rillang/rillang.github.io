@@ -1,0 +1,286 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Rill</title>
+<meta name="description" content="Rill: a small, explicit programming language that compiles itself to native arm64 code. Early and experimental.">
+<link rel="stylesheet" href="style.css">
+<script src="site.js"></script>
+</head>
+<body>
+<header class="site-header">
+  <div class="wrap">
+    <a class="wordmark" href="index.html"><svg viewBox="0 0 34 20" aria-hidden="true"><path d="M2 13 C8 3, 12 3, 17 10 S27 17, 32 7" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"/></svg>rill</a>
+    <nav class="site-nav" aria-label="Main">
+      <a href="learn.html">Learn</a>
+      <a href="install.html">Install</a>
+      <a href="roadmap.html">Roadmap</a>
+      <a href="community.html">Community</a>
+    </nav>
+    <button class="theme-toggle" type="button">Dark</button>
+  </div>
+</header>
+
+<main class="wrap">
+  <section class="hero">
+    <div>
+      <span class="status-pill">Experimental · arm64 macOS and Linux</span>
+      <h1>A small, explicit language that compiles itself.</h1>
+      <p class="lede">Rill has Swift-like syntax, Go's simplicity, value semantics, pattern
+        matching and structured concurrency. Its compiler is written in Rill and writes
+        native executables on its own: no C compiler, assembler or linker anywhere.</p>
+      <div class="actions">
+        <a class="button primary" href="install.html">Get started</a>
+        <a class="button" href="../docs/book/README.md">Read the book</a>
+        <a class="button" href="../docs/book/by-example/README.md">Rill by Example</a>
+      </div>
+    </div>
+    <div>
+      <div class="code">
+        <div class="file">taste.rl</div>
+        <!-- include: examples/taste.rl -->
+        <pre><code class="rill">enum Expr {
+  case num(Int)
+  case add(Expr, Expr)
+  case mul(Expr, Expr)
+}
+
+fn eval(_ e: Expr) -&gt; Int {
+case .num(n): return n
+case .add(a, b): return eval(a) + eval(b)
+case .mul(a, b): return eval(a) * eval(b)
+}
+
+fn main() {
+  let e: Expr = .add(.num(2), .mul(.num(3), .num(4)))
+  let big = [1, 2, 3, 4].map { $ * 10 }.filter { $ &gt; 15 }
+  print("result ${eval(e)}, big ${big.len()}")
+}
+
+test "eval follows the tree" {
+  expect(eval(.mul(.num(2), .num(5))) == 10)
+}</code></pre>
+        <div class="run">
+          <div class="file">$ rill run taste.rl</div>
+          <!-- include: examples/taste.out -->
+          <pre><code>result 14, big 3</code></pre>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <svg class="stream" viewBox="0 0 1200 28" preserveAspectRatio="none" aria-hidden="true"><path d="M0 18 C150 4, 250 4, 400 14 S650 26, 800 12 S1050 2, 1200 14" fill="none" stroke="currentColor" stroke-width="2"/></svg>
+
+  <h2>Why Rill</h2>
+  <div class="features">
+    <div class="card">
+      <h3>One binary, whole toolchain</h3>
+      <p><code>rill</code> runs, builds, tests, formats, debugs and serves your editor
+        (<code>run</code>, <code>build</code>, <code>test</code>, <code>fmt</code>,
+        <code>debug</code>, <code>lsp</code>). Nothing else to install.</p>
+    </div>
+    <div class="card">
+      <h3>No C toolchain</h3>
+      <p>The compiler emits arm64 machine code and writes signed Mach-O or static ELF files
+        itself. Cross-compiling from macOS to Linux is a flag.</p>
+    </div>
+    <div class="card">
+      <h3>Self-hosting</h3>
+      <p>About 19 000 lines of Rill compile themselves to a byte-identical fixpoint, starting
+        from a checked-in seed, the way Go bootstraps from an earlier Go.</p>
+    </div>
+    <div class="card">
+      <h3>Structured concurrency</h3>
+      <p><code>group { spawn { … } }</code>, channels, <code>parMap</code>, <code>Mutex</code>
+        and <code>Atomic</code> on all cores. Tasks never outlive their group; sharing a
+        <code>var</code> between tasks is a compile error.</p>
+    </div>
+    <div class="card">
+      <h3>Pattern matching</h3>
+      <p>One pattern language for <code>switch</code>, <code>if case</code>,
+        <code>guard case</code>, <code>let</code>, <code>for</code> and functions made of
+        cases, with exhaustiveness checks that name the missing case.</p>
+    </div>
+    <div class="card">
+      <h3>Value semantics</h3>
+      <p>Structs, arrays and maps are values, copied lazily on write. No aliasing surprises,
+        no ownership annotations; a garbage collector reclaims memory.</p>
+    </div>
+    <div class="card">
+      <h3>Fast to build</h3>
+      <p>Hello world builds in about 0.2 s; the compiler rebuilds itself in about 2 s on an
+        Apple M4. <a href="install.html#speed">Measured numbers and context</a>.</p>
+    </div>
+    <div class="card">
+      <h3>For humans and models</h3>
+      <p>One obvious way to write things, explicit types at every function boundary,
+        stable error codes and <code>--json</code> diagnostics, tests next to the code.</p>
+    </div>
+  </div>
+
+  <div class="split">
+    <div>
+      <h2>Concurrency you can read</h2>
+      <p>A <code>group</code> waits for every task spawned inside it. Values captured by a
+        task are copied into it, so tasks cannot race on them; channels, <code>Mutex</code>
+        and <code>Atomic</code> are the ways to share. Tasks are green threads scheduled on
+        all cores with work stealing and preemption.</p>
+      <p><a href="../docs/book/09-concurrency.md">Concurrency in the book</a></p>
+    </div>
+    <div>
+      <div class="code">
+        <div class="file">concurrency.rl</div>
+        <!-- include: examples/concurrency.rl -->
+        <pre><code class="rill">fn main() {
+  let urls = ["/", "/docs", "/blog", "/about"]
+  let sizes = Channel&lt;Int&gt;(capacity: 4)
+  group {
+    for u in urls {
+      spawn { sizes.send(u.len() * 100) }
+    }
+  }
+  sizes.close()
+  var total = 0
+  for s in sizes {
+    total += s
+  }
+  let squares = [1, 2, 3, 4].parMap { $ * $ }
+  print("total $total, squares ${squares[3]}")
+}</code></pre>
+        <div class="run">
+          <div class="file">$ rill run concurrency.rl</div>
+          <!-- include: examples/concurrency.out -->
+          <pre><code>total 1700, squares 16</code></pre>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="split">
+    <div>
+      <h2>Patterns everywhere</h2>
+      <p>Match arrays by shape, maps by key, enums by case and structs by field, with
+        <code>where</code> guards. A <code>switch</code> without <code>default</code> must
+        cover every value, and the compiler tells you which case is missing.</p>
+      <p><a href="../docs/book/05-pattern-matching.md">Pattern matching in the book</a></p>
+    </div>
+    <div>
+      <div class="code">
+        <div class="file">patterns.rl</div>
+        <!-- include: examples/patterns.rl -->
+        <pre><code class="rill">fn describe(_ xs: [Int]) -&gt; String {
+  switch xs {
+  case []: return "empty"
+  case [x]: return "just $x"
+  case [first, ...rest] where first &gt; 100: return "big start, ${rest.len()} more"
+  case [first, second, ...]: return "$first, $second, ..."
+  }
+}
+
+fn port(_ conf: Map&lt;String, Int&gt;) -&gt; String {
+  switch conf {
+  case ["port": p, "tls": 1]: return "https on $p"
+  case ["port": p]: return "http on $p"
+  default: return "no port"
+  }
+}
+
+fn main() {
+  print("${describe([])} | ${describe([7])} | ${describe([500, 1])} | ${describe([1, 2, 3])}")
+  print("${port(["port": 443, "tls": 1])} | ${port(["port": 80])}")
+}</code></pre>
+        <div class="run">
+          <div class="file">$ rill run patterns.rl</div>
+          <!-- include: examples/patterns.out -->
+          <pre><code>empty | just 7 | big start, 1 more | 1, 2, ...
+https on 443 | http on 80</code></pre>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="split">
+    <div>
+      <h2>Errors in the types</h2>
+      <p>No exceptions and no null. <code>T?</code> may be missing, <code>T!</code> may
+        fail; <code>?</code> passes the problem up, <code>??</code> supplies a default.
+        Panics are for bugs and stop the program.</p>
+      <h3>Values, not references</h3>
+      <p>Copying a struct copies its arrays too (lazily). Only <code>inout</code>
+        parameters change a caller's variable, and the call site says so with
+        <code>&amp;</code>.</p>
+    </div>
+    <div>
+      <div class="code">
+        <div class="file">errors.rl</div>
+        <!-- include: examples/errors.rl -->
+        <pre><code class="rill">fn parsePort(_ s: String) -&gt; Int! {
+  guard let n = s.toInt() else {
+    return fail("not a number: $s")
+  }
+  return n
+}
+
+fn config(_ raw: String) -&gt; String! {
+  let port = parsePort(raw)?
+  return "listening on $port"
+}
+
+fn main() {
+  print(config("8080") ?? "?")
+  if case .err(e) = config("http") {
+    print("error: ${e.msg}")
+  }
+}</code></pre>
+        <div class="run">
+          <div class="file">$ rill run errors.rl</div>
+          <!-- include: examples/errors.out -->
+          <pre><code>listening on 8080
+error: not a number: http</code></pre>
+        </div>
+      </div>
+      <div class="code">
+        <div class="file">values.rl</div>
+        <!-- include: examples/values.rl -->
+        <pre><code class="rill">struct Team { name: String, members: [String] }
+
+fn main() {
+  var a = Team(name: "core", members: ["ana"])
+  var b = a
+  b.members.push("bo")
+  print("${a.members.len()} ${b.members.len()}")
+  a.name = "lang"
+  print("${a.name} ${b.name}")
+}</code></pre>
+        <div class="run">
+          <div class="file">$ rill run values.rl</div>
+          <!-- include: examples/values.out -->
+          <pre><code>1 2
+lang core</code></pre>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="note">
+    <h3 style="margin-top:0">Honest status</h3>
+    <ul>
+      <li>Rill is experimental and has no releases yet; you build it from source.</li>
+      <li>It runs on <strong>arm64 only</strong>: macOS and Linux. No x86-64, no Windows
+        (a WebAssembly target is <a href="roadmap.html">planned</a>).</li>
+      <li>There is no standard library or package manager yet: a handful of builtins cover
+        files, processes and the environment. Both are <a href="roadmap.html">next</a>.</li>
+      <li>The language will still change in incompatible ways before 1.0.</li>
+    </ul>
+  </div>
+</main>
+
+<footer class="site-footer">
+  <div class="wrap">
+    <span>Rill · MIT OR Apache-2.0</span>
+    <span><a href="learn.html">Learn</a> · <a href="install.html">Install</a> · <a href="roadmap.html">Roadmap</a> · <a href="community.html">Community</a></span>
+  </div>
+</footer>
+</body>
+</html>
