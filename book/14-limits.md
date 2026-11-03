@@ -36,7 +36,7 @@ way. Items marked **planned** have a spec or are on the roadmap.
 
 ## Tooling
 
-- No completion, rename or references in the language server.
+- No completion or rename in the language server (references and workspace symbols work).
 - The debugger shows closures and interface values in their raw form, and optimized builds
   hide variables kept in registers.
 
