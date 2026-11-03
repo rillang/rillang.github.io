@@ -188,6 +188,59 @@ variance.
   `"benches"` in the `package` and `result` events).
 - A benchmark runs about its benchtime: the last batch is sized to the remaining time.
 
+## Coverage
+
+`--cover` measures which code the tests ran, the way `go test -cover` does: the statements
+of a package are split into blocks that run as a whole (a block ends after an `if`, a loop,
+a `switch`, a `return`, ...), and every block counts how often it ran.
+
+```rill
+pub fn grade(_ points: Int) -> String {
+  if points >= 90 {
+    return "A"
+  }
+  if points >= 50 {
+    return "pass"
+  }
+  return "fail"
+}
+
+test "top marks" {
+  expect(grade(95) == "A")
+}
+
+test "a pass" {
+  expect(grade(60) == "pass")
+}
+```
+
+```sh
+$ rill test --coverprofile cover.out ./...
+ok    grade    2 tests   0.00s   coverage: 80.0% of statements
+
+$ rill cover cover.out
+grade/grade.rl:1:  grade   80.0%
+total:                     80.0%
+
+$ rill cover --html cover.out -o cover.html
+```
+
+- `--cover` adds the percentage to each package line; `--coverprofile <file>` writes the
+  counts of all packages in Go's profile format (`file:line.col,line.col statements count`),
+  so Go's tools read it too.
+- Only the package under test is measured; `--coverpkg ./...` (comma-separated patterns)
+  measures other packages as well, and the percentage is over everything measured. Test and
+  bench blocks never count.
+- `--covermode atomic` counts with atomic adds (exact counts with tasks); the default `count`
+  may lose counts under contention, never coverage.
+- `rill cover` prints the coverage per function; `--html` writes one page with the source,
+  blocks that ran in green (darker: more often) and blocks that never ran in red.
+- The language server shows blocks the last `rill test --cover` of the module never ran as
+  hints ("not covered by tests") while the file is unchanged since; the profile is kept in
+  `~/.cache/rill/cover` (`$RILL_CACHE/cover`). An editor turns them off with
+  `initializationOptions: {"coverage": false}`.
+- A cover run is never cached, and a package that panicked has no coverage (`[panicked]`).
+
 ## The compiler's own tests
 
 The repository uses golden tests: a program next to its expected output, compiled and
