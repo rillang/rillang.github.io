@@ -177,8 +177,8 @@ of objects allocated. The heap is collected before each benchmark, packages are 
 at a time, and results never come from the test cache; `--count N` repeats them to see the
 variance.
 
-- `loop()` is only allowed as the condition of a `while` in a `bench` block, and every bench
-  calls it once.
+- `loop()` is only allowed as the condition of a `while` directly in a `bench` block (not in
+  a closure, a task or another loop), and every bench has exactly one.
 - No call in a bench is inlined, so the optimizer cannot remove the work of a call whose
   result is unused. Arithmetic written directly in the loop can still be folded away: put it
   in a function.
