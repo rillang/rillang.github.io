@@ -188,6 +188,29 @@ variance.
   `"benches"` in the `package` and `result` events).
 - A benchmark runs about its benchtime: the last batch is sized to the remaining time.
 
+## Parallel tests
+
+A slow test (files, the network, large inputs) can run next to the others: mark it
+`parallel`.
+
+```rill
+import "std/fs"
+
+test "parses the big fixture" parallel {
+  let text = fs.readFile("testdata/big.json") ?? ""
+  expect(text.len() > 0)
+}
+```
+
+- The tests without the marker run first, one after another; then every parallel test runs
+  in a process of its own, `--parallel N` at a time (default: the number of cores).
+- A parallel test that panics or calls `os.exit` ends only itself: the other tests still
+  run and are reported.
+- The report and `--json` list every test in the order of the source, wherever it ran;
+  coverage and the test cache include the parallel tests.
+- `--parallel 1`, and `--count N` with N > 1, run every test in one process, in order.
+- A process costs a few milliseconds to start: mark tests that take longer than that.
+
 ## Coverage
 
 `--cover` measures which code the tests ran, the way `go test -cover` does: the statements
