@@ -211,6 +211,47 @@ test "parses the big fixture" parallel {
 - `--parallel 1`, and `--count N` with N > 1, run every test in one process, in order.
 - A process costs a few milliseconds to start: mark tests that take longer than that.
 
+## Fuzzing
+
+A fuzz block states a property for every input; `rill test --fuzz` searches for an input
+that breaks it.
+
+```rill
+import "std/json"
+
+fuzz "parse" (s: String, depth: Int) {
+  seed("{}", 1)
+  seed("[[1]]", 3)
+  let _ = json.parse(s) // a panic or a failed expect is a finding
+}
+```
+
+- Parameters can be `String` (any bytes), `Int`, `Float`, `Bool` and `[Int]`. The `seed(...)`
+  calls at the start are example inputs.
+- Plain `rill test` runs every seed and every saved input as a test (`parse#1`,
+  `parse#3f9a…`), so a fuzz block is also a regression test.
+- `rill test --fuzz parse --fuzztime 30s ./json` builds the package with coverage counters
+  and runs `--parallel N` worker processes that mutate inputs; an input that reaches new
+  code joins the corpus (kept in `~/.cache/rill/fuzz` for the next run).
+- A panic, a failed `expect`, `os.exit` or a hang (no result after 10 s) is a finding: the
+  input is minimized, saved to `testdata/fuzz/<name>/` and shown with a command to rerun it.
+  Commit the file: from then on it is a test.
+
+```sh
+$ rill test --fuzz magic ./magic
+FAIL  ./magic    1 test   0.00s
+    fuzz magic   72623 execs (1711330/s)   4 corpus   0.04s
+
+failures:
+
+--- FAIL ./magic: fuzz magic
+panic: index out of bounds: 5 (len 1)
+ --> magic/magic.rl:7
+input (magic/testdata/fuzz/magic/0b52ec813ab93c7b):
+    s: "FUZZ"
+rerun: rill test --run 'magic#0b52ec813ab93c7b'
+```
+
 ## Coverage
 
 `--cover` measures which code the tests ran, the way `go test -cover` does: the statements
