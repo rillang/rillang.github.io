@@ -23,6 +23,7 @@ global names (`readFile`, `args`, …) is error E0039, which names the replaceme
 | Expression | Type |
 |---|---|
 | `StringBuilder()` | `StringBuilder` |
+| `[T](repeating: x, count: n)` | `[T]` (n copies, allocated at once) |
 | `Map<K, V>()`, `[:]` | `Map<K, V>` |
 | `Channel<T>(capacity: n)` | `Channel<T>` |
 | `Mutex(x)`, `Mutex<T>(x)` | `Mutex<T>` |

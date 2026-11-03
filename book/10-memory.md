@@ -75,14 +75,20 @@ crossing into a task are deep copies ([chapter 9](09-concurrency.md)).
 - Marking runs in parallel on all workers (in the style of Go's "Green Tea" collector:
   spans are queued and scanned in address order). Sweeping is lazy.
 - Allocation goes through per-processor caches of size-class spans without locks.
+- Memory without pointers (string bytes, arrays of numbers, flags and structs made of
+  them) lives in "noscan" spans: the collector marks it but never reads it.
+- Freed page runs merge with their free neighbours, so large objects reuse them.
 - A collection starts when the heap has grown by `RILL_GC` percent (default 100) since the
   last one. `RILL_GC=off` disables collection, `RILL_GC=stress:N` collects every N
-  allocations and poisons freed memory (for testing the runtime).
+  allocations and poisons freed memory (for testing the runtime). A program can set the
+  percentage itself with `runtime.setGCPercent` (`std/runtime`); the compiler uses 200.
+- `RILL_GCTRACE=1` prints every collection, `RILL_ALLOCPROF=1` the allocation sites with
+  the most bytes at exit.
 
-Costs today, from [`docs/perf.md`](https://github.com/rillang/rill/blob/main/docs/perf.md): when the compiler compiles itself, roughly
-30 MB stay live and collection takes a large share of the build time (about 0.8 s of
-1.5 s on the machine measured there). The collector is unoptimized and memory is not yet
-returned to the operating system.
+Costs today, from [`docs/perf.md`](https://github.com/rillang/rill/blob/main/docs/perf.md):
+the compiler compiling itself (30 000 lines) allocates about 1 GB, keeps at most ~60 MB
+live and spends about a third of a second in the collector, with a peak of ~330 MB
+resident memory. Memory is not yet returned to the operating system.
 
 ## Unsafe code
 

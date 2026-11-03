@@ -99,5 +99,7 @@ Environment variables tune a compiled program; the defaults need no tuning.
 | `RILL_WORKERS` | threads that run tasks (default: number of cores) |
 | `RILL_STACK` | stack size per task in bytes (default 1 MiB) |
 | `RILL_BACKTRACE` | `1`: a panic prints the call chain |
+| `RILL_GCTRACE` | `1`: one line per collection on stderr (live memory, pause) |
+| `RILL_ALLOCPROF` | `1`: at exit, the allocation sites with the most bytes |
 
 Next: [Basics](02-basics.md).

@@ -20,6 +20,7 @@ the compiler's. Import a module by its path under `std/`:
 | `std/time` | `now` (Unix ns), `monotonic`, `since`, `sleep`, `Duration` (`milliseconds`, `seconds`, `text`), `rfc3339` |
 | `std/json` | `Json` (`null`, `bool`, `num(Float)`, `str`, `arr`, `obj(Map)`), `parse` (`Json!`), `stringify`, `pretty`, `get`, `at`, `str`, `int`, `num`, `bool`, `items`, `object` |
 | `std/hash/sha256` | `sum(String)` (hex), `sumBytes`, `sumRange`, `hex` |
+| `std/runtime` | `setGCPercent` (the collector's target, returns the previous value) |
 
 Every module has `///` documentation on its public declarations and its own tests
 (`rill test std/strings` in the repository).
