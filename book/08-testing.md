@@ -303,7 +303,8 @@ $ rill cover --html cover.out -o cover.html
   hints ("not covered by tests") while the file is unchanged since; the profile is kept in
   `~/.cache/rill/cover` (`$RILL_CACHE/cover`). An editor turns them off with
   `initializationOptions: {"coverage": false}`.
-- A cover run is never cached, and a package that panicked has no coverage (`[panicked]`).
+- A cover run is never cached, and a package that panicked has no coverage (`[panicked]`):
+  it writes no profile, so the merged profile and the total leave its code out (as Go does).
 
 ## The compiler's own tests
 
