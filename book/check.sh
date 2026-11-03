@@ -37,7 +37,7 @@ check() {
       "$tmp/bin" >"$tmp/out" 2>"$tmp/err"
     fi
   else
-    "$RILL" $2 "$1" >"$tmp/out" 2>"$tmp/err"
+    RILL_TEST_NOTIME=1 "$RILL" $2 "$1" >"$tmp/out" 2>"$tmp/err"
   fi
   code=$?
   if [ -n "$UPDATE" ]; then

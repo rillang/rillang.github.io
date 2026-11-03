@@ -27,9 +27,9 @@ test "common years" {
 
 <!-- include: examples/tests.test.out -->
 ```text
-ok   leap years
-ok   common years
-2 passed, 0 failed
+ok    book/by-example/examples/tests.test.rl    2 tests   0.00s
+
+result: ok. 2 passed; 1 module in 0.00s
 ```
 
 [Index](README.md)

@@ -13,9 +13,9 @@ way. Items marked **planned** have a spec or are on the roadmap.
 ## Language
 
 - Packages work (chapter 7); GPG signers are not supported yet (SSH keys are). The [standard library](15-standard-library.md) is a first version (no
-  networking, no regular expressions).
-- Strings are bytes: no character type, no Unicode-aware functions; a character literal is
-  an `Int`.
+  networking).
+- Strings are bytes: no character type, no Unicode-aware string functions (`std/unicode`
+  has the properties of single runes); a character literal is an `Int`.
 - No string formatting beyond interpolation (widths, precision); no `replace`, `toUpper`.
 - No optional chaining (`a?.b`), no `if`/`switch` expressions, no closed ranges (`a...b`),
   no tuples.

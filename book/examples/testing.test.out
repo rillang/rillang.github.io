@@ -1,6 +1,17 @@
-ok   add
-ok   clamp keeps values in range
-FAIL a failing test reports every failed expect
-  expect failed at book/examples/testing.test.rl:28
-  expect failed at book/examples/testing.test.rl:29
-2 passed, 1 failed
+FAIL  book/examples/testing.test.rl    3 tests   0.00s   (1 failed)
+
+failures:
+
+--- FAIL book/examples/testing.test.rl: a failing test reports every failed expect
+book/examples/testing.test.rl:30: expect(add(2, 2) == 5)
+    left:  4
+    right: 5
+book/examples/testing.test.rl:32: expect(p == Point(x: 1, y: 3))
+    left:  Point(x: 1, y: 2)
+    right: Point(x: 1, y: 3)
+    message: points differ in y
+book/examples/testing.test.rl:33: expect(clamp(3, low: 0, high: 2) > 2)
+    left:  2
+    right: 2
+
+result: FAIL. 2 passed, 1 failed; 1 module in 0.00s

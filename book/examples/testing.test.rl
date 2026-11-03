@@ -10,6 +10,8 @@ fn clamp(_ x: Int, low: Int, high: Int) -> Int {
   return x
 }
 
+struct Point { x: Int, y: Int }
+
 fn main() {
   print("rill test does not run main")
 }
@@ -26,5 +28,7 @@ test "clamp keeps values in range" {
 
 test "a failing test reports every failed expect" {
   expect(add(2, 2) == 5)
-  expect(clamp(3, low: 0, high: 2) == 3)
+  let p = Point(x: 1, y: 2)
+  expect(p == Point(x: 1, y: 3), "points differ in y")
+  expect(clamp(3, low: 0, high: 2) > 2)
 }
