@@ -91,10 +91,52 @@ their values, then a result line; the exit code is 0 only when every test passed
 | `--run <regex>` | only the tests whose name matches (`std/regexp` syntax, unanchored) |
 | `-v` | one line per test, with its output |
 | `-p N` | packages tested in parallel (default: the number of cores) |
+| `--count N` | run the tests N times; never from the cache |
+| `--json` | one JSON event per line instead of the report |
 | `--opt=0`, `--target=…`, `--deny-warnings` | as for `rill build` |
 
 Output a test prints is shown with its failure (and always with `-v`). Colours are used only
 when the output is a terminal (and `NO_COLOR` is unset).
+
+### The test cache
+
+A package whose tests all passed is cached. Run again, it shows `(cached)` in place of its
+time and does not run, as long as its test binary is the same and nothing its tests read
+changed: files and directories (through `std/fs`) and environment variables (`os.env`).
+What the tests cannot be tracked through, the clock, randomness, other processes, is not
+an input; run such tests with `--count 1`. The cache lives in `~/.cache/rill/test`
+(`$RILL_CACHE/test`); `RILL_CACHE=off` turns it off.
+
+```sh
+$ rill test ./...
+ok    lexer      12 tests   0.12s
+$ rill test ./...
+ok    lexer      12 tests   (cached)
+```
+
+### JSON events
+
+`--json` writes one object per line, in the order of the report:
+
+```
+{"event":"start","pkg":"lexer","test":"tokens"}
+{"event":"expect","pkg":"lexer","test":"tokens","file":"lexer/lexer_test.rl","line":12,"source":"n == 3","left":"2","right":"3"}
+{"event":"end","pkg":"lexer","test":"tokens","result":"fail","ns":1200}
+{"event":"package","pkg":"lexer","result":"fail","passed":11,"failed":1,"panicked":0,"notRun":0,"ns":120000000,"cached":false}
+{"event":"result","result":"fail","passed":11,"failed":1,"panicked":0,"notRun":0,"packages":1,"ns":130000000}
+```
+
+| Event | Fields |
+|---|---|
+| `build` | the build failed: `ok` (false), `output` (diagnostics) |
+| `start` | `test` |
+| `output` | `text`: a test's output (with `test`) or text outside tests |
+| `expect` | a failed expectation: `file`, `line`, `source`, `left`, `right`, `msg` (absent ones left out) |
+| `end` | `test`, `result` (`ok`, `fail`, `panic`, `notrun`), `ns`, `panic` (its text) |
+| `package` | `result` (`ok`, `fail`, `panic`, `buildfail`, `notests`), counts, `ns`, `cached` |
+| `result` | the totals over all packages |
+
+With `--count` above 1, `start`, `output`, `expect` and `end` carry `run` (from 1).
 
 ## The compiler's own tests
 
@@ -102,8 +144,7 @@ The repository uses golden tests: a program next to its expected output, compile
 compared by `sh tests/golden.sh` (conventions in [AGENTS.md](https://github.com/rillang/rill/blob/main/AGENTS.md)). The book's
 examples use the same conventions ([check.sh](check.sh)).
 
-Not yet: machine-readable test output (`--json`), repeated runs and a test cache,
-benchmarks, coverage, parallel tests within a package, fuzzing, and doctests (they come
-with `rill doc`).
+Not yet: benchmarks, coverage, parallel tests within a package, fuzzing, and doctests
+(they come with `rill doc`).
 
 Next: [Concurrency](09-concurrency.md).
