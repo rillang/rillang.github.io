@@ -167,7 +167,7 @@ bench "sort 1k" {
 
 ```sh
 $ rill test --bench . --run '^$' ./...
-ok    sorting    0 tests   1.17s
+ok    sorting    0 tests, 1 bench   1.17s
     bench sort 1k        7016        166273 ns/op      339024 B/op      6497 allocs/op
 ```
 
@@ -184,7 +184,9 @@ variance.
   in a function.
 - `expect` works in a bench; a failed expectation fails the bench (no numbers).
 - `--json` reports a `bench` event per benchmark: `n`, `nsPerOp`, `bytesPerOp`,
-  `allocsPerOp`, `result`.
+  `allocsPerOp`, `result`. Benches are counted apart from tests (`3 passed, 2 benches`;
+  `"benches"` in the `package` and `result` events).
+- A benchmark runs about its benchtime: the last batch is sized to the remaining time.
 
 ## The compiler's own tests
 
