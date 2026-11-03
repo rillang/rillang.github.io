@@ -93,6 +93,8 @@ their values, then a result line; the exit code is 0 only when every test passed
 | `-p N` | packages tested in parallel (default: the number of cores) |
 | `--count N` | run the tests N times; never from the cache |
 | `--json` | one JSON event per line instead of the report |
+| `--bench <regex>` | after the tests, run the benchmarks whose name matches (`.` = all) |
+| `--benchtime D` | time per benchmark (`1s`, the default; `500ms`) or iterations (`100x`) |
 | `--opt=0`, `--target=…`, `--deny-warnings` | as for `rill build` |
 
 Output a test prints is shown with its failure (and always with `-v`). Colours are used only
@@ -138,13 +140,59 @@ ok    lexer      12 tests   (cached)
 
 With `--count` above 1, `start`, `output`, `expect` and `end` carry `run` (from 1).
 
+## Benchmarks
+
+A `bench` block measures code. Setup runs once; the body of `while loop()` is the measured
+loop, and `loop()` decides how often it runs: in growing batches until the benchmark took
+`--benchtime` (1 s), or exactly `N` times with `--benchtime Nx`.
+
+```rill
+import "std/slices"
+
+fn data() -> [Int] {
+  var xs: [Int] = []
+  for i in 0..<1000 {
+    xs.push((i * 7919) % 1000)
+  }
+  return xs
+}
+
+bench "sort 1k" {
+  let xs = data() // setup: not measured
+  while loop() {
+    let _ = slices.sort(xs)
+  }
+}
+```
+
+```sh
+$ rill test --bench . --run '^$' ./...
+ok    sorting    0 tests   1.17s
+    bench sort 1k        7016        166273 ns/op      339024 B/op      6497 allocs/op
+```
+
+Benchmarks run only with `--bench`, after the tests (`--run '^$'` skips them), in source
+order. Each line shows the iterations and, per iteration, the time, the bytes and the number
+of objects allocated. The heap is collected before each benchmark, packages are measured one
+at a time, and results never come from the test cache; `--count N` repeats them to see the
+variance.
+
+- `loop()` is only allowed as the condition of a `while` in a `bench` block, and every bench
+  calls it once.
+- No call in a bench is inlined, so the optimizer cannot remove the work of a call whose
+  result is unused. Arithmetic written directly in the loop can still be folded away: put it
+  in a function.
+- `expect` works in a bench; a failed expectation fails the bench (no numbers).
+- `--json` reports a `bench` event per benchmark: `n`, `nsPerOp`, `bytesPerOp`,
+  `allocsPerOp`, `result`.
+
 ## The compiler's own tests
 
 The repository uses golden tests: a program next to its expected output, compiled and
 compared by `sh tests/golden.sh` (conventions in [AGENTS.md](https://github.com/rillang/rill/blob/main/AGENTS.md)). The book's
 examples use the same conventions ([check.sh](check.sh)).
 
-Not yet: benchmarks, coverage, parallel tests within a package, fuzzing, and doctests
+Not yet: coverage, parallel tests within a package, fuzzing, and doctests
 (they come with `rill doc`).
 
 Next: [Concurrency](09-concurrency.md).
