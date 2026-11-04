@@ -4,46 +4,44 @@
 
 <!-- include: examples/values.rl -->
 ```swift
+enum Shape {
+  case circle(Int)
+  case square(Int)
+  case dot
+}
+
+// a function whose whole body is a value
+fn sign(_ n: Int) -> Int = if n < 0 { -1 } else if n == 0 { 0 } else { 1 }
+
+fn name(_ s: Shape) -> String = switch s {
+  case .circle(_): "circle"
+  case .square(_): "square"
+  case .dot: "dot"
+}
+
+fn half(_ n: Int) -> Int? {
+  // a branch may leave instead of giving a value
+  let h = if n % 2 == 0 { n / 2 } else { return nil }
+  return h
+}
+
 fn main() {
-  // let binds a constant, var a variable
-  let answer = 42
-  var count = 0
-  count += 1
-
-  // the basic types: Int (64-bit), Float (64-bit), Bool, String
-  let pi: Float = 3.14159
-  let ready: Bool = answer > 40 && count == 1
-  let greeting: String = "hi"
-
-  // interpolation: $name or ${expression}
-  print("$greeting: answer=$answer, count=$count, ready=$ready")
-  print("pi doubled is ${pi * 2.0}")
-
-  // integer division truncates, % is the remainder
-  print("${7 / 2} ${7 % 2} ${7.0 / 2.0}")
-
-  // no implicit conversions between Int and Float
-  let n = 3
-  let half = Float(n) / 2.0
-  print("${half} ${Int(2.9)} ${str(n)}")
-
-  // literals: hex, digit separators, characters (which are Ints)
-  print("${0xff} ${1_000_000} ${'A'}")
-
-  // strings are immutable UTF-8 bytes
-  let word = "naïve"
-  print("${word.len()} bytes")
+  let wide = true
+  let width = if wide { 120 } else { 80 }
+  let size = switch Shape.square(3) {
+    case .circle(r): 3 * r * r
+    case .square(a): a * a
+    case .dot: 0
+  }
+  print("$width $size ${sign(-4)} ${name(.dot)}")
+  print("${half(10) ?? -1} ${half(7) ?? -1}")
 }
 ```
 
 <!-- include: examples/values.out -->
 ```text
-hi: answer=42, count=1, ready=true
-pi doubled is 6.28318
-3 1 3.5
-1.5 2 3
-255 1000000 65
-6 bytes
+120 9 -1 dot
+5 -1
 ```
 
 - `let` binds a constant, `var` a variable. Assigning to a `let` is error E0006.
@@ -157,7 +155,8 @@ ana
 bo
 ```
 
-- `if` / `else if` / `else` are statements (not expressions); conditions must be `Bool`.
+- `if` / `else if` / `else` are statements; conditions must be `Bool`. An `if` or `switch`
+  can also be a value: see below.
 - `guard condition else { … }` checks a precondition. The `else` block must leave the
   scope (`return`, `break`, `continue`, `panic`, `exit`), otherwise error E0019. Bindings made
   by `guard let` and `guard case` stay visible after the guard.
@@ -166,6 +165,62 @@ bo
   condition holds. `break` and `continue` apply to the innermost loop.
 - `switch` is covered in [chapter 5](05-pattern-matching.md).
 - A block `{ … }` on its own opens a scope.
+
+### `if` and `switch` as values
+
+<!-- include: examples/values.rl -->
+```swift
+enum Shape {
+  case circle(Int)
+  case square(Int)
+  case dot
+}
+
+// a function whose whole body is a value
+fn sign(_ n: Int) -> Int = if n < 0 { -1 } else if n == 0 { 0 } else { 1 }
+
+fn name(_ s: Shape) -> String = switch s {
+  case .circle(_): "circle"
+  case .square(_): "square"
+  case .dot: "dot"
+}
+
+fn half(_ n: Int) -> Int? {
+  // a branch may leave instead of giving a value
+  let h = if n % 2 == 0 { n / 2 } else { return nil }
+  return h
+}
+
+fn main() {
+  let wide = true
+  let width = if wide { 120 } else { 80 }
+  let size = switch Shape.square(3) {
+    case .circle(r): 3 * r * r
+    case .square(a): a * a
+    case .dot: 0
+  }
+  print("$width $size ${sign(-4)} ${name(.dot)}")
+  print("${half(10) ?? -1} ${half(7) ?? -1}")
+}
+```
+
+<!-- include: examples/values.out -->
+```text
+120 9 -1 dot
+5 -1
+```
+
+- An `if` or `switch` is a value only as the whole right-hand side of `let x =`, `var x =`,
+  `x =`, `return` and `fn f() -> T =`. Anywhere else (an argument, an operand) is E0123;
+  there is no ternary.
+- Each branch is a single expression, or `return`, `break`, `continue`, `panic(…)`,
+  `exit(…)`, which leave instead of giving a value. A branch that needs more statements is
+  written as an `if` or `switch` statement (E0122).
+- An `if` value needs an `else` (E0121); `else if` chains work. A `switch` value is
+  exhaustive like the statement and takes every pattern and `where` guard.
+- The branches have one type: the declared type when there is one
+  (`let v: Int? = if c { 1 } else { nil }`), otherwise the first branch's.
+- `if let` and `if case` are not values: use `guard let` or `??` (E0124).
 
 ## Functions and argument labels
 

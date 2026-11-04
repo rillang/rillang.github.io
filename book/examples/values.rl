@@ -1,30 +1,32 @@
+enum Shape {
+  case circle(Int)
+  case square(Int)
+  case dot
+}
+
+// a function whose whole body is a value
+fn sign(_ n: Int) -> Int = if n < 0 { -1 } else if n == 0 { 0 } else { 1 }
+
+fn name(_ s: Shape) -> String = switch s {
+  case .circle(_): "circle"
+  case .square(_): "square"
+  case .dot: "dot"
+}
+
+fn half(_ n: Int) -> Int? {
+  // a branch may leave instead of giving a value
+  let h = if n % 2 == 0 { n / 2 } else { return nil }
+  return h
+}
+
 fn main() {
-  // let binds a constant, var a variable
-  let answer = 42
-  var count = 0
-  count += 1
-
-  // the basic types: Int (64-bit), Float (64-bit), Bool, String
-  let pi: Float = 3.14159
-  let ready: Bool = answer > 40 && count == 1
-  let greeting: String = "hi"
-
-  // interpolation: $name or ${expression}
-  print("$greeting: answer=$answer, count=$count, ready=$ready")
-  print("pi doubled is ${pi * 2.0}")
-
-  // integer division truncates, % is the remainder
-  print("${7 / 2} ${7 % 2} ${7.0 / 2.0}")
-
-  // no implicit conversions between Int and Float
-  let n = 3
-  let half = Float(n) / 2.0
-  print("${half} ${Int(2.9)} ${str(n)}")
-
-  // literals: hex, digit separators, characters (which are Ints)
-  print("${0xff} ${1_000_000} ${'A'}")
-
-  // strings are immutable UTF-8 bytes
-  let word = "naïve"
-  print("${word.len()} bytes")
+  let wide = true
+  let width = if wide { 120 } else { 80 }
+  let size = switch Shape.square(3) {
+    case .circle(r): 3 * r * r
+    case .square(a): a * a
+    case .dot: 0
+  }
+  print("$width $size ${sign(-4)} ${name(.dot)}")
+  print("${half(10) ?? -1} ${half(7) ?? -1}")
 }

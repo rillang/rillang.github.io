@@ -17,7 +17,7 @@ way. Items marked **planned** have a spec or are on the roadmap.
 - Strings are bytes: no character type, no Unicode-aware string functions (`std/unicode`
   has the properties of single runes); a character literal is an `Int`.
 - No string formatting beyond interpolation (widths, precision); no `replace`, `toUpper`.
-- No optional chaining (`a?.b`), no `if`/`switch` expressions, no closed ranges (`a...b`),
+- No optional chaining (`a?.b`), no closed ranges (`a...b`),
   no tuples.
 - Arrays have no `pop`, `contains`, `reduce`, `reverse`; maps cannot remove keys and
   cannot be compared with `==`.
