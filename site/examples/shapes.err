@@ -1,0 +1,5 @@
+error[E0011]: switch must be exhaustive, missing: .dot
+ --> shapes.rl:8:3
+  |
+8 |   switch s {
+  |   ^

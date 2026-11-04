@@ -10,6 +10,7 @@
 #   ```
 #
 # In HTML the content starts on the <pre> line and ends with </code></pre>; it is escaped.
+# A line range after the path copies only those lines: <!-- include: examples/x.rl 3-9 -->
 # Usage: sh book/sync.sh            rewrite the pages
 #        sh book/sync.sh --check    only report pages that are out of date
 cd "$(dirname "$0")/.." || exit 1
@@ -24,9 +25,14 @@ sync_page() {
       gsub(/&/, "\\&amp;", s); gsub(/</, "\\&lt;", s); gsub(/>/, "\\&gt;", s)
       return s
     }
-    function emit(path,   line, n, r) {
+    function emit(path,   line, n, r, no) {
       n = 0
+      no = 0
       while ((r = (getline line < path)) > 0) {
+        no++
+        if (no < from || (to > 0 && no > to)) {
+          continue
+        }
         if (html) {
           line = esc(line)
           if (n == 0) { printf "%s", line } else { printf "\n%s", line }
@@ -44,10 +50,18 @@ sync_page() {
     {
       if (state == "") {
         print
-        if (match($0, /<!-- include: [^ ]+ -->/)) {
+        if (match($0, /<!-- include: [^ ]+( [0-9]+-[0-9]+)? -->/)) {
           path = $0
           sub(/.*<!-- include: /, "", path)
           sub(/ -->.*/, "", path)
+          from = 1
+          to = 0
+          if (split(path, part, " ") == 2) {
+            path = part[1]
+            split(part[2], range, "-")
+            from = range[1] + 0
+            to = range[2] + 0
+          }
           path = dir "/" path
           state = "open"
         }

@@ -4,11 +4,8 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Rill</title>
-<meta name="description" content="Rill: code like Swift, build like Go, go as deep as Rust. One language from scripts to engines, built for people and AI agents. Early and experimental.">
+<meta name="description" content="Rill: a beautiful language with everything included, for you and the AI working next to you. Early and experimental.">
 <link rel="icon" href="logo/favicon.svg" type="image/svg+xml">
-<link rel="apple-touch-icon" href="logo/apple-touch-icon.png">
-<meta property="og:image" content="https://rillang.github.io/site/logo/social.png">
-<meta name="twitter:card" content="summary_large_image">
 <link rel="stylesheet" href="style.css">
 <script src="site.js"></script>
 </head>
@@ -27,214 +24,86 @@
 </header>
 
 <main class="wrap">
-  <section class="hero">
-    <div>
-      <span class="status-pill">Experimental · arm64 macOS and Linux</span>
-      <h1>Code like Swift. Build like Go. Go as deep as Rust.</h1>
-      <p class="lede">One language from scripts to engines: scripts, tools, web services,
-        games and simulations. Rill grows with your program — a script needs nothing but
-        <code>print</code>, an engine adds <code>nogc</code> code, arenas and SIMD — and it is
-        built so that people and AI agents can work on the same code with confidence.
-        One self-contained toolchain: no C compiler, assembler or linker anywhere.</p>
+  <section class="opening">
+    <h1>A beautiful language with everything included.</h1>
+    <p class="motto">Code like Swift, build like Go, go as deep as Rust.</p>
+    <p class="lede">Code that reads like what it means. One <code>rill</code> binary that runs,
+      tests and ships it, for you and the AI next to you.</p>
+    <div class="go">
       <div class="actions">
-        <a class="button primary" href="install.html">Get started</a>
+        <a class="button primary" href="install.html">Install Rill</a>
         <a class="button" href="../book/">Read the book</a>
-        <a class="button" href="../book/by-example/">Rill by Example</a>
       </div>
-    </div>
-    <div>
-      <div class="code">
-        <div class="file">taste.rl</div>
-        <!-- include: examples/taste.rl -->
-        <pre><code class="rill">enum Expr {
-  case num(Int)
-  case add(Expr, Expr)
-  case mul(Expr, Expr)
-}
-
-fn eval(_ e: Expr) -&gt; Int {
-case .num(n): return n
-case .add(a, b): return eval(a) + eval(b)
-case .mul(a, b): return eval(a) * eval(b)
-}
-
-fn main() {
-  let e: Expr = .add(.num(2), .mul(.num(3), .num(4)))
-  let big = [1, 2, 3, 4].map { $ * 10 }.filter { $ &gt; 15 }
-  print("result ${eval(e)}, big ${big.len()}")
-}
-
-test "eval follows the tree" {
-  expect(eval(.mul(.num(2), .num(5))) == 10)
-}</code></pre>
-        <div class="run">
-          <div class="file">$ rill run taste.rl</div>
-          <!-- include: examples/taste.out -->
-          <pre><code>result 14, big 3</code></pre>
-        </div>
-      </div>
+      <p class="state">Experimental: arm64 macOS and Linux. <a href="roadmap.html">Roadmap</a>.</p>
     </div>
   </section>
 
-  <svg class="stream" viewBox="0 0 1200 28" preserveAspectRatio="none" aria-hidden="true"><path d="M0 18 C150 4, 250 4, 400 14 S650 26, 800 12 S1050 2, 1200 14" fill="none" stroke="currentColor" stroke-width="2"/></svg>
+  <div class="session">
+    <svg aria-hidden="true" focusable="false"><path class="bed"/><path class="flow"/></svg>
 
-  <h2>Why Rill</h2>
-  <div class="features">
-    <div class="card">
-      <h3>Grows with your program</h3>
-      <p>A script needs nothing but <code>print</code>. A service adds types, packages and
-        concurrency. An engine adds <code>nogc</code> code, arenas, SIMD and
-        <code>unsafe</code> — each step opt-in, local and as readable as the rest
-        <span class="tag">planned</span>.</p>
-    </div>
-    <div class="card">
-      <h3>Built for people and AI agents</h3>
-      <p>One obvious way to write things, diagnostics with stable codes, one formatter,
-        and migrations as code (<code>rill fix</code>): what makes code easy for an agent
-        to write and review helps every reader.</p>
-    </div>
-    <div class="card">
-      <h3>One binary, whole toolchain</h3>
-      <p><code>rill</code> runs, builds, tests, formats, debugs and serves your editor
-        (<code>run</code>, <code>build</code>, <code>test</code>, <code>fmt</code>,
-        <code>debug</code>, <code>lsp</code>). Nothing else to install.</p>
-    </div>
-    <div class="card">
-      <h3>No C toolchain</h3>
-      <p>The compiler emits arm64 machine code and writes signed Mach-O or static ELF files
-        itself. Cross-compiling from macOS to Linux is a flag.</p>
-    </div>
-    <div class="card">
-      <h3>Self-hosting</h3>
-      <p>About 19 000 lines of Rill compile themselves to a byte-identical fixpoint, starting
-        from a checked-in seed, the way Go bootstraps from an earlier Go.</p>
-    </div>
-    <div class="card">
-      <h3>Structured concurrency</h3>
-      <p><code>group { spawn { … } }</code>, channels, <code>parMap</code>, <code>Mutex</code>
-        and <code>Atomic</code> on all cores. Tasks never outlive their group; sharing a
-        <code>var</code> between tasks is a compile error.</p>
-    </div>
-    <div class="card">
-      <h3>Pattern matching</h3>
-      <p>One pattern language for <code>switch</code>, <code>if case</code>,
-        <code>guard case</code>, <code>let</code>, <code>for</code> and functions made of
-        cases, with exhaustiveness checks that name the missing case.</p>
-    </div>
-    <div class="card">
-      <h3>Value semantics</h3>
-      <p>Structs, arrays and maps are values, copied lazily on write. No aliasing surprises,
-        no ownership annotations; a garbage collector reclaims memory.</p>
-    </div>
-    <div class="card">
-      <h3>Fast to build</h3>
-      <p>Hello world builds in about 0.2 s; the compiler rebuilds itself in about 2 s on an
-        Apple M4. <a href="install.html#speed">Measured numbers and context</a>.</p>
-    </div>
-    <div class="card">
-      <h3>For humans and models</h3>
-      <p>One obvious way to write things, explicit types at every function boundary,
-        stable error codes and <code>--json</code> diagnostics, tests next to the code.</p>
-    </div>
-  </div>
+    <section class="step">
+      <h2>Write what you mean</h2>
+      <p>Enums carry data, <code>switch</code> takes them apart, and the compiler says which case you forgot.</p>
+      <div class="pair">
+        <div class="code">
+          <div class="file"><span>shapes.rl</span></div>
+          <!-- include: examples/shapes.err.rl 1-12 -->
+          <pre><code class="rill">enum Shape {
+  case circle(Float)
+  case rect(Float, Float)
+  case dot
+}
 
-  <div class="split">
-    <div>
-      <h2>Concurrency you can read</h2>
-      <p>A <code>group</code> waits for every task spawned inside it. Values captured by a
-        task are copied into it, so tasks cannot race on them; channels, <code>Mutex</code>
-        and <code>Atomic</code> are the ways to share. Tasks are green threads scheduled on
-        all cores with work stealing and preemption.</p>
-      <p><a href="../book/09-concurrency.html">Concurrency in the book</a></p>
-    </div>
-    <div>
-      <div class="code">
-        <div class="file">concurrency.rl</div>
-        <!-- include: examples/concurrency.rl -->
-        <pre><code class="rill">fn main() {
-  let urls = ["/", "/docs", "/blog", "/about"]
-  let sizes = Channel&lt;Int&gt;(capacity: 4)
-  group {
-    for u in urls {
-      spawn { sizes.send(u.len() * 100) }
-    }
+fn area(_ s: Shape) -&gt; Float {
+  switch s {
+  case .circle(r): return 3.14 * r * r
+  case .rect(w, h): return w * h
   }
-  sizes.close()
-  var total = 0
-  for s in sizes {
-    total += s
-  }
-  let squares = [1, 2, 3, 4].parMap { $ * $ }
-  print("total $total, squares ${squares[3]}")
 }</code></pre>
-        <div class="run">
-          <div class="file">$ rill run concurrency.rl</div>
-          <!-- include: examples/concurrency.out -->
-          <pre><code>total 1700, squares 16</code></pre>
+        </div>
+        <div class="term">
+          <div class="bar">$ rill build shapes.rl</div>
+          <!-- include: examples/shapes.err 1-2 -->
+          <pre><code>error[E0011]: switch must be exhaustive, missing: .dot
+ --&gt; shapes.rl:8:3</code></pre>
         </div>
       </div>
-    </div>
-  </div>
+    </section>
 
-  <div class="split">
-    <div>
+    <section class="step">
       <h2>Patterns everywhere</h2>
-      <p>Match arrays by shape, maps by key, enums by case and structs by field, with
-        <code>where</code> guards. A <code>switch</code> without <code>default</code> must
-        cover every value, and the compiler tells you which case is missing.</p>
-      <p><a href="../book/05-pattern-matching.html">Pattern matching in the book</a></p>
-    </div>
-    <div>
-      <div class="code">
-        <div class="file">patterns.rl</div>
-        <!-- include: examples/patterns.rl -->
-        <pre><code class="rill">fn describe(_ xs: [Int]) -&gt; String {
+      <p>Match arrays by shape, maps by key, enums by case, with <code>where</code> guards. One
+        pattern language for <code>switch</code>, <code>if</code>, <code>let</code> and <code>for</code>.</p>
+      <div class="pair wide">
+        <div class="code">
+          <div class="file"><span>patterns.rl</span></div>
+          <!-- include: examples/patterns.rl 1-8 -->
+          <pre><code class="rill">fn describe(_ xs: [Int]) -&gt; String {
   switch xs {
   case []: return "empty"
   case [x]: return "just $x"
   case [first, ...rest] where first &gt; 100: return "big start, ${rest.len()} more"
   case [first, second, ...]: return "$first, $second, ..."
   }
-}
-
-fn port(_ conf: Map&lt;String, Int&gt;) -&gt; String {
-  switch conf {
-  case ["port": p, "tls": 1]: return "https on $p"
-  case ["port": p]: return "http on $p"
-  default: return "no port"
-  }
-}
-
-fn main() {
-  print("${describe([])} | ${describe([7])} | ${describe([500, 1])} | ${describe([1, 2, 3])}")
-  print("${port(["port": 443, "tls": 1])} | ${port(["port": 80])}")
 }</code></pre>
-        <div class="run">
-          <div class="file">$ rill run patterns.rl</div>
-          <!-- include: examples/patterns.out -->
-          <pre><code>empty | just 7 | big start, 1 more | 1, 2, ...
-https on 443 | http on 80</code></pre>
+        </div>
+        <div class="term">
+          <div class="bar">$ rill run patterns.rl</div>
+          <!-- include: examples/patterns.out 1-1 -->
+          <pre><code>empty | just 7 | big start, 1 more | 1, 2, ...</code></pre>
         </div>
       </div>
-    </div>
-  </div>
+    </section>
 
-  <div class="split">
-    <div>
-      <h2>Errors in the types</h2>
-      <p>No exceptions and no null. <code>T?</code> may be missing, <code>T!</code> may
-        fail; <code>?</code> passes the problem up, <code>??</code> supplies a default.
-        Panics are for bugs and stop the program.</p>
-      <h3>Values, not references</h3>
-      <p>Copying a struct copies its arrays too (lazily). Only <code>inout</code>
-        parameters change a caller's variable, and the call site says so with
-        <code>&amp;</code>.</p>
-    </div>
-    <div>
-      <div class="code">
-        <div class="file">errors.rl</div>
-        <!-- include: examples/errors.rl -->
-        <pre><code class="rill">fn parsePort(_ s: String) -&gt; Int! {
+    <section class="step">
+      <h2>No null, no exceptions</h2>
+      <p><code>T?</code> may be missing, <code>T!</code> may fail. <code>?</code> passes the
+        problem up, <code>??</code> supplies a default, and the types tell every caller.</p>
+      <div class="pair">
+        <div class="code">
+          <div class="file"><span>errors.rl</span></div>
+          <!-- include: examples/errors.rl 1-11 -->
+          <pre><code class="rill">fn parsePort(_ s: String) -&gt; Int! {
   guard let n = s.toInt() else {
     return fail("not a number: $s")
   }
@@ -244,55 +113,166 @@ https on 443 | http on 80</code></pre>
 fn config(_ raw: String) -&gt; String! {
   let port = parsePort(raw)?
   return "listening on $port"
-}
-
-fn main() {
-  print(config("8080") ?? "?")
-  if case .err(e) = config("http") {
-    print("error: ${e.msg}")
-  }
 }</code></pre>
-        <div class="run">
-          <div class="file">$ rill run errors.rl</div>
+        </div>
+        <div class="term">
+          <div class="bar">$ rill run errors.rl</div>
           <!-- include: examples/errors.out -->
           <pre><code>listening on 8080
 error: not a number: http</code></pre>
         </div>
       </div>
-      <div class="code">
-        <div class="file">values.rl</div>
-        <!-- include: examples/values.rl -->
-        <pre><code class="rill">struct Team { name: String, members: [String] }
+    </section>
 
-fn main() {
-  var a = Team(name: "core", members: ["ana"])
-  var b = a
-  b.members.push("bo")
-  print("${a.members.len()} ${b.members.len()}")
-  a.name = "lang"
-  print("${a.name} ${b.name}")
+    <section class="step">
+      <h2>Test it next to the code</h2>
+      <p>Tests live in the same file. <code>rill test</code> also fuzzes and measures coverage.</p>
+      <div class="pair">
+        <div class="code">
+          <div class="file"><span>shapes.rl</span></div>
+          <!-- include: examples/shapes.test.rl 15-17 -->
+          <pre><code class="rill">test "a rectangle is width times height" {
+  expect(area(.rect(2.0, 3.0)) == 6.0)
 }</code></pre>
-        <div class="run">
-          <div class="file">$ rill run values.rl</div>
-          <!-- include: examples/values.out -->
-          <pre><code>1 2
-lang core</code></pre>
+        </div>
+        <div class="term">
+          <div class="bar">$ rill test shapes.rl</div>
+          <!-- include: examples/shapes.test.out 1-1 -->
+          <pre><code>ok    shapes.rl    1 test   0.00s</code></pre>
         </div>
       </div>
-    </div>
+    </section>
+
+    <section class="step">
+      <h2>Use every core</h2>
+      <p>Tasks are green threads on all cores with work stealing. A <code>group</code> waits for
+        its tasks, and tasks cannot race on what they capture: they get copies.</p>
+      <div class="pair">
+        <div class="code">
+          <div class="file"><span>tasks.rl</span></div>
+          <!-- include: examples/tasks.rl 2-7 -->
+          <pre><code class="rill">  let results = Channel&lt;Int&gt;(capacity: 3)
+  group {
+    for n in [10, 20, 30] {
+      spawn { results.send(n * n) }
+    }
+  }</code></pre>
+        </div>
+        <div class="term">
+          <div class="bar">$ rill run tasks.rl</div>
+          <!-- include: examples/tasks.out -->
+          <pre><code>total 1400</code></pre>
+        </div>
+      </div>
+    </section>
+
+    <section class="step">
+      <h2>Fast, and you can see why</h2>
+      <p>Ahead-of-time native code, values without hidden aliasing, a parallel collector.
+        Benchmarks (<code>rill test --bench</code>) and CPU and heap profiles (<code>rill pprof</code>) are built in, in Go's pprof format.</p>
+      <div class="pair wide">
+        <div class="code">
+          <div class="file"><span>bench.rl</span></div>
+          <!-- include: examples/bench.test.rl 5-10 -->
+          <pre><code class="rill">bench "split a sentence" {
+  let s = strings.repeat("the cat saw the dog ", 100)
+  while loop() {
+    let _ = words(s)
+  }
+}</code></pre>
+        </div>
+      </div>
+    </section>
+
+    <section class="step">
+      <h2>Hand it to an agent</h2>
+      <p>One way to write things, stable error codes, JSON output: an agent gets the same answers you do.</p>
+      <div class="pair wide">
+        <div class="term">
+          <div class="bar">$ rill build --json shapes.rl</div>
+          <!-- include: examples/shapes.json -->
+          <pre><code>{"code":"E0011","message":"switch must be exhaustive, missing: .dot","file":"shapes.rl","line":8,"col":3}</code></pre>
+        </div>
+      </div>
+    </section>
+
+    <section class="step">
+      <h2>Ship one file</h2>
+      <p>No C compiler, no linker: the result is one static executable, for this machine or another.</p>
+      <div class="pair wide">
+        <div class="term">
+          <div class="bar">$ rill build --target=linux-arm64 shapes.rl</div>
+        </div>
+      </div>
+    </section>
   </div>
 
-  <div class="note">
-    <h3 style="margin-top:0">Honest status</h3>
-    <ul>
-      <li>Rill is experimental and has no releases yet; you build it from source.</li>
-      <li>It runs on <strong>arm64 only</strong>: macOS and Linux. No x86-64, no Windows
-        (a WebAssembly target is <a href="roadmap.html">planned</a>).</li>
-      <li>There is no standard library or package manager yet: a handful of builtins cover
-        files, processes and the environment. Both are <a href="roadmap.html">next</a>.</li>
-      <li>The language will still change in incompatible ways before 1.0.</li>
-    </ul>
-  </div>
+  <section class="grows">
+    <h2>Grows with your program</h2>
+    <p class="intro">The same language from a script to an engine. Each step is opt-in, local
+      and as readable as the rest.</p>
+    <div class="levels">
+      <div><h3>Scripts and tools</h3><p>Nothing but <code>print</code> to start; files,
+        processes, JSON and regular expressions from the standard library.</p></div>
+      <div><h3>Services</h3><p>Types, packages, concurrency and profiles today;
+        <code>std/net</code>, HTTP and databases <span class="tag next">next</span>.</p></div>
+      <div><h3>Engines</h3><p>Code the collector never touches (<code>nogc</code>), arenas,
+        fixed arrays, SIMD, <code>unsafe</code> and C libraries
+        <span class="tag">planned</span>. <a href="#deep">How it works</a>.</p></div>
+    </div>
+  </section>
+
+  <section class="deep" id="deep">
+    <div class="deep-text">
+      <h2>No collector where it matters</h2>
+      <p>Most code is happier with a garbage collector. A render loop, an audio thread or a
+        physics step is not. Mark it <code>nogc</code> and the compiler checks that it never
+        touches the GC heap: memory comes from arenas, pools and fixed arrays, and one simple
+        rule replaces a borrow checker. A value from an arena may not leave its block.</p>
+      <ul class="guarantees">
+        <li><code>nogc</code> on a function, a file or a module: no GC allocation, checked.</li>
+        <li><code>spawn nogc { … }</code>: a task the collector never stops, for frames without hitches.</li>
+        <li><code>rill build --nogc</code>: a binary with no collector at all.</li>
+      </ul>
+      <p class="planned-note"><span class="tag">planned</span> The design is in
+        <a href="https://github.com/rillang/rill/blob/main/docs/rfcs/0008-direction.md">RFC 0008</a>;
+        the syntax may still change.</p>
+      <p class="today">The ground is already there: Rill's heap, garbage collector and
+        scheduler are written in Rill itself, in its <code>unsafe</code> dialect with raw
+        pointers, loads and stores. Today only the runtime may use it; opening it to every
+        program comes with <code>nogc</code>.</p>
+    </div>
+    <div class="codes">
+    <div class="code"><div class="file"><span>engine/physics/solver.rl</span><span>planned</span></div><pre><code class="rill">nogc // the whole file
+
+pub fn step(_ world: inout World, _ dt: Float) {
+  // freed at the end of the block
+  arena { a in
+    var contacts = a.array&lt;Contact&gt;(capacity: 1024)
+    // letting contacts escape is a compile error
+    world.collide(into: &amp;contacts)
+  }
+}</code></pre>
+      </div>
+    <div class="code today-code"><div class="file"><span>runtime/rt_heap.rl</span><span>today</span></div><pre><code class="rill">fn setWord(_ base: Int, _ i: Int, _ v: Int) {
+  store64(intToPtr(base + 8 * i), v)
+}
+
+pub fn setField(_ s: Int, _ off: Int, _ v: Int) {
+  store64(intToPtr(s + off), v)
+}</code></pre></div>
+    </div>
+  </section>
+
+  <section class="close">
+    <h2>Start with one file</h2>
+    <p>The standard library comes with the compiler. Install it, write <code>main.rl</code>, <code>rill run</code> it.</p>
+    <div class="actions">
+      <a class="button primary" href="install.html">Install Rill</a>
+      <a class="button" href="../book/">Read the book</a>
+      <a class="button" href="../book/by-example/">Rill by Example</a>
+    </div>
+  </section>
 </main>
 
 <footer class="site-footer">
@@ -301,5 +281,55 @@ lang core</code></pre>
     <span><a href="learn.html">Learn</a> · <a href="install.html">Install</a> · <a href="roadmap.html">Roadmap</a> · <a href="community.html">Community</a></span>
   </div>
 </footer>
+<script>
+// The stream: one path through every step's mark, drawn as far as the reader has scrolled.
+(function () {
+  var session = document.querySelector(".session");
+  if (!session) return;
+  var svg = session.querySelector("svg"), bed = svg.querySelector(".bed"), flow = svg.querySelector(".flow");
+  var steps = Array.prototype.slice.call(session.querySelectorAll(".step"));
+  var still = window.matchMedia("(prefers-reduced-motion: reduce)");
+  var length = 0;
+
+  function layout() {
+    var x = svg.getBoundingClientRect().width / 2, top = session.getBoundingClientRect().top;
+    var pts = steps.map(function (s) {
+      var m = getComputedStyle(s, "::before");
+      return s.getBoundingClientRect().top - top + parseFloat(m.top) + 7;
+    });
+    var swing = Math.min(18, x * 0.8), d = "M" + x + " 0 L" + x + " " + pts[0];
+    for (var i = 1; i < pts.length; i++) {
+      var a = pts[i - 1], b = pts[i], dir = i % 2 ? 1 : -1, mid = (b - a) / 2;
+      d += " C" + (x + dir * swing) + " " + (a + mid * 0.6) + ", " + (x - dir * swing) + " " + (b - mid * 0.6) + ", " + x + " " + b;
+    }
+    d += " L" + x + " " + session.getBoundingClientRect().height;
+    bed.setAttribute("d", d);
+    flow.setAttribute("d", d);
+    length = flow.getTotalLength();
+    flow.style.strokeDasharray = length;
+    draw();
+  }
+
+  function draw() {
+    var r = session.getBoundingClientRect(), line = window.innerHeight * 0.62;
+    var p = still.matches ? 1 : Math.max(0, Math.min(1, (line - r.top) / r.height));
+    flow.style.strokeDashoffset = length * (1 - p);
+    steps.forEach(function (s) {
+      s.classList.toggle("reached", still.matches || s.getBoundingClientRect().top + 16 < line);
+    });
+  }
+
+  // diagnostics in the terminals: the severity stands out
+  document.querySelectorAll(".term code").forEach(function (c) {
+    c.innerHTML = c.innerHTML.replace(/^(error|warning)(\[[EW]\d+\])/gm, function (m, k) {
+      return '<span class="' + (k === "error" ? "e" : "w") + '">' + m + "</span>";
+    });
+  });
+  window.addEventListener("load", layout);
+  window.addEventListener("resize", layout);
+  window.addEventListener("scroll", function () { requestAnimationFrame(draw); }, { passive: true });
+  if (document.readyState === "complete") layout();
+})();
+</script>
 </body>
 </html>
