@@ -23,7 +23,7 @@ jobs:
           repository: rillang/rill
           path: rill-src
           ssh-key: ${{ secrets.RILL_DEPLOY_KEY }}
-      - run: cd rill-src && sh bootstrap.sh
+      - run: cd rill-src && NO_GOLDEN=1 sh bootstrap.sh # the compiler only: its goldens are rillang/rill's CI
       - run: RILL=rill-src/out/rill sh book/check.sh
       - run: RILL=rill-src/out/rill sh tutorials/check.sh
       - if: failure() && github.event_name == 'schedule'
