@@ -62,6 +62,35 @@ pi doubled is 6.28318
 - `str(x)` turns an `Int`, `Float`, `Bool` or `String` into a `String`.
 - Comments are `//` to the end of the line. There are no block comments.
 
+### Constants
+
+A `let` at the top level of a file is a constant: a name for a value the compiler computes.
+
+```swift
+pub let hour = 3600
+pub let day = 24 * hour
+let banner: String = "v$version"
+let version = 2
+
+fn status(_ code: Int) -> String {
+  switch code {
+  case http.notFound: return "missing"     // another module's constant as a pattern
+  default: return "ok"
+  }
+}
+```
+
+- The value is a constant expression: Int, Float, Bool and String literals, operators,
+  other constants (`time.hour`), and interpolation of Int, Bool and String constants. A
+  call, an array or a map is error E0120, as is a constant that depends on itself or
+  overflows.
+- Every use is replaced by the value: no storage, no initialization order (a constant may
+  use one declared below it).
+- `pub let` exports it (`units.day`); the type can be written (`pub let pi: Float = 3.14`).
+- Another module's constant is a pattern: `case fs.notFound:`. A plain name in a pattern
+  binds a new variable, so a constant of the same module is matched with
+  `case _ where x == limit:`.
+
 ## Control flow
 
 <!-- include: examples/control.rl -->
