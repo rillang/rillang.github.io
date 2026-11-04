@@ -22,6 +22,7 @@ the compiler's. Import a module by its path under `std/`:
 | `std/time` | `now` (Unix ns), `monotonic`, `since`, `sleep`, `Duration` (`milliseconds`, `seconds`, `text`), `rfc3339` |
 | `std/json` | `Json` (`null`, `bool`, `num(Float)`, `str`, `arr`, `obj(Map)`), `parse` (`Json!`), `stringify`, `pretty`, `get`, `at`, `str`, `int`, `num`, `bool`, `items`, `object` |
 | `std/hash/sha256` | `sum(String)` (hex), `sumBytes`, `sumRange`, `hex` |
+| `std/pprof` | `startCPU`, `stopCPU`, `writeHeap`, `setMemProfileRate`, `writeTasks`: profiles for `rill pprof` and Go's pprof ([tooling](11-tooling.md#profiling-rill-pprof)) |
 | `std/runtime` | `setGCPercent` (the collector's target, returns the previous value), `numCPU` |
 
 ## Regular expressions

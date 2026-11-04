@@ -101,5 +101,7 @@ Environment variables tune a compiled program; the defaults need no tuning.
 | `RILL_BACKTRACE` | `1`: a panic prints the call chain |
 | `RILL_GCTRACE` | `1`: one line per collection on stderr (live memory, pause) |
 | `RILL_ALLOCPROF` | `1`: at exit, the allocation sites with the most bytes |
+| `RILL_CPUPROF` | a file: the CPU profile of the run ([profiling](11-tooling.md#profiling-rill-pprof)) |
+| `RILL_MEMPROF` | a file: the heap profile at exit (`RILL_MEMPROFRATE`: bytes per sample) |
 
 Next: [Basics](02-basics.md).

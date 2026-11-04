@@ -87,6 +87,48 @@ Strings, arrays, maps, optionals, results, enum cases, structs, generic instance
 Optimized builds keep line breakpoints and stepping, but variables that live in registers
 are not shown. Closures and interface values show their raw representation.
 
+## Profiling: `rill pprof`
+
+Profiles use the format of Go's pprof, and `rill pprof` shows them with Go's reports (Go's
+own `pprof` tool reads them too: `pprof -http=: cpu.pb` for a flame graph).
+
+```rill
+import "std/pprof"
+
+fn main() -> Void! {
+  pprof.startCPU("cpu.pb")?
+  work()
+  pprof.stopCPU() // optional: also written at exit or on a panic
+  pprof.writeHeap("mem.pb")? // needs a sample rate: pprof.setMemProfileRate or RILL_MEMPROF
+  pprof.writeTasks("tasks.pb")? // the stack of every task
+}
+```
+
+```sh
+$ RILL_CPUPROF=cpu.pb rill build compiler/main     # any program, no code changes
+$ rill pprof -top -nodecount=3 cpu.pb
+Type: cpu
+Duration: 797.43ms, Total samples = 820ms (102.83%)
+Showing nodes accounting for 580ms, 70.73% of 820ms total
+Showing top 3 nodes out of 179
+      flat  flat%   sum%        cum   cum%
+     280ms 34.15% 34.15%      280ms 34.15%  rl_memcpy
+     160ms 19.51% 53.66%      170ms 20.73%  rl_rt_gc_scanRange
+     140ms 17.07% 70.73%      140ms 17.07%  rl_zero
+$ rill test --cpuprofile cpu.pb --memprofile mem.pb ./lexer
+$ rill pprof mem.pb       # on a terminal: top, list <regexp>, peek <regexp>, traces, help
+```
+
+- CPU profiles sample 100 times a second on every thread, runtime functions included
+  (`rl_rt_gc_*` is the collector).
+- Heap profiles sample one allocation per 512 KiB on average (`RILL_MEMPROFRATE`,
+  `--memprofilerate`, `setMemProfileRate`; `1` records every allocation) and hold
+  `inuse_space` (the default), `inuse_objects`, `alloc_space` and `alloc_objects`
+  (`-sample_index=`).
+- `-list <regexp>` shows the source with values per line, `-peek <regexp>` callers and
+  callees, `-traces` every sample.
+- Details and limits: [docs/profiling.md](https://github.com/rillang/rill/blob/main/docs/profiling.md).
+
 ## Inspecting the compiler
 
 `--dump-tokens`, `--dump-ast`, `--dump-ir`, `--dump-opt` and `--dump-asm` print the
