@@ -16,13 +16,13 @@ jobs:
       - uses: actions/checkout@v4
       # the sidebar and previous/next links list every page (needs no compiler)
       - run: sh tools/nav.sh --check
-      # the compiler; while rillang/rill is private, RILL_REPO_TOKEN (a fine-grained token
-      # with read access to its contents) lets this repository check it out
+      # the compiler; while rillang/rill is private, RILL_DEPLOY_KEY (the private half of a
+      # read-only deploy key of rillang/rill) lets this repository check it out
       - uses: actions/checkout@v4
         with:
           repository: rillang/rill
           path: rill-src
-          token: ${{ secrets.RILL_REPO_TOKEN || github.token }}
+          ssh-key: ${{ secrets.RILL_DEPLOY_KEY }}
       - run: cd rill-src && sh bootstrap.sh
       - run: RILL=rill-src/out/rill sh book/check.sh
       - run: RILL=rill-src/out/rill sh tutorials/check.sh
