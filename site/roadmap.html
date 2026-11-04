@@ -61,25 +61,58 @@
         <li class="done"><span class="tag done">done</span> Packages from Git:
           <code>rill.mod</code>, <code>rill.sum</code>, minimal version selection, pinned
           tags, signatures, vendoring; builds never fetch</li>
+        <li class="done"><span class="tag done">done</span> Package updates and security:
+          <code>rill mod outdated</code>, <code>rill update</code> (changelog, API diff,
+          <code>--pr</code>), retractions, <code>rill mod audit</code> with reachability</li>
         <li class="done"><span class="tag done">done</span> Warnings and enforced lints;
           <code>rill api</code>, <code>rill release</code>, <code>rill fix</code></li>
+        <li class="done"><span class="tag done">done</span> <code>rill test</code> on the
+          level of <code>go test</code>: a test cache, benchmarks, coverage, fuzzing</li>
+        <li class="done"><span class="tag done">done</span> Profiling: <code>std/pprof</code>
+          and <code>rill pprof</code> (CPU, heap and task profiles)</li>
+        <li class="done"><span class="tag done">done</span> Faster builds: parallel code
+          generation and a parallel optimizer</li>
       </ul>
     </div>
     <div>
       <h2>Milestones</h2>
       <ul class="timeline">
         <li class="next"><span class="tag next">next</span> <strong>v0.2 Instant</strong> — speed and scripts<br>
-          Incremental builds, cached binaries for <code>rill run</code>, <code>#!/usr/bin/env rill</code>, fast start; package updates and security (<code>rill update</code>, <code>rill mod outdated</code>, <code>rill mod audit</code>). <em>Showcase: Scripts replace shell and Python one-offs.</em></li>
-        <li class=""><span class="tag planned">planned</span> <strong>v0.3 Batteries</strong> — the standard library<br>
-          <code>net/http</code> (server and client), command-line flags, logging, regular expressions, crypto, encodings, time formats, test helpers with diffs; error types and Unicode strings. <em>Showcase: A web service with a JSON API.</em></li>
-        <li class=""><span class="tag planned">planned</span> <strong>v0.4 Metal</strong> — as deep as Rust<br>
-          Native libraries and system APIs through a foreign function interface, with <code>window</code> and <code>gpu</code> packages for desktop apps and 2D/3D rendering (Metal, Vulkan); <code>nogc</code> functions, files and modules; arenas and pools; <code>unsafe</code>; SIMD; tasks the collector never stops (<code>spawn nogc</code>) and binaries without a collector (<code>--nogc</code>). <em>Showcase: A native window with a GPU triangle; a game loop without GC pauses.</em></li>
-        <li class=""><span class="tag planned">planned</span> <strong>v0.5 Agent-native</strong> — the toolchain for agents<br>
-          <code>rill doc</code> with doctests, <code>--json</code> for every command, <code>rill mcp</code> (an MCP server), completion, rename and code actions in the language server. <em>Showcase: An agent builds and migrates a project end to end.</em></li>
-        <li class=""><span class="tag planned">planned</span> <strong>v0.6 Everywhere</strong> — platforms<br>
-          An x86-64 backend for Linux and macOS, WebAssembly and a browser playground, then Windows; cross-compiling between all of them. <em>Showcase: The same program everywhere.</em></li>
+          Incremental builds (a function cache, the build key, parallel linking), cached binaries for <code>rill run</code>, <code>#!/usr/bin/env rill</code>, fast start. <em>Showcase: Scripts replace shell and Python one-offs.</em></li>
+        <li class=""><span class="tag planned">planned</span> <strong>v0.3 Foundations</strong> — language for libraries<br>
+          Error types, <code>Char</code> and Unicode strings, byte arrays, explicit type arguments, <code>if let</code> on results, UFCS across modules, test helpers with diffs.</li>
+        <li class=""><span class="tag planned">planned</span> <strong>v0.4 Encode</strong> — data in and out<br>
+          Encoding derived by the compiler for every type; typed JSON, TOML and CSV; config structs from files, environment and flags; file embedding; time zones. <em>Showcase: A CLI tool with a config file.</em></li>
+        <li class=""><span class="tag planned">planned</span> <strong>v0.5 Concurrency</strong> — the network runtime<br>
+          A netpoller and <code>std/net</code>, <code>select</code>, timers, one cancellation and deadline model, task groups. <em>Showcase: A TCP chat server.</em></li>
+        <li class=""><span class="tag planned">planned</span> <strong>v0.6 Crypto</strong> — security in Rill<br>
+          Hashes, HMAC, AEADs, signatures, X.509 and TLS 1.3, written in Rill; password hashing, UUIDs. <em>Showcase: An HTTPS request without system libraries.</em></li>
+        <li class=""><span class="tag planned">planned</span> <strong>v0.7 Web</strong> — HTTP<br>
+          <code>std/http</code>: HTTP/1.1 and HTTP/2 server and client, router, middleware, typed handlers; logging, compression, <code>rill watch</code>. <em>Showcase: A static file server and reverse proxy.</em></li>
+        <li class=""><span class="tag planned">planned</span> <strong>v0.8 API</strong> — web APIs<br>
+          OpenAPI and a docs page generated from the handlers, problem details, validation, JWT, WebSockets and server-sent events. <em>Showcase: A web service with a JSON API.</em></li>
+        <li class=""><span class="tag planned">planned</span> <strong>v0.9 Data</strong> — databases<br>
+          <code>std/sql</code>, a native Postgres driver, SQL checked at build time against the migrations, <code>rill db</code> migrations, <code>Decimal</code>, database test fixtures. <em>Showcase: A CRUD service on Postgres.</em></li>
+        <li class=""><span class="tag planned">planned</span> <strong>v0.10 Services</strong> — production services<br>
+          A Redis/Valkey client, a Postgres job queue, metrics, health checks and graceful shutdown. <em>Showcase: The package proxy runs on Rill.</em></li>
+        <li class=""><span class="tag planned">planned</span> <strong>v0.11 x86-64</strong> — servers<br>
+          An x86-64 backend for Linux and macOS, cross-compiling, container images. <em>Showcase: The proxy on an x86-64 server.</em></li>
+        <li class=""><span class="tag planned">planned</span> <strong>v0.12 Beta DX</strong> — public beta<br>
+          <code>rill doc</code>, completion and code actions, a VS Code extension, <code>rill new</code> templates, better diagnostics, a package index, an installer, <code>rill tour</code>, a playground. <em>Showcase: The public beta.</em></li>
+        <li class=""><span class="tag planned">planned</span> <strong>v0.13 FFI</strong> — native libraries<br>
+          A foreign function interface: C libraries, callbacks, <code>rill bind</code>; SQLite. <em>Showcase: SQLite from Rill.</em></li>
+        <li class=""><span class="tag planned">planned</span> <strong>v0.14 Metal</strong> — as deep as Rust<br>
+          <code>nogc</code> functions, files and modules; arenas and pools; <code>unsafe</code>; SIMD; tasks the collector never stops (<code>spawn nogc</code>) and binaries without a collector (<code>--nogc</code>). <em>Showcase: A simulation without GC pauses.</em></li>
+        <li class=""><span class="tag planned">planned</span> <strong>v0.15 Native apps</strong> — desktop and graphics<br>
+          <code>window</code> and <code>gpu</code> packages for desktop apps and 2D/3D rendering (Metal, Vulkan), a 2D engine. <em>Showcase: A GPU triangle; a small game.</em></li>
+        <li class=""><span class="tag planned">planned</span> <strong>v0.16 Agent-native</strong> — the toolchain for agents<br>
+          <code>--json</code> for every command, <code>rill mcp</code> (an MCP server), structured test output. <em>Showcase: An agent builds and migrates a project end to end.</em></li>
+        <li class=""><span class="tag planned">planned</span> <strong>v0.17 Everywhere</strong> — platforms<br>
+          Windows, WebAssembly and a browser playground. <em>Showcase: The same program everywhere.</em></li>
+        <li class=""><span class="tag planned">planned</span> <strong>v0.18 Protocols</strong> — more protocols<br>
+          HTTP/3 and QUIC, gRPC, OpenTelemetry, YAML, message brokers, HTML templates, S3.</li>
         <li class=""><span class="tag planned">planned</span> <strong>1.0</strong> — the promise<br>
-          A compatibility guarantee, signed reproducible releases, a toolchain version manager.</li>
+          A compatibility guarantee, signed reproducible releases. Not soon: the v0.x series comes first.</li>
       </ul>
       <p>Not planned: ownership and lifetimes as in Rust (the escape check of <code>nogc</code>
         arenas is the deliberate alternative), macros, inheritance, a VM. The details:
