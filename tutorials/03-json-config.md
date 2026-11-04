@@ -323,9 +323,9 @@ The pieces:
 <!-- include: json-config/sessions/test.txt -->
 ```text
 $ rill test cfg.rl
-ok   defaults
-ok   problems
-2 passed, 0 failed
+ok    cfg.rl    2 tests   0.00s
+
+result: ok. 2 passed; 1 module in 0.00s
 ```
 
 The minimal configuration, with every default spelled out:

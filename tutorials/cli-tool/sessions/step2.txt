@@ -1,6 +1,7 @@
 $ rill test wc2.rl
-ok   count
-1 passed, 0 failed
+ok    wc2.rl    1 test   0.00s
+
+result: ok. 1 passed; 1 module in 0.00s
 $ rill run wc2.rl testdata/fox.txt testdata/rill.txt
 3 9 45 testdata/fox.txt
 4 11 66 testdata/rill.txt

@@ -59,6 +59,8 @@ expect() {
 # finish: compares the transcript being recorded
 finish() {
   [ -n "$cur" ] || return 0
+  # rill test prints run times: recorded as 0.00s
+  sed -E 's/[0-9]+\.[0-9]+s$/0.00s/' "$tmp/transcript" >"$tmp/t" && mv "$tmp/t" "$tmp/transcript"
   if [ -n "$UPDATE" ]; then
     mkdir -p "$(dirname "$T/$cur")"
     cp "$tmp/transcript" "$T/$cur"

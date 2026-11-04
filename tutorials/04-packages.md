@@ -167,13 +167,15 @@ $ cat rill.mod
 module github.com/ada/textkit
 rill 0.1
 $ rill test . && rill test wrap && rill test internal/ascii
-ok   slug
-ok   words
-2 passed, 0 failed
-ok   lines
-1 passed, 0 failed
-ok   classes
-1 passed, 0 failed
+ok    .    2 tests   0.00s
+
+result: ok. 2 passed; 1 module in 0.00s
+ok    wrap    1 test   0.00s
+
+result: ok. 1 passed; 1 module in 0.00s
+ok    internal/ascii    1 test   0.00s
+
+result: ok. 1 passed; 1 module in 0.00s
 $ rill api
 fn slug(_ s: String) -> String
 fn words(_ s: String) -> Int
@@ -384,9 +386,9 @@ Replace `~/src/textkit/textkit.rl` with [`packages/v1.1/textkit.rl`](packages/v1
 ```text
 $ cd ~/src/textkit
 $ rill lsp --check textkit.rl && rill test .
-ok   slugify
-ok   words
-2 passed, 0 failed
+ok    .    2 tests   0.00s
+
+result: ok. 2 passed; 1 module in 0.00s
 $ rill api diff v1.0.0 .
 + fn slugify(_ s: String, sep: String) -> String
 change: minor

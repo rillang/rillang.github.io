@@ -1,4 +1,4 @@
 $ rill test wc.rl
-ok   count
-ok   parseArgs
-2 passed, 0 failed
+ok    wc.rl    2 tests   0.00s
+
+result: ok. 2 passed; 1 module in 0.00s

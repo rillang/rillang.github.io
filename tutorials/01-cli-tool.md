@@ -101,8 +101,9 @@ test "count" {
 <!-- include: cli-tool/sessions/step2.txt -->
 ```text
 $ rill test wc2.rl
-ok   count
-1 passed, 0 failed
+ok    wc2.rl    1 test   0.00s
+
+result: ok. 1 passed; 1 module in 0.00s
 $ rill run wc2.rl testdata/fox.txt testdata/rill.txt
 3 9 45 testdata/fox.txt
 4 11 66 testdata/rill.txt
@@ -115,10 +116,19 @@ failed `expect`; `rill test` exits with 1:
 ```text
 $ sed "s/c.words += 1/c.words += 2/" wc2.rl >broken.rl
 $ rill test broken.rl
-FAIL count
-  expect failed at broken.rl:36
-  expect failed at broken.rl:37
-0 passed, 1 failed
+FAIL  broken.rl    1 test   0.00s   (1 failed)
+
+failures:
+
+--- FAIL broken.rl: count
+broken.rl:36: expect(count("one two\nthree\n") == Counts(lines: 2, words: 3, bytes: 14))
+    left:  Counts(lines: 2, words: 6, bytes: 14)
+    right: Counts(lines: 2, words: 3, bytes: 14)
+broken.rl:37: expect(count("  spaced   out  ") == Counts(lines: 0, words: 2, bytes: 16))
+    left:  Counts(lines: 0, words: 4, bytes: 16)
+    right: Counts(lines: 0, words: 2, bytes: 16)
+
+result: FAIL. 0 passed, 1 failed; 1 module in 0.00s
 [exit 1]
 ```
 
@@ -278,9 +288,9 @@ What is new:
 <!-- include: cli-tool/sessions/test.txt -->
 ```text
 $ rill test wc.rl
-ok   count
-ok   parseArgs
-2 passed, 0 failed
+ok    wc.rl    2 tests   0.00s
+
+result: ok. 2 passed; 1 module in 0.00s
 ```
 
 ## Build a binary
