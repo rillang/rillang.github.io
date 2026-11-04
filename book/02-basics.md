@@ -351,7 +351,8 @@ a=3
 
 - `[T]` is an array: `len`, `push`, `slice(from, to)`, `map`, `filter`, `sortBy`,
   `parMap`, and `join(separator)` for `[String]`. Indexing out of bounds panics.
-- `Map<K, V>` is a hash map with `Int` or `String` keys, iterated in insertion order:
+- `Map<K, V>` is a hash map with `Int` or `String` keys, iterated in insertion order
+  (guaranteed; replacing a value keeps the key's position):
   `m[k]` returns `V?`, `m[k] = v` inserts or replaces, `has`, `keys`, `len`. A map literal is
   `["a": 1]`; the empty map is `[:]` or `Map<String, Int>()`.
 - An empty array literal needs a type: `let xs: [Int] = []`.
