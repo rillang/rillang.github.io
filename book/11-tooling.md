@@ -98,7 +98,7 @@ import "std/pprof"
 fn main() -> Void! {
   pprof.startCPU("cpu.pb")?
   work()
-  pprof.stopCPU() // optional: also written at exit or on a panic
+  pprof.stopCPU() // optional: also written at exit, on a panic or a crash
   pprof.writeHeap("mem.pb")? // needs a sample rate: pprof.setMemProfileRate or RILL_MEMPROF
   pprof.writeTasks("tasks.pb")? // the stack of every task
 }
