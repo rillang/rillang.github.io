@@ -73,9 +73,10 @@ fn main() {
   print("${largest([3, 9, 4]) ?? 0} ${largest(["pear", "apple"]) ?? ""}")
   print(mapAll(["a", "bcd"], { w in "${w.len()}" }).join(","))
 
-  // type arguments come from the arguments or from the expected type
+  // type arguments come from the arguments or from the expected type, or are written out
   let none: [String] = empty()
-  print("${none.len()}")
+  let zero = empty<Int>()
+  print("${none.len()} ${zero.len()}")
 }
 ```
 
@@ -85,14 +86,16 @@ fn main() {
 3
 9 pear
 1,3
-0
+0 0
 ```
 
 - A generic type is used with its arguments: `Stack<Int>`, `Pair<String, [Int]>`.
   In an expression: `Stack<Int>(items: [])`.
-- Calls never name type arguments (`empty<Int>()` does not exist). The compiler infers them
-  from the arguments, and failing that from the expected type
-  (`let none: [String] = empty()`). If neither works: E0029.
+- The compiler infers a call's type arguments from the arguments, and failing that from
+  the expected type (`let none: [String] = empty()`). If neither works: E0029. A call can
+  also name them: `empty<Int>()`, `box.none<String>()`, `xs.wrap<[Int]>()`; the arguments
+  must then agree with them. A wrong number of them, or type arguments on a function that
+  is not generic, is E0135.
 - A type parameter may have **one** constraint: `T: Comparable`, `T: Shape`. Without one,
   a `T` can only be passed, stored, returned and put into arrays, optionals and map values.
   Anything else (`<` on an unconstrained `T`, a field access) is E0030.
@@ -168,7 +171,7 @@ square: 4.0
   implicitly. The value is boxed (copied) and calls go through a table at run time. Only
   the interface's functions can be called on it: `==`, field access and `switch` are E0030.
 
-Not available yet: explicit type arguments on calls, several constraints per parameter,
+Not available yet: a generic function as a value (`let f = empty<Int>`), several constraints per parameter,
 `where` clauses on generics, interface inheritance, default implementations, `Self` in
 requirements, generic closures, and sending generic or interface values between tasks.
 
