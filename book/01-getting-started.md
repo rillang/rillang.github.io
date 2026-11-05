@@ -48,10 +48,33 @@ rill run hello.rl
 Hello, Rill!
 ```
 
-`rill run` compiles the file to `~/.cache/rill/run/` and runs it; arguments after the
-file name go to the program. A program starts at `fn main()`. (Two `rill run`s of files
-with the same name at the same time share that path; use `rill build -o` for parallel
-scripts.)
+`rill run` compiles the file and runs it; arguments after the file name go to the
+program. A program starts at `fn main()`. When nothing changed, the next `rill run`
+starts the binary it kept in `~/.cache/rill/run/` (about 10 ms, without compiling).
+
+## Scripts
+
+A file whose first line is `#!/usr/bin/env rill` runs like a shell or Python script:
+
+```swift
+#!/usr/bin/env rill
+import "std/os"
+
+fn main() {
+  for a in os.args() {
+    print("hello, $a")
+  }
+}
+```
+
+```sh
+chmod +x greet.rl
+./greet.rl Ada Linus      # hello, Ada / hello, Linus
+```
+
+`rill greet.rl Ada` does the same: a first argument ending in `.rl` is short for `rill run`.
+The first run compiles; later runs of the unchanged file start in about 10 ms. The file
+needs the `.rl` suffix, and `rill fmt` leaves the `#!` line as it is.
 
 ## The `rill` command
 
