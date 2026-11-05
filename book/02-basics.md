@@ -318,9 +318,10 @@ fn main() {
   base = 100
   print("${addBase(1)} ${makeAdder(base)(1)}")
 
-  // a closure stored in a variable needs a type
+  // a closure stored in a variable needs a type: on the variable or on its parameters
   let isEven: (Int) -> Bool = { n in n % 2 == 0 }
-  print("${isEven(4)} ${isEven(7)}")
+  let isOdd = { (n: Int) in n % 2 == 1 }
+  print("${isEven(4)} ${isEven(7)} ${isOdd(7)}")
 }
 ```
 
@@ -331,7 +332,7 @@ fn main() {
 20, 30, 40
 a bb ccc
 2 101
-true false
+true false true
 ```
 
 - A closure is `{ params in body }`; `{ $ * 2 }` uses `$` for a single parameter.
@@ -340,6 +341,10 @@ true false
 - Closure parameter types come from the context: the parameter type of the function
   being called, or an annotation like `let f: (Int) -> Int = { x in x + 1 }`.
   `let f = { x in x + 1 }` is error E0013.
+- Parameters in parentheses can carry their own types: `{ (s: String, n: Int) in … }`.
+  Where there is no context they give the closure its type (the result comes from the
+  body); where there is one they must agree with it (E0134). A generic call such as
+  `apply("abc") { (s: String) in s.len() }` learns its type arguments from them.
 - Closures **capture by value**, at the moment they are created. Assigning to a captured
   variable is error E0006.
 - Function types are written `(Int, String) -> Bool`; a named function is a value of such

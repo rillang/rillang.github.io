@@ -28,7 +28,8 @@ fn main() {
   base = 100
   print("${addBase(1)} ${makeAdder(base)(1)}")
 
-  // a closure stored in a variable needs a type
+  // a closure stored in a variable needs a type: on the variable or on its parameters
   let isEven: (Int) -> Bool = { n in n % 2 == 0 }
-  print("${isEven(4)} ${isEven(7)}")
+  let isOdd = { (n: Int) in n % 2 == 1 }
+  print("${isEven(4)} ${isEven(7)} ${isOdd(7)}")
 }
