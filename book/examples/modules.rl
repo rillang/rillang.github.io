@@ -3,10 +3,9 @@ import "lib/geometry"
 
 fn main() {
   let v = geometry.Vec2(x: 3, y: 4)
-  print("${geometry.length2(v)}")
+  print("${v.length2()}") // UFCS: length2 is pub in the module declaring Vec2
   let s: geometry.Shape = .rect(2, 5)
   print("${geometry.area(s)} ${geometry.area(geometry.Shape.square(3))}")
-  // UFCS looks in the current module only: v.length2() would not find geometry.length2
   let f: (geometry.Vec2) -> Int = geometry.length2
   print("${f(v)}")
 }

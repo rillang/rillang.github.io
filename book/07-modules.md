@@ -39,10 +39,9 @@ import "lib/geometry"
 
 fn main() {
   let v = geometry.Vec2(x: 3, y: 4)
-  print("${geometry.length2(v)}")
+  print("${v.length2()}") // UFCS: length2 is pub in the module declaring Vec2
   let s: geometry.Shape = .rect(2, 5)
   print("${geometry.area(s)} ${geometry.area(geometry.Shape.square(3))}")
-  // UFCS looks in the current module only: v.length2() would not find geometry.length2
   let f: (geometry.Vec2) -> Int = geometry.length2
   print("${f(v)}")
 }
@@ -64,8 +63,10 @@ fn main() {
 - Only `pub` declarations are visible outside the module (E0016 otherwise). Inside a module,
   order does not matter: everything can use everything.
 - Imported names are always qualified: `geometry.area(s)`, `geometry.Vec2(x: 3, y: 4)`.
-  UFCS (`v.length2()`) does not find functions of another module; call them as
-  `geometry.length2(v)`.
+  UFCS (`v.length2()`) looks in the current module first, then among the `pub` functions
+  of the module that declares the receiver's type; any other module's function is called as
+  `module.f(x)`. That module need not be imported: a value's type brings its functions along.
+  Plain calls (`length2(v)`) always need the prefix.
 - Import cycles are an error (E0017).
 - `test` blocks in a module run with `rill test lib/geometry` and can see private
   functions.

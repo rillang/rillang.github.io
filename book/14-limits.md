@@ -27,7 +27,8 @@ way. Items marked **planned** have a spec or are on the roadmap.
 - A closure's result type cannot be written; it comes from the context or the body.
 - No generic function as a value (`empty<Int>` without a call); one constraint per type
   parameter; no `Self` or default methods in interfaces.
-- UFCS calls (`x.f()`) find functions in the current module only.
+- UFCS calls (`x.f()`) find functions in the current module and the module declaring `x`'s
+  type, not in other imported modules.
 - `==` between an optional and a plain value works with the optional on the left
   (`opt == 3`) but not on the right (`3 == opt`).
 - `let`, `var` and `for` bind names only (`for k, v in m` two of them); patterns appear

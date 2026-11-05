@@ -383,8 +383,9 @@ fn main() {
 ```
 
 If `x` has a field of function type named `f`, `x.f(y)` calls that field instead.
-`x.f()` finds `f` in the current module only; a function from another module is called as
-`module.f(x)` (see [chapter 7](07-modules.md)).
+`x.f()` finds `f` in the current module, or a `pub` one in the module that declares `x`'s
+type; a function from any other module is called as `module.f(x)` (see
+[chapter 7](07-modules.md)).
 
 ## Arrays, maps and StringBuilder
 
