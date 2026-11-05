@@ -70,6 +70,8 @@ true
 | `a?` | the value, or return `nil` from the enclosing function (which must return an optional) |
 | `a == nil`, `a == 3` | comparisons (the optional on the left) |
 
+`if let`, `guard let` and `??` work on results too ([below](#results)).
+
 `??` binds more loosely than arithmetic: `a ?? 0 + 1` means `a ?? (0 + 1)`.
 
 An optional is an enum with the cases `.some(x)` and `.none`, and can be matched like one
@@ -93,6 +95,15 @@ fn parsePort(_ s: String) -> Int! {
   return n
 }
 
+// guard let takes the value of a result and skips the error: right here,
+// because any bad input means "use the default port"
+fn portOr80(_ s: String) -> Int {
+  guard let p = parsePort(s) else {
+    return 80
+  }
+  return p
+}
+
 // `?` propagates the error to the caller
 fn parsePair(_ a: String, _ b: String) -> Int! {
   return parsePort(a)? + parsePort(b)?
@@ -108,6 +119,13 @@ fn main() {
   case .err(e): print("error: ${e.msg}")
   }
 
+  // if let runs the block only when there is a value
+  if let p = parsePort("443") {
+    print("port $p")
+  }
+  print("${portOr80("http")}")
+
+  // to look at the error, switch on .err(e)
   switch parsePort("") {
   case .ok(_):
   case .err(e): print("empty input: ${e.msg}")
@@ -120,6 +138,8 @@ fn main() {
 8080
 0
 error: out of range: 99999
+port 443
+80
 empty input: not a number: 
 ```
 
@@ -128,8 +148,14 @@ empty input: not a number:
 - `e?` returns the error from the enclosing function (which must return a result,
   otherwise E0015); otherwise it is the value.
 - `e ?? fallback` uses a fallback instead of the error.
+- `if let v = r { … } else { … }` and `guard let v = r else { … }` work on results as on
+  optionals: they bind the value, and on an error they take the other branch and drop the
+  error. A `Void!` has no value to bind: use `switch` or `?` (E0003).
 - A result is an enum with the cases `.ok(value)` and `.err(error)`; `switch` takes it
-  apart (an empty case body ignores the other case).
+  apart, and is the way to look at the error (an empty case body ignores the other case).
+- Skipping an error, with `??` or `if let`, is right only when the fallback is a correct
+  answer (an optional settings file that is missing). Otherwise propagate it with `?` or
+  handle `.err(e)` in a `switch`.
 
 ## Errors in `main`
 

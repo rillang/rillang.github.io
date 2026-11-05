@@ -17,4 +17,7 @@ fn main() {
   case .err(e): print("failed: ${e.msg}")
   }
   print(average(9, 3) ?? "?")
+  if let q = divide(7, by: 7) {
+    print("quotient $q")
+  }
 }

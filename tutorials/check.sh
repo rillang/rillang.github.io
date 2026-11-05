@@ -132,6 +132,8 @@ x './wc testdata/fox.txt testdata/rill.txt'
 x './wc -l testdata/fox.txt missing.txt'
 x 'printf "one two\nthree\n" | ./wc -w'
 x './wc -q'
+expect unused
+x 'rill build unused.warn.rl -o unused'
 expect warnings
 x 'rill build warnings.warn.rl -o warnings'
 x 'rill build --deny-warnings warnings.warn.rl -o warnings'

@@ -1,0 +1,13 @@
+$ rill build unused.warn.rl -o unused
+error[E0043]: import "std/strings" is not used
+ --> unused.warn.rl:1:1
+  |
+1 | import "std/strings"
+  | ^
+
+error[E0042]: 'unused' is never used (name it _unused if that is intended)
+ --> unused.warn.rl:5:3
+  |
+5 |   let unused = 42
+  |   ^
+[exit 1]

@@ -277,8 +277,8 @@ What is new:
 - **Handling an error instead of propagating it**: a missing file should not stop the
   others, so `main` takes the result of `fs.readFile` apart with `switch` (`.ok(text)` /
   `.err(e)`), prints `e.msg` to standard error with `eprint`, and exits with 1 at the end
-  (`os.exit`). A result is an enum, and `if let` only works on optionals, so `switch` is the
-  way to look inside (the test does it too).
+  (`os.exit`). A result is an enum; `if let` would take the value and skip the error, but
+  here the error must be reported, so `switch` looks inside (the test does it too).
 - **Columns** come from `fmt.pad(s, width: 7, align: .right)` of `std/fmt`.
 - **Standard input**: `os.readStdin(max)` returns up to `max` bytes and `""` at the end;
   a `StringBuilder` collects the chunks.
@@ -319,20 +319,52 @@ error: unknown flag -q (use -l, -w, -c)
 
 The output matches the system `wc` (which pads to 8 columns).
 
-## Warnings
+## Unused code and warnings
 
-The compiler warns about code that is probably a mistake. The build still succeeds;
-`--deny-warnings` turns warnings into errors, which is what you want in CI.
-[`warnings.warn.rl`](cli-tool/warnings.warn.rl) has three problems:
+As in Go, an import that nothing uses and a local that is never read are errors:
+[`unused.warn.rl`](cli-tool/unused.warn.rl) does not build.
 
-<!-- include: cli-tool/warnings.warn.rl -->
+<!-- include: cli-tool/unused.warn.rl -->
 ```swift
 import "std/strings"
 import "std/fs"
 
 fn main() -> Void! {
-  var name = "fox.txt"
   let unused = 42
+  let text = fs.readFile("testdata/fox.txt")?
+  print("${text.len()} bytes")
+}
+```
+
+<!-- include: cli-tool/sessions/unused.txt -->
+```text
+$ rill build unused.warn.rl -o unused
+error[E0043]: import "std/strings" is not used
+ --> unused.warn.rl:1:1
+  |
+1 | import "std/strings"
+  | ^
+
+error[E0042]: 'unused' is never used (name it _unused if that is intended)
+ --> unused.warn.rl:5:3
+  |
+5 |   let unused = 42
+  |   ^
+[exit 1]
+```
+
+Remove the import, and remove the local or name it `_unused` if it is there on purpose.
+
+Other code that is probably a mistake gets a warning: the build still succeeds.
+`--deny-warnings` turns warnings into errors, which is what you want in CI.
+[`warnings.warn.rl`](cli-tool/warnings.warn.rl) declares a `var` it never changes:
+
+<!-- include: cli-tool/warnings.warn.rl -->
+```swift
+import "std/fs"
+
+fn main() -> Void! {
+  var name = "fox.txt"
   let text = fs.readFile("testdata/" + name)?
   print("${text.len()} bytes")
 }
@@ -341,46 +373,22 @@ fn main() -> Void! {
 <!-- include: cli-tool/sessions/warnings.txt -->
 ```text
 $ rill build warnings.warn.rl -o warnings
-warning[W0002]: import "std/strings" is not used
- --> warnings.warn.rl:1:1
-  |
-1 | import "std/strings"
-  | ^
-
 warning[W0004]: 'name' is never changed: declare it with let
- --> warnings.warn.rl:5:3
+ --> warnings.warn.rl:4:3
   |
-5 |   var name = "fox.txt"
-  |   ^
-
-warning[W0003]: 'unused' is never used (name it _unused if that is intended)
- --> warnings.warn.rl:6:3
-  |
-6 |   let unused = 42
+4 |   var name = "fox.txt"
   |   ^
 $ rill build --deny-warnings warnings.warn.rl -o warnings
-error[W0002]: import "std/strings" is not used
- --> warnings.warn.rl:1:1
-  |
-1 | import "std/strings"
-  | ^
-
 error[W0004]: 'name' is never changed: declare it with let
- --> warnings.warn.rl:5:3
+ --> warnings.warn.rl:4:3
   |
-5 |   var name = "fox.txt"
-  |   ^
-
-error[W0003]: 'unused' is never used (name it _unused if that is intended)
- --> warnings.warn.rl:6:3
-  |
-6 |   let unused = 42
+4 |   var name = "fox.txt"
   |   ^
 [exit 1]
 ```
 
-Fix each one (remove the import, `let name`, remove or rename to `_unused`), or silence a
-warning on purpose with `/// allow: W0003` on the declaration. The full list is in
+Fix it with `let name`, or silence a warning on purpose with `/// allow: W0004` above the
+function. The full list of errors and warnings is in
 [docs/errors.md](https://github.com/rillang/rill/blob/main/docs/errors.md).
 
 ## Formatting

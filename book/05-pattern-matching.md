@@ -2,7 +2,7 @@
 
 Patterns take values apart, and they live in one place: the cases of a `switch` (and of
 functions made of cases, which are a `switch` over the parameters). `let`, `var` and `for`
-bind names only; `if let` and `guard let` unwrap optionals.
+bind names only; `if let` and `guard let` unwrap optionals and results.
 
 ## switch
 

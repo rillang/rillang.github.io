@@ -1,6 +1,6 @@
 # Results and errors
 
-`T!` is a value or an error. `fail` creates an error, `?` passes it up, `??` replaces it, `switch` inspects it.
+`T!` is a value or an error. `fail` creates an error, `?` passes it up, `??` and `if let` skip it, `switch` inspects it.
 
 <!-- include: examples/errors.rl -->
 ```swift
@@ -23,6 +23,9 @@ fn main() {
   case .err(e): print("failed: ${e.msg}")
   }
   print(average(9, 3) ?? "?")
+  if let q = divide(7, by: 7) {
+    print("quotient $q")
+  }
 }
 ```
 
@@ -33,6 +36,7 @@ fn main() {
 5 -1
 failed: division by zero
 average 3
+quotient 1
 ```
 
 [Index](README.md)

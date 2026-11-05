@@ -9,6 +9,15 @@ fn parsePort(_ s: String) -> Int! {
   return n
 }
 
+// guard let takes the value of a result and skips the error: right here,
+// because any bad input means "use the default port"
+fn portOr80(_ s: String) -> Int {
+  guard let p = parsePort(s) else {
+    return 80
+  }
+  return p
+}
+
 // `?` propagates the error to the caller
 fn parsePair(_ a: String, _ b: String) -> Int! {
   return parsePort(a)? + parsePort(b)?
@@ -24,6 +33,13 @@ fn main() {
   case .err(e): print("error: ${e.msg}")
   }
 
+  // if let runs the block only when there is a value
+  if let p = parsePort("443") {
+    print("port $p")
+  }
+  print("${portOr80("http")}")
+
+  // to look at the error, switch on .err(e)
   switch parsePort("") {
   case .ok(_):
   case .err(e): print("empty input: ${e.msg}")

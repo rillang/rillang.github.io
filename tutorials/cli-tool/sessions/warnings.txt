@@ -1,37 +1,13 @@
 $ rill build warnings.warn.rl -o warnings
-warning[W0002]: import "std/strings" is not used
- --> warnings.warn.rl:1:1
-  |
-1 | import "std/strings"
-  | ^
-
 warning[W0004]: 'name' is never changed: declare it with let
- --> warnings.warn.rl:5:3
+ --> warnings.warn.rl:4:3
   |
-5 |   var name = "fox.txt"
-  |   ^
-
-warning[W0003]: 'unused' is never used (name it _unused if that is intended)
- --> warnings.warn.rl:6:3
-  |
-6 |   let unused = 42
+4 |   var name = "fox.txt"
   |   ^
 $ rill build --deny-warnings warnings.warn.rl -o warnings
-error[W0002]: import "std/strings" is not used
- --> warnings.warn.rl:1:1
-  |
-1 | import "std/strings"
-  | ^
-
 error[W0004]: 'name' is never changed: declare it with let
- --> warnings.warn.rl:5:3
+ --> warnings.warn.rl:4:3
   |
-5 |   var name = "fox.txt"
-  |   ^
-
-error[W0003]: 'unused' is never used (name it _unused if that is intended)
- --> warnings.warn.rl:6:3
-  |
-6 |   let unused = 42
+4 |   var name = "fox.txt"
   |   ^
 [exit 1]
