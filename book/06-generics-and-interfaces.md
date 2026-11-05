@@ -95,7 +95,7 @@ fn main() {
   the expected type (`let none: [String] = empty()`). If neither works: E0029. A call can
   also name them: `empty<Int>()`, `box.none<String>()`, `xs.wrap<[Int]>()`; the arguments
   must then agree with them. A wrong number of them, or type arguments on a function that
-  is not generic, is E0135.
+  is not generic, is E0031.
 - A type parameter may have **one** constraint: `T: Comparable`, `T: Shape`. Without one,
   a `T` can only be passed, stored, returned and put into arrays, optionals and map values.
   Anything else (`<` on an unconstrained `T`, a field access) is E0030.
