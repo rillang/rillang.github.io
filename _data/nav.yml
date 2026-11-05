@@ -232,3 +232,7 @@ tutorials:
       path: tutorials/04-packages.md
       url: /tutorials/04-packages.html
       group: ""
+    - title: "5. Scripts"
+      path: tutorials/05-scripts.md
+      url: /tutorials/05-scripts.html
+      group: ""
