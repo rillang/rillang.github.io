@@ -161,13 +161,9 @@ by-example:
       path: book/by-example/panic.md
       url: /book/by-example/panic.html
       group: "Errors"
-    - title: "if case and guard case"
-      path: book/by-example/if-case.md
-      url: /book/by-example/if-case.html
-      group: "Pattern matching"
-    - title: "Destructuring"
-      path: book/by-example/destructuring.md
-      url: /book/by-example/destructuring.html
+    - title: "Matching one case"
+      path: book/by-example/one-case.md
+      url: /book/by-example/one-case.html
       group: "Pattern matching"
     - title: "Functions made of cases"
       path: book/by-example/case-functions.md

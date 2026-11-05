@@ -1,7 +1,8 @@
 # 5. Pattern matching
 
-Taking values apart is one construct, used the same way in `switch`, `if case`,
-`guard case`, `let`, `for` and in functions made of cases.
+Patterns take values apart, and they live in one place: the cases of a `switch` (and of
+functions made of cases, which are a `switch` over the parameters). `let`, `var` and `for`
+bind names only; `if let` and `guard let` unwrap optionals.
 
 ## switch
 
@@ -70,8 +71,9 @@ fn main() {
 
   // name @ pattern binds the whole value too
   let s: Shape = .rect(Point(x: 9, y: 0), Point(x: 0, y: 0))
-  if case whole @ .rect(Point(x: x, y: _), _) = s {
-    print("x=$x in ${describe(whole)}")
+  switch s {
+  case whole @ .rect(Point(x: x, y: _), _): print("x=$x in ${describe(whole)}")
+  case .circle(_), .dot:
   }
 }
 ```
@@ -153,7 +155,7 @@ Bools, enums, optionals, results, structs and array lengths are checked structur
 Cases with a `where` guard do not count as covering. A case that can never match because
 earlier cases took all its values is error E0032.
 
-## Patterns outside switch
+## Matching one case, functions made of cases
 
 <!-- include: examples/patterns_more.rl -->
 ```swift
@@ -177,32 +179,41 @@ case (a, 0): return a
 case (a, b): return gcd(b, a % b)
 }
 
-fn sumOfFirstTwo(_ xs: [Int]) -> Int {
-  guard case [a, b, ...] = xs else {
-    return 0
-  }
-  return a + b
+// one pattern with a fallback: a switch as the function's value
+fn sumOfFirstTwo(_ xs: [Int]) -> Int = switch xs {
+  case [a, b, ...]: a + b
+  default: 0
 }
 
 fn main() {
   print("${fib(10)} ${gcd(84, 36)}")
   print("${sumOfFirstTwo([4, 5, 6])} ${sumOfFirstTwo([1])}")
 
-  // let destructures with an irrefutable pattern
-  let p = Point(x: 3, y: 4)
-  let Point(x: px, y: py) = p
-  print("$px $py")
+  // one case of interest: name the others with an empty body
+  let s: Shape = .circle(2.0)
+  switch s {
+  case .circle(r): print("radius $r")
+  case .square(_):
+  }
 
-  // for destructures every element; for case visits only matching ones
+  // let and for bind names; fields are read with `.`
+  let p = Point(x: 3, y: 4)
+  let px = p.x
+  print("$px ${p.y}")
+
+  // to visit only some elements, switch inside the loop
   let points = [Point(x: 1, y: 2), Point(x: 3, y: 4)]
   var dot = 0
-  for Point(x: x, y: y) in points {
-    dot += x * y
+  for pt in points {
+    dot += pt.x * pt.y
   }
   let shapes: [Shape] = [.circle(1.0), .square(2.0), .circle(0.5)]
   var radii = 0.0
-  for case .circle(r) in shapes {
-    radii += r
+  for sh in shapes {
+    switch sh {
+    case .circle(r): radii += r
+    case .square(_): continue
+    }
   }
   print("$dot $radii")
 
@@ -217,22 +228,22 @@ fn main() {
 ```text
 55 12
 9 0
+radius 2.0
 3 4
 14 1.5
 one -> 1
 two -> 2
 ```
 
-| Form | Pattern kind |
-|---|---|
-| `if case p = e { … } else { … }` | refutable: a condition |
-| `guard case p = e else { … }` | refutable; bindings stay visible after the guard |
-| `let p = e`, `var p = e` | irrefutable only (bindings, `_`, structs of those) |
-| `for p in xs` | irrefutable, destructures each element |
-| `for case p in xs` | refutable, visits only matching elements |
-| `for k, v in m` | both irrefutable (to filter, use `if case` inside the loop) |
-
-A refutable pattern where an irrefutable one is required is error E0034.
+- **One case of interest**: a `switch` whose other cases have an empty body. When only one
+  or two cases are left over, name them instead of writing `default:` (warning W0007), so
+  a case added to the enum later is not silently swallowed.
+- **A pattern with a fallback**: `fn f(…) -> T = switch xs { case [a, b, ...]: … default: … }`,
+  or `let v = switch …` inside a function.
+- **`let`, `var` and `for` bind names**, not patterns: read fields with `.` (`let px = p.x`)
+  and switch on each element inside the loop to visit only some of them. A pattern after
+  `let`/`var`/`for` is error E0130; `if case`, `guard case` and `for case` are E0127,
+  E0128 and E0129. `for k, v in m` (two names) iterates a map.
 
 **Functions made of cases**: when a function body starts with `case`, it matches the
 parameters. With several parameters, each case lists one pattern per parameter in

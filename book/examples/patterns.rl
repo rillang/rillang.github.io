@@ -61,7 +61,8 @@ fn main() {
 
   // name @ pattern binds the whole value too
   let s: Shape = .rect(Point(x: 9, y: 0), Point(x: 0, y: 0))
-  if case whole @ .rect(Point(x: x, y: _), _) = s {
-    print("x=$x in ${describe(whole)}")
+  switch s {
+  case whole @ .rect(Point(x: x, y: _), _): print("x=$x in ${describe(whole)}")
+  case .circle(_), .dot:
   }
 }

@@ -21,15 +21,15 @@ The full table of codes with a one-line example each is
 | Codes | Area |
 |---|---|
 | E0001–E0010 | names, syntax, types, labels, argument counts, constants, returns, duplicates |
-| E0011, E0018, E0032–E0035 | `switch` and patterns |
+| E0011, E0018, E0032, E0033, E0035 | `switch` and patterns |
 | E0012–E0017 | recursive structs, inference, members, `?`, visibility, imports |
 | E0019–E0022 | `guard`, misplaced statements, character literals, `inout` |
 | E0023 | unsafe code outside `runtime/` |
 | E0024–E0027 | concurrency rules (`group`/`spawn`, captures, `lock`, `Atomic`) |
 | E0028–E0031 | generics and interfaces |
-
 | E0036–E0039 | imports (`as`, paths, `internal/`) and moved builtins |
 | E0040, E0041 | a dropped `T!` result; naming conventions (types UpperCamelCase, the rest lowerCamelCase) |
+| E0127–E0130 | removed pattern forms: `if case`, `guard case`, `for case`, a pattern after `let`/`var`/`for` |
 | E0100–E0109 | packages: `rill.mod`, downloads, hashes, tags, signatures, `vendor/` |
 
 ## Warnings

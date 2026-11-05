@@ -18,32 +18,41 @@ case (a, 0): return a
 case (a, b): return gcd(b, a % b)
 }
 
-fn sumOfFirstTwo(_ xs: [Int]) -> Int {
-  guard case [a, b, ...] = xs else {
-    return 0
-  }
-  return a + b
+// one pattern with a fallback: a switch as the function's value
+fn sumOfFirstTwo(_ xs: [Int]) -> Int = switch xs {
+  case [a, b, ...]: a + b
+  default: 0
 }
 
 fn main() {
   print("${fib(10)} ${gcd(84, 36)}")
   print("${sumOfFirstTwo([4, 5, 6])} ${sumOfFirstTwo([1])}")
 
-  // let destructures with an irrefutable pattern
-  let p = Point(x: 3, y: 4)
-  let Point(x: px, y: py) = p
-  print("$px $py")
+  // one case of interest: name the others with an empty body
+  let s: Shape = .circle(2.0)
+  switch s {
+  case .circle(r): print("radius $r")
+  case .square(_):
+  }
 
-  // for destructures every element; for case visits only matching ones
+  // let and for bind names; fields are read with `.`
+  let p = Point(x: 3, y: 4)
+  let px = p.x
+  print("$px ${p.y}")
+
+  // to visit only some elements, switch inside the loop
   let points = [Point(x: 1, y: 2), Point(x: 3, y: 4)]
   var dot = 0
-  for Point(x: x, y: y) in points {
-    dot += x * y
+  for pt in points {
+    dot += pt.x * pt.y
   }
   let shapes: [Shape] = [.circle(1.0), .square(2.0), .circle(0.5)]
   var radii = 0.0
-  for case .circle(r) in shapes {
-    radii += r
+  for sh in shapes {
+    switch sh {
+    case .circle(r): radii += r
+    case .square(_): continue
+    }
   }
   print("$dot $radii")
 

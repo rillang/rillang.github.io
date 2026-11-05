@@ -262,10 +262,9 @@ test "parseArgs" {
   expect(all.lines && all.words && all.bytes && all.files == ["a.txt"])
   let l = parseArgs(["-l", "x", "y"]) ?? Options(lines: false, words: false, bytes: false, files: [])
   expect(l.lines && !l.words && l.files.len() == 2)
-  if case .err(e) = parseArgs(["-x"]) {
-    expect(e.msg == "unknown flag -x (use -l, -w, -c)")
-  } else {
-    expect(false)
+  switch parseArgs(["-x"]) {
+  case .ok(_): expect(false)
+  case .err(e): expect(e.msg == "unknown flag -x (use -l, -w, -c)")
   }
 }
 ```
@@ -278,8 +277,8 @@ What is new:
 - **Handling an error instead of propagating it**: a missing file should not stop the
   others, so `main` takes the result of `fs.readFile` apart with `switch` (`.ok(text)` /
   `.err(e)`), prints `e.msg` to standard error with `eprint`, and exits with 1 at the end
-  (`os.exit`). A result is an enum, and `if let` only works on optionals, so `switch` (or
-  `if case .err(e) = …`, as in the test) is the way to look inside.
+  (`os.exit`). A result is an enum, and `if let` only works on optionals, so `switch` is the
+  way to look inside (the test does it too).
 - **Columns** come from `fmt.pad(s, width: 7, align: .right)` of `std/fmt`.
 - **Standard input**: `os.readStdin(max)` returns up to `max` bytes and `""` at the end;
   a `StringBuilder` collects the chunks.

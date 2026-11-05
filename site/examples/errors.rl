@@ -12,7 +12,8 @@ fn config(_ raw: String) -> String! {
 
 fn main() {
   print(config("8080") ?? "?")
-  if case .err(e) = config("http") {
-    print("error: ${e.msg}")
+  switch config("http") {
+  case .ok(msg): print(msg)
+  case .err(e): print("error: ${e.msg}")
   }
 }

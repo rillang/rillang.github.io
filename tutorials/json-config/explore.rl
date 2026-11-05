@@ -15,8 +15,9 @@ case .obj(fields): return "object with ${fields.len()} keys"
 
 fn main() -> Void! {
   let doc = json.parse(fs.readFile(os.args()[0])?)?
-  guard case .obj(fields) = doc else {
-    return fail("expected an object, got ${kind(doc)}")
+  let fields = switch doc {
+    case .obj(f): f
+    default: return fail("expected an object, got ${kind(doc)}")
   }
   for key, value in fields {
     print("$key: ${kind(value)}")

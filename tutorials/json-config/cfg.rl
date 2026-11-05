@@ -88,18 +88,18 @@ fn texts(_ o: Map<String, json.Json>, _ key: String, required: Bool, _ problems:
     }
     return out
   }
-  guard case .arr(items) = j else {
-    problems.push("$key: expected an array of strings, got ${kind(j)}")
-    return out
-  }
-  for i in 0..<items.len() {
-    switch items[i] {
-    case .str(s): out.push(s)
-    case other: problems.push("$key[$i]: expected a string, got ${kind(other)}")
+  switch j {
+  case .arr(items):
+    for i in 0..<items.len() {
+      switch items[i] {
+      case .str(s): out.push(s)
+      case other: problems.push("$key[$i]: expected a string, got ${kind(other)}")
+      }
     }
-  }
-  if required && items.len() == 0 {
-    problems.push("$key: must not be empty")
+    if required && items.len() == 0 {
+      problems.push("$key: must not be empty")
+    }
+  default: problems.push("$key: expected an array of strings, got ${kind(j)}")
   }
   return out
 }
@@ -181,10 +181,9 @@ fn problemsIn(_ text: String) -> String {
 
 test "defaults" {
   let c = load(json.parse("{\"name\": \"n\", \"sources\": [\"/a\"], \"target\": {\"host\": \"h\"}}") ?? .null)
-  if case .ok(conf) = c {
-    expect(conf.target.port == 22 && conf.keepDaily == 7 && !conf.compress)
-  } else {
-    expect(false)
+  switch c {
+  case .ok(conf): expect(conf.target.port == 22 && conf.keepDaily == 7 && !conf.compress)
+  case .err(_): expect(false)
   }
 }
 

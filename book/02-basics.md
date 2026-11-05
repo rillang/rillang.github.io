@@ -159,7 +159,7 @@ bo
   can also be a value: see below.
 - `guard condition else { … }` checks a precondition. The `else` block must leave the
   scope (`return`, `break`, `continue`, `panic`, `exit`), otherwise error E0019. Bindings made
-  by `guard let` and `guard case` stay visible after the guard.
+  by `guard let` stay visible after the guard.
 - `for x in xs` iterates an array, `for i in a..<b` a half-open range, `for k, v in m` a map
   (in insertion order), `for x in ch` a channel until it is closed. `while` loops while a
   condition holds. `break` and `continue` apply to the innermost loop.
@@ -220,7 +220,7 @@ fn main() {
   exhaustive like the statement and takes every pattern and `where` guard.
 - The branches have one type: the declared type when there is one
   (`let v: Int? = if c { 1 } else { nil }`), otherwise the first branch's.
-- `if let` and `if case` are not values: use `guard let` or `??` (E0124).
+- `if let` is not a value: use `guard let` or `??` (E0124).
 
 ## Functions and argument labels
 

@@ -30,7 +30,8 @@ way. Items marked **planned** have a spec or are on the roadmap.
 - UFCS calls (`x.f()`) find functions in the current module only.
 - `==` between an optional and a plain value works with the optional on the left
   (`opt == 3`) but not on the right (`3 == opt`).
-- `for k, v in m` takes only irrefutable patterns; there is no `for case` over maps.
+- `let`, `var` and `for` bind names only (`for k, v in m` two of them); patterns appear
+  only in `switch` cases.
 - No `select` over channels, no timeouts, no sleep.
 - Only `//` comments; `///` doc comments are a convention without tooling yet.
 

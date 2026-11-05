@@ -45,8 +45,7 @@ Run any of them with `rill run book/by-example/examples/<name>.rl`.
 
 ## Pattern matching
 
-- [if case and guard case](if-case.md)
-- [Destructuring](destructuring.md)
+- [Matching one case](one-case.md)
 - [Functions made of cases](case-functions.md)
 
 ## Programs

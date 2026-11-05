@@ -108,8 +108,9 @@ fn main() {
   case .err(e): print("error: ${e.msg}")
   }
 
-  if case .err(e) = parsePort("") {
-    print("empty input: ${e.msg}")
+  switch parsePort("") {
+  case .ok(_):
+  case .err(e): print("empty input: ${e.msg}")
   }
 }
 ```
@@ -127,8 +128,8 @@ empty input: not a number:
 - `e?` returns the error from the enclosing function (which must return a result,
   otherwise E0015); otherwise it is the value.
 - `e ?? fallback` uses a fallback instead of the error.
-- A result is an enum with the cases `.ok(value)` and `.err(error)`; `switch`, `if case` and
-  `guard case` take it apart.
+- A result is an enum with the cases `.ok(value)` and `.err(error)`; `switch` takes it
+  apart (an empty case body ignores the other case).
 
 ## Errors in `main`
 

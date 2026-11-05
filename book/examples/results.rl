@@ -24,7 +24,8 @@ fn main() {
   case .err(e): print("error: ${e.msg}")
   }
 
-  if case .err(e) = parsePort("") {
-    print("empty input: ${e.msg}")
+  switch parsePort("") {
+  case .ok(_):
+  case .err(e): print("empty input: ${e.msg}")
   }
 }

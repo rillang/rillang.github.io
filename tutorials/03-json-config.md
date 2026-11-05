@@ -60,8 +60,9 @@ case .obj(fields): return "object with ${fields.len()} keys"
 
 fn main() -> Void! {
   let doc = json.parse(fs.readFile(os.args()[0])?)?
-  guard case .obj(fields) = doc else {
-    return fail("expected an object, got ${kind(doc)}")
+  let fields = switch doc {
+    case .obj(f): f
+    default: return fail("expected an object, got ${kind(doc)}")
   }
   for key, value in fields {
     print("$key: ${kind(value)}")
@@ -75,8 +76,9 @@ fn main() -> Void! {
   parameter. The compiler checks that all six cases are covered.
 - The enum is `json.Json` outside its module. Inside a pattern the type is known, so
   `.obj(fields)` needs no prefix.
-- `guard case .obj(fields) = doc else { … }` refuses anything but an object and keeps
-  `fields` in scope after the guard.
+- `let fields = switch doc { case .obj(f): f  default: return fail(…) }` refuses anything
+  but an object and keeps `fields` in scope for the rest of `main`: a branch of a
+  `switch` value may `return` instead of giving a value.
 - `for key, value in fields` walks the map. Objects keep their keys in file order.
 - `json.at(doc, "target.port")` follows a path and returns `Json?`; `json.int` turns that
   into `Int?` (nil for anything but a whole number). There is no optional chaining, so
@@ -194,18 +196,18 @@ fn texts(_ o: Map<String, json.Json>, _ key: String, required: Bool, _ problems:
     }
     return out
   }
-  guard case .arr(items) = j else {
-    problems.push("$key: expected an array of strings, got ${kind(j)}")
-    return out
-  }
-  for i in 0..<items.len() {
-    switch items[i] {
-    case .str(s): out.push(s)
-    case other: problems.push("$key[$i]: expected a string, got ${kind(other)}")
+  switch j {
+  case .arr(items):
+    for i in 0..<items.len() {
+      switch items[i] {
+      case .str(s): out.push(s)
+      case other: problems.push("$key[$i]: expected a string, got ${kind(other)}")
+      }
     }
-  }
-  if required && items.len() == 0 {
-    problems.push("$key: must not be empty")
+    if required && items.len() == 0 {
+      problems.push("$key: must not be empty")
+    }
+  default: problems.push("$key: expected an array of strings, got ${kind(j)}")
   }
   return out
 }
@@ -287,10 +289,9 @@ fn problemsIn(_ text: String) -> String {
 
 test "defaults" {
   let c = load(json.parse("{\"name\": \"n\", \"sources\": [\"/a\"], \"target\": {\"host\": \"h\"}}") ?? .null)
-  if case .ok(conf) = c {
-    expect(conf.target.port == 22 && conf.keepDaily == 7 && !conf.compress)
-  } else {
-    expect(false)
+  switch c {
+  case .ok(conf): expect(conf.target.port == 22 && conf.keepDaily == 7 && !conf.compress)
+  case .err(_): expect(false)
   }
 }
 
@@ -318,7 +319,7 @@ The pieces:
   a fraction), and `xs.map { json.Json.str($) }` an array. `json.pretty` indents by two
   spaces, `json.stringify` writes compact JSON.
 - **Tests** call `load` on JSON text directly. `?` is not allowed in test blocks, so
-  `json.parse(…) ?? .null` stands in, and `if case .ok(conf) = …` looks inside the result.
+  `json.parse(…) ?? .null` stands in, and a `switch` on the result looks inside it.
 
 <!-- include: json-config/sessions/test.txt -->
 ```text

@@ -118,9 +118,8 @@ test "parseArgs" {
   expect(all.lines && all.words && all.bytes && all.files == ["a.txt"])
   let l = parseArgs(["-l", "x", "y"]) ?? Options(lines: false, words: false, bytes: false, files: [])
   expect(l.lines && !l.words && l.files.len() == 2)
-  if case .err(e) = parseArgs(["-x"]) {
-    expect(e.msg == "unknown flag -x (use -l, -w, -c)")
-  } else {
-    expect(false)
+  switch parseArgs(["-x"]) {
+  case .ok(_): expect(false)
+  case .err(e): expect(e.msg == "unknown flag -x (use -l, -w, -c)")
   }
 }
