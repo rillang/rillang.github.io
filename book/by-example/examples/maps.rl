@@ -1,5 +1,5 @@
 fn main() {
-  var m: Map<String, Int> = [:]
+  var m = Map<String, Int>()
   m["k1"] = 7
   m["k2"] = 13
   print("${m.len()} ${m["k1"] ?? 0} ${m.has("k3")}")

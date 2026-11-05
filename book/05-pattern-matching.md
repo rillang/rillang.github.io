@@ -1,8 +1,7 @@
 # 5. Pattern matching
 
-Patterns take values apart, and they live in one place: the cases of a `switch` (and of
-functions made of cases, which are a `switch` over the parameters). `let`, `var` and `for`
-bind names only; `if let` and `guard let` unwrap optionals and results.
+Patterns take values apart, and they live in one place: the cases of a `switch`. `let`,
+`var` and `for` bind names only; `if let` and `guard let` unwrap optionals and results.
 
 ## switch
 
@@ -51,13 +50,18 @@ fn greet(_ name: String?) -> String {
   }
 }
 
+// maps are not matched: look keys up with m[k]
 fn server(_ conf: Map<String, Int>) -> String {
-  switch conf {
-  case [:]: return "no config"
-  case ["port": p, "debug": 1]: return "port $p (debug)"
-  case ["port": p]: return "port $p"
-  default: return "no port"
+  if conf.len() == 0 {
+    return "no config"
   }
+  guard let p = conf["port"] else {
+    return "no port"
+  }
+  if conf["debug"] == 1 {
+    return "port $p (debug)"
+  }
+  return "port $p"
 }
 
 fn main() {
@@ -69,10 +73,10 @@ fn main() {
   print("${greet(nil)}; ${greet("root")}; ${greet("ana")}")
   print("${server([:])}; ${server(["port": 80])}; ${server(["port": 8080, "debug": 1])}")
 
-  // name @ pattern binds the whole value too
+  // the whole value is the switch subject itself
   let s: Shape = .rect(Point(x: 9, y: 0), Point(x: 0, y: 0))
   switch s {
-  case whole @ .rect(Point(x: x, y: _), _): print("x=$x in ${describe(whole)}")
+  case .rect(Point(x: x, y: _), _): print("x=$x in ${describe(s)}")
   case .circle(_), .dot:
   }
 }
@@ -109,13 +113,14 @@ the pattern's bindings in scope. `default:` matches everything else.
 | `Type(field: p, …)` | a struct whose listed fields match; others are ignored | the field bindings |
 | `[p1, p2]` | an array of exactly that length | elementwise |
 | `[p1, ...rest]`, `[p1, ...]` | an array of at least that length; `rest` is the remainder | elementwise and `rest` |
-| `["key": p]` | a map that has the key, with a value matching `p`; other keys are allowed | the value bindings |
-| `[:]` | an empty map | nothing |
-| `name @ p` | what `p` matches | `name` (the whole value) and what `p` binds |
 
 Patterns nest freely. Bindings are constants. A pattern gets its type from the value it is
 matched against, so `.circle(r)` needs no type name; a pattern that cannot match the type
 is error E0033.
+
+Maps are not matched: look keys up with `m[k]` and test `m.len() == 0` (map patterns are
+error E0133). To use the whole value in a case, use the switch subject (`describe(s)`
+above); `name @ p` bindings are error E0132.
 
 ## Exhaustiveness
 
@@ -155,7 +160,7 @@ Bools, enums, optionals, results, structs and array lengths are checked structur
 Cases with a `where` guard do not count as covering. A case that can never match because
 earlier cases took all its values is error E0032.
 
-## Matching one case, functions made of cases
+## Matching one case, switch as a function body
 
 <!-- include: examples/patterns_more.rl -->
 ```swift
@@ -166,20 +171,17 @@ enum Shape {
   case square(Float)
 }
 
-// A function whose body starts with `case` matches its parameters
-fn fib(_ n: Int) -> Int {
-case 0: return 0
-case 1: return 1
-case n: return fib(n - 1) + fib(n - 2)
+// a function that only matches is a switch as its value
+fn fib(_ n: Int) -> Int = switch n {
+  case 0: 0
+  case 1: 1
+  default: fib(n - 1) + fib(n - 2)
 }
 
-// several parameters: one pattern per parameter, in parentheses
-fn gcd(_ a: Int, _ b: Int) -> Int {
-case (a, 0): return a
-case (a, b): return gcd(b, a % b)
-}
+// several parameters: conditions, not patterns
+fn gcd(_ a: Int, _ b: Int) -> Int = if b == 0 { a } else { gcd(b, a % b) }
 
-// one pattern with a fallback: a switch as the function's value
+// one pattern with a fallback
 fn sumOfFirstTwo(_ xs: [Int]) -> Int = switch xs {
   case [a, b, ...]: a + b
   default: 0
@@ -244,12 +246,10 @@ two -> 2
   and switch on each element inside the loop to visit only some of them. A pattern after
   `let`/`var`/`for` is error E0130; `if case`, `guard case` and `for case` are E0127,
   E0128 and E0129. `for k, v in m` (two names) iterates a map.
-
-**Functions made of cases**: when a function body starts with `case`, it matches the
-parameters. With several parameters, each case lists one pattern per parameter in
-parentheses (the only place where parentheses group patterns: Rill has no tuples). The
-cases must be exhaustive, like a `switch`. The signature stays explicit, so labels and
-types at the boundary do not change.
+- **A function that only matches** its parameter is `fn f(_ n: Int) -> Int = switch n { … }`.
+  A body that starts with `case` (a function made of cases) is error E0131. Several
+  parameters are compared with `if` (`gcd` above): Rill has no tuples, so there are no
+  tuple patterns.
 
 Not supported: string prefix patterns, patterns on closure parameters.
 

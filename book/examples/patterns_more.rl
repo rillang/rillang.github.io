@@ -5,20 +5,17 @@ enum Shape {
   case square(Float)
 }
 
-// A function whose body starts with `case` matches its parameters
-fn fib(_ n: Int) -> Int {
-case 0: return 0
-case 1: return 1
-case n: return fib(n - 1) + fib(n - 2)
+// a function that only matches is a switch as its value
+fn fib(_ n: Int) -> Int = switch n {
+  case 0: 0
+  case 1: 1
+  default: fib(n - 1) + fib(n - 2)
 }
 
-// several parameters: one pattern per parameter, in parentheses
-fn gcd(_ a: Int, _ b: Int) -> Int {
-case (a, 0): return a
-case (a, b): return gcd(b, a % b)
-}
+// several parameters: conditions, not patterns
+fn gcd(_ a: Int, _ b: Int) -> Int = if b == 0 { a } else { gcd(b, a % b) }
 
-// one pattern with a fallback: a switch as the function's value
+// one pattern with a fallback
 fn sumOfFirstTwo(_ xs: [Int]) -> Int = switch xs {
   case [a, b, ...]: a + b
   default: 0

@@ -48,14 +48,14 @@ import "std/os"
 import "std/fs"
 import "std/json"
 
-// The kind of a JSON value: a function made of cases over the Json enum.
-fn kind(_ j: json.Json) -> String {
-case .null: return "null"
-case .bool(b): return "bool $b"
-case .num(n): return "number $n"
-case .str(s): return "string \"$s\""
-case .arr(xs): return "array of ${xs.len()}"
-case .obj(fields): return "object with ${fields.len()} keys"
+// The kind of a JSON value: a switch over the Json enum as the function body.
+fn kind(_ j: json.Json) -> String = switch j {
+  case .null: "null"
+  case .bool(b): "bool $b"
+  case .num(n): "number $n"
+  case .str(s): "string \"$s\""
+  case .arr(xs): "array of ${xs.len()}"
+  case .obj(fields): "object with ${fields.len()} keys"
 }
 
 fn main() -> Void! {
@@ -72,8 +72,8 @@ fn main() -> Void! {
 }
 ```
 
-- `kind` is a **function made of cases**: its body starts with `case`, so it matches its
-  parameter. The compiler checks that all six cases are covered.
+- `kind`'s body is a **`switch` value** (`fn … = switch j { … }`): each case gives the
+  result. The compiler checks that all six cases are covered.
 - The enum is `json.Json` outside its module. Inside a pattern the type is known, so
   `.obj(fields)` needs no prefix.
 - `let fields = switch doc { case .obj(f): f  default: return fail(…) }` refuses anything
@@ -126,13 +126,13 @@ struct Config {
   exclude: [String],
 }
 
-fn kind(_ j: json.Json) -> String {
-case .null: return "null"
-case .bool(_): return "a boolean"
-case .num(_): return "a number"
-case .str(_): return "a string"
-case .arr(_): return "an array"
-case .obj(_): return "an object"
+fn kind(_ j: json.Json) -> String = switch j {
+  case .null: "null"
+  case .bool(_): "a boolean"
+  case .num(_): "a number"
+  case .str(_): "a string"
+  case .arr(_): "an array"
+  case .obj(_): "an object"
 }
 
 // The fields of an object, or none (with a problem) for anything else.

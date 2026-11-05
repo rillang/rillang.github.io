@@ -41,13 +41,18 @@ fn greet(_ name: String?) -> String {
   }
 }
 
+// maps are not matched: look keys up with m[k]
 fn server(_ conf: Map<String, Int>) -> String {
-  switch conf {
-  case [:]: return "no config"
-  case ["port": p, "debug": 1]: return "port $p (debug)"
-  case ["port": p]: return "port $p"
-  default: return "no port"
+  if conf.len() == 0 {
+    return "no config"
   }
+  guard let p = conf["port"] else {
+    return "no port"
+  }
+  if conf["debug"] == 1 {
+    return "port $p (debug)"
+  }
+  return "port $p"
 }
 
 fn main() {
@@ -59,10 +64,10 @@ fn main() {
   print("${greet(nil)}; ${greet("root")}; ${greet("ana")}")
   print("${server([:])}; ${server(["port": 80])}; ${server(["port": 8080, "debug": 1])}")
 
-  // name @ pattern binds the whole value too
+  // the whole value is the switch subject itself
   let s: Shape = .rect(Point(x: 9, y: 0), Point(x: 0, y: 0))
   switch s {
-  case whole @ .rect(Point(x: x, y: _), _): print("x=$x in ${describe(whole)}")
+  case .rect(Point(x: x, y: _), _): print("x=$x in ${describe(s)}")
   case .circle(_), .dot:
   }
 }

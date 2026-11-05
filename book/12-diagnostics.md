@@ -28,19 +28,22 @@ The full table of codes with a one-line example each is
 | E0024–E0027 | concurrency rules (`group`/`spawn`, captures, `lock`, `Atomic`) |
 | E0028–E0031 | generics and interfaces |
 | E0036–E0039 | imports (`as`, paths, `internal/`) and moved builtins |
-| E0040, E0041 | a dropped `T!` result; naming conventions (types UpperCamelCase, the rest lowerCamelCase) |
-| E0127–E0130 | removed pattern forms: `if case`, `guard case`, `for case`, a pattern after `let`/`var`/`for` |
+| E0040–E0043 | a dropped `T!` result; naming conventions (types UpperCamelCase, the rest lowerCamelCase); unused locals and imports |
+| E0127–E0133 | removed forms: `if case`, `guard case`, `for case`, a pattern after `let`/`var`/`for`, functions made of cases, `@` bindings, map patterns |
 | E0100–E0109 | packages: `rill.mod`, downloads, hashes, tags, signatures, `vendor/` |
 
 ## Warnings
 
-Warnings do not stop a build: unused imports (`W0002`), unused locals and parameters
-(`W0003`, name them `_x` if intended), a `var` that is never changed (`W0004`), unreachable
-code (`W0005`), use of a deprecated declaration (`W0001`). When there are errors, only the
-errors are shown.
+Unused imports and locals are errors, as in Go (E0043, E0042; name a local `_x` if it is
+intended). Warnings do not stop a build: a `var` that is never changed (`W0004`),
+unreachable code (`W0005`), use of a deprecated declaration (`W0001`), a `default` that
+covers only one or two cases (`W0007`), `let m: Map<K, V> = [:]` instead of
+`Map<K, V>()` (`W0010`), `guard` with a plain condition instead of an `if` (`W0011`).
+An unused parameter (`W0003`) is a hint in the editor only. When there are errors, only
+the errors are shown. `rill fix` rewrites W0006, W0007, W0009, W0010 and W0011.
 
 - `--deny-warnings` turns warnings into errors (for CI).
-- `/// allow: W0003` above a declaration silences that warning inside it.
+- `/// allow: W0004` above a declaration silences that warning inside it.
 - The language server shows warnings with warning severity; warnings in the standard
   library and in packages are never shown.
 

@@ -8,8 +8,8 @@ fn classify(_ n: Int) -> String {
 }
 
 fn firstWord(_ line: String) -> String {
-  // guard: the else block must leave the function
-  guard line.len() > 0 else {
+  // an early exit is an if with return
+  if line.len() == 0 {
     return "(empty)"
   }
   return line.split(" ")[0]

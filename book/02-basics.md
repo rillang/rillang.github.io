@@ -103,8 +103,8 @@ fn classify(_ n: Int) -> String {
 }
 
 fn firstWord(_ line: String) -> String {
-  // guard: the else block must leave the function
-  guard line.len() > 0 else {
+  // an early exit is an if with return
+  if line.len() == 0 {
     return "(empty)"
   }
   return line.split(" ")[0]
@@ -157,9 +157,10 @@ bo
 
 - `if` / `else if` / `else` are statements; conditions must be `Bool`. An `if` or `switch`
   can also be a value: see below.
-- `guard condition else { … }` checks a precondition. The `else` block must leave the
-  scope (`return`, `break`, `continue`, `panic`, `exit`), otherwise error E0019. Bindings made
-  by `guard let` stay visible after the guard.
+- Early exits are an `if` with `return` (or `break`, `continue`, `panic`). `guard let x = …
+  else { … }` unwraps an optional or a result for the rest of the scope; its `else` block
+  must leave the scope, otherwise error E0019. `guard` is for bindings: a plain condition
+  (`guard n > 0 else`) is warning W0011, written `if n <= 0 { return }` (`rill fix` does it).
 - `for x in xs` iterates an array, `for i in a..<b` a half-open range, `for k, v in m` a map
   (in insertion order), `for x in ch` a channel until it is closed. `while` loops while a
   condition holds. `break` and `continue` apply to the innermost loop.
@@ -438,7 +439,9 @@ a=3
 - `Map<K, V>` is a hash map with `Int` or `String` keys, iterated in insertion order
   (guaranteed; replacing a value keeps the key's position):
   `m[k]` returns `V?`, `m[k] = v` inserts or replaces, `has`, `keys`, `len`. A map literal is
-  `["a": 1]`; the empty map is `[:]` or `Map<String, Int>()`.
+  `["a": 1]`. A new empty map is `Map<String, Int>()`; `[:]` works where the type is
+  already known (an argument, a `return`, `m = [:]`), and `let m: Map<K, V> = [:]` is
+  warning W0010.
 - An empty array literal needs a type: `let xs: [Int] = []`.
 - Arrays and maps are **values**: assigning one copies it (lazily, on the first write).
 - `StringBuilder()` collects pieces (`add`, `addInt`, `addByte`) and `build()`s a string.

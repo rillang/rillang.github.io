@@ -8,11 +8,13 @@ fn describe(_ xs: [Int]) -> String {
 }
 
 fn port(_ conf: Map<String, Int>) -> String {
-  switch conf {
-  case ["port": p, "tls": 1]: return "https on $p"
-  case ["port": p]: return "http on $p"
-  default: return "no port"
+  guard let p = conf["port"] else {
+    return "no port"
   }
+  if conf["tls"] == 1 {
+    return "https on $p"
+  }
+  return "http on $p"
 }
 
 fn main() {

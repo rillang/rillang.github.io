@@ -46,7 +46,7 @@ Run any of them with `rill run book/by-example/examples/<name>.rl`.
 ## Pattern matching
 
 - [Matching one case](one-case.md)
-- [Functions made of cases](case-functions.md)
+- [Switch as a function body](switch-functions.md)
 
 ## Programs
 

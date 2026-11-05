@@ -89,7 +89,7 @@ fn parsePort(_ s: String) -> Int! {
   guard let n = s.toInt() else {
     return fail("not a number: $s")
   }
-  guard n > 0 && n < 65536 else {
+  if n <= 0 || n >= 65536 {
     return fail("out of range: $n")
   }
   return n

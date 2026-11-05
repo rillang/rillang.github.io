@@ -3,14 +3,14 @@ import "std/os"
 import "std/fs"
 import "std/json"
 
-// The kind of a JSON value: a function made of cases over the Json enum.
-fn kind(_ j: json.Json) -> String {
-case .null: return "null"
-case .bool(b): return "bool $b"
-case .num(n): return "number $n"
-case .str(s): return "string \"$s\""
-case .arr(xs): return "array of ${xs.len()}"
-case .obj(fields): return "object with ${fields.len()} keys"
+// The kind of a JSON value: a switch over the Json enum as the function body.
+fn kind(_ j: json.Json) -> String = switch j {
+  case .null: "null"
+  case .bool(b): "bool $b"
+  case .num(n): "number $n"
+  case .str(s): "string \"$s\""
+  case .arr(xs): "array of ${xs.len()}"
+  case .obj(fields): "object with ${fields.len()} keys"
 }
 
 fn main() -> Void! {

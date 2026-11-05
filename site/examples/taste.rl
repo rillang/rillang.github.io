@@ -4,10 +4,10 @@ enum Expr {
   case mul(Expr, Expr)
 }
 
-fn eval(_ e: Expr) -> Int {
-case .num(n): return n
-case .add(a, b): return eval(a) + eval(b)
-case .mul(a, b): return eval(a) * eval(b)
+fn eval(_ e: Expr) -> Int = switch e {
+  case .num(n): n
+  case .add(a, b): eval(a) + eval(b)
+  case .mul(a, b): eval(a) * eval(b)
 }
 
 fn main() {

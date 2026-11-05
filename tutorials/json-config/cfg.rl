@@ -18,13 +18,13 @@ struct Config {
   exclude: [String],
 }
 
-fn kind(_ j: json.Json) -> String {
-case .null: return "null"
-case .bool(_): return "a boolean"
-case .num(_): return "a number"
-case .str(_): return "a string"
-case .arr(_): return "an array"
-case .obj(_): return "an object"
+fn kind(_ j: json.Json) -> String = switch j {
+  case .null: "null"
+  case .bool(_): "a boolean"
+  case .num(_): "a number"
+  case .str(_): "a string"
+  case .arr(_): "an array"
+  case .obj(_): "an object"
 }
 
 // The fields of an object, or none (with a problem) for anything else.

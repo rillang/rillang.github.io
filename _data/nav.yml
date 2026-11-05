@@ -165,9 +165,9 @@ by-example:
       path: book/by-example/one-case.md
       url: /book/by-example/one-case.html
       group: "Pattern matching"
-    - title: "Functions made of cases"
-      path: book/by-example/case-functions.md
-      url: /book/by-example/case-functions.html
+    - title: "Switch as a function body"
+      path: book/by-example/switch-functions.md
+      url: /book/by-example/switch-functions.html
       group: "Pattern matching"
     - title: "Modules"
       path: book/by-example/modules.md
