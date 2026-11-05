@@ -10,6 +10,7 @@ finished code; every command and its output on the pages is replayed and compare
 | [2. Concurrency](02-concurrency.md) | `hashtree`: SHA-256 of a directory tree on all cores | `fs.walk`, `std/hash/sha256`, `parMap`, `group`/`spawn`, `Channel`, `Mutex`, `std/time` |
 | [3. A JSON configuration](03-json-config.md) | `cfg`: load, default and validate a config | `std/json`, pattern matching over `Json`, `inout`, `switch` values |
 | [4. Packages](04-packages.md) | a library on (local) Git and an app using it | `rill mod init`, `rill get`, `rill.sum`, `internal/`, `rill api`, `rill release`, `/// deprecated:`, `rill fix` |
+| [5. Scripts](05-scripts.md) | `todo`, `tidy`, `tasks`: chores as `#!/usr/bin/env rill` scripts | `fs.walk`, `fs.rename`, `std/json`, `os.run`, `std/time`, kept `rill run` binaries |
 
 They build on each other a little, but each one stands alone. The [Rill Book](../book/README.md)
 is the reference for everything they touch.

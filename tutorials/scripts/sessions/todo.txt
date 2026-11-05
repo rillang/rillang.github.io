@@ -1,0 +1,10 @@
+$ ./todo.rl notes
+notes/2026/november.md:3: TODO: renew the passport
+notes/2026/november.md:4: TODO: back up the photos
+notes/shopping.txt:3: TODO bread (the good one)
+notes/trip.md:4: - TODO: ask Linus about the tent
+4 TODOs
+$ rill todo.rl notes/2026
+notes/2026/november.md:3: TODO: renew the passport
+notes/2026/november.md:4: TODO: back up the photos
+2 TODOs

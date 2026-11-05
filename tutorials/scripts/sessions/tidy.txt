@@ -1,0 +1,19 @@
+$ rill test tidy.rl
+ok    tidy.rl    1 test   0.00s
+
+result: ok. 1 passed; 1 module in 0.00s
+$ ./tidy.rl photos
+skip Beach Day 01.JPG: beach-day-01.jpg exists
+Beach Day 02.JPG -> beach-day-02.jpg
+IMG_0042.HEIC -> img_0042.heic
+(dry run: --apply renames)
+$ ./tidy.rl --apply photos
+skip Beach Day 01.JPG: beach-day-01.jpg exists
+Beach Day 02.JPG -> beach-day-02.jpg
+IMG_0042.HEIC -> img_0042.heic
+$ ls photos
+Beach Day 01.JPG
+beach-day-01.jpg
+beach-day-02.jpg
+img_0042.heic
+sunset.jpg

@@ -238,6 +238,20 @@ x 'rill build --deny-warnings . -o greeter && ./greeter'
 x 'rill mod tidy && rill mod verify'
 finish
 
+# ---------------------------------------------------------------- 5. scripts
+session scripts
+expect todo
+x './todo.rl notes'
+x 'rill todo.rl notes/2026'
+expect tidy
+x 'rill test tidy.rl'
+x './tidy.rl photos'
+x './tidy.rl --apply photos'
+x 'ls photos'
+expect tasks
+xt './tasks.rl'
+finish
+
 # ---------------------------------------------------------------- source checks
 cd "$repo" || exit 1
 srcs=$(find tutorials -name '*.rl' ! -name '*.warn.rl' ! -name '*.fmt.rl' | sort)

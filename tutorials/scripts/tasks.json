@@ -1,0 +1,8 @@
+{
+  "tasks": [
+    { "name": "list notes", "run": ["ls", "notes"] },
+    { "name": "count todos", "run": ["grep", "-c", "TODO", "notes/trip.md"] },
+    { "name": "missing file", "run": ["cat", "notes/nope.md"] },
+    { "name": "never runs", "run": ["echo", "unreachable"] }
+  ]
+}

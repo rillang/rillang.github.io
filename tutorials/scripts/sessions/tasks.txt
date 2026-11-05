@@ -1,0 +1,10 @@
+$ ./tasks.rl
+2026
+shopping.txt
+trip.md
+== list notes: exit 0 in <time>
+1
+== count todos: exit 0 in <time>
+cat: notes/nope.md: No such file or directory
+== missing file: exit 1 in <time>
+[exit 1]
