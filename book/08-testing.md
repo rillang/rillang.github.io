@@ -54,7 +54,8 @@ test "a failing test reports every failed expect" {
 - `?` works in a test as in a function returning a result: `let n = parse("3")?` takes the
   value, and an error (or `nil` from an optional) fails the test with its message and ends
   it. The report shows the expression and `error: <message>`. Inside a closure `?` still
-  belongs to the closure.
+  belongs to the closure. The same holds in bench and fuzz blocks: there a failing `?` is
+  a failed bench, or a finding.
 - `rill test` runs the tests and not `main`; `rill run` and `rill build` ignore `test` blocks.
 - A panic (or `os.exit`) inside a test ends that package's run: the test is reported as
   `PANIC` with the panic message, and the tests after it as not run.

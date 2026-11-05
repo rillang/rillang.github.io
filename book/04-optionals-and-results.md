@@ -146,7 +146,8 @@ empty input: not a number:
 - `T!` holds a `T` or an `Error`. `Void!` is a result without a value.
 - `fail("message")` creates an error. `Error` has one field, `msg: String`.
 - `e?` returns the error from the enclosing function (which must return a result,
-  otherwise E0015); otherwise it is the value.
+  otherwise E0015); otherwise it is the value. In a test it fails the test instead
+  ([chapter 8](08-testing.md)).
 - `e ?? fallback` uses a fallback instead of the error.
 - `if let v = r { … } else { … }` and `guard let v = r else { … }` work on results as on
   optionals: they bind the value, and on an error they take the other branch and drop the
