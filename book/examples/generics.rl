@@ -65,7 +65,8 @@ fn main() {
   print("${largest([3, 9, 4]) ?? 0} ${largest(["pear", "apple"]) ?? ""}")
   print(mapAll(["a", "bcd"], { w in "${w.len()}" }).join(","))
 
-  // type arguments come from the arguments or from the expected type
+  // type arguments come from the arguments or from the expected type, or are written out
   let none: [String] = empty()
-  print("${none.len()}")
+  let zero = empty<Int>()
+  print("${none.len()} ${zero.len()}")
 }

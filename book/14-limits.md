@@ -25,7 +25,8 @@ way. Items marked **planned** have a spec or are on the roadmap.
   `-(1.shr(60))`.
 - Errors carry only a message (`e.msg`); there are no error types to match on.
 - A closure's result type cannot be written; it comes from the context or the body.
-- No explicit type arguments on calls; one constraint per type parameter; no `Self` or
+- No generic function as a value (`empty<Int>` without a call); one constraint per type
+  parameter; no `Self` or
   default methods in interfaces.
 - UFCS calls (`x.f()`) find functions in the current module only.
 - `==` between an optional and a plain value works with the optional on the left
