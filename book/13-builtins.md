@@ -48,7 +48,7 @@ global names (`readFile`, `args`, …) is error E0039, which names the replaceme
 |---|---|
 | `+ - * /` | `Int`, `Float`; `+` also concatenates `String`s |
 | `%` | `Int` |
-| `== !=` | `Int`, `Float`, `Bool`, `String`, and structs, enums, arrays and optionals of comparable types (structural); not maps, interface values or functions |
+| `== !=` | `Int`, `Float`, `Bool`, `String`, and structs, enums, arrays, maps and optionals of comparable types (structural; maps: same keys with equal values, in any order); not interface values or functions |
 | `< <= > >=` | `Int`, `Float`, `String` |
 | `&& \|\| !` | `Bool` |
 | `??` | optionals and results |
