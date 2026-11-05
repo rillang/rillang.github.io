@@ -51,6 +51,10 @@ test "a failing test reports every failed expect" {
   a message, evaluated only when the expectation fails. `expect` outside a test is error
   E0020; a message that is no `String` is E0113.
 - Long or multi-line values are shown as a line diff (`-` left, `+` right).
+- `?` works in a test as in a function returning a result: `let n = parse("3")?` takes the
+  value, and an error (or `nil` from an optional) fails the test with its message and ends
+  it. The report shows the expression and `error: <message>`. Inside a closure `?` still
+  belongs to the closure.
 - `rill test` runs the tests and not `main`; `rill run` and `rill build` ignore `test` blocks.
 - A panic (or `os.exit`) inside a test ends that package's run: the test is reported as
   `PANIC` with the panic message, and the tests after it as not run.
@@ -133,7 +137,7 @@ ok    lexer      12 tests   (cached)
 | `build` | the build failed: `ok` (false), `output` (diagnostics) |
 | `start` | `test` |
 | `output` | `text`: a test's output (with `test`) or text outside tests |
-| `expect` | a failed expectation: `file`, `line`, `source`, `left`, `right`, `msg` (absent ones left out) |
+| `expect` | a failed expectation: `file`, `line`, `source`, `left`, `right`, `msg` (absent ones left out); for a `?` that met an error, `source` is the expression and `msg` the error |
 | `end` | `test`, `result` (`ok`, `fail`, `panic`, `notrun`), `ns`, `panic` (its text) |
 | `package` | `result` (`ok`, `fail`, `panic`, `buildfail`, `notests`), counts, `ns`, `cached` |
 | `result` | the totals over all packages |
