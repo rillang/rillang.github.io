@@ -72,15 +72,20 @@
           and <code>rill pprof</code> (CPU, heap and task profiles)</li>
         <li class="done"><span class="tag done">done</span> Faster builds: parallel code
           generation and a parallel optimizer</li>
+        <li class="done"><span class="tag done">done</span> <strong>v0.2 Instant</strong>:
+          a function cache and a build key (an unchanged build in 0.01 s), dead-function
+          elimination, <code>rill run</code> keeps its binary (11 ms to start),
+          <code>#!/usr/bin/env rill</code> scripts</li>
+        <li class="done"><span class="tag done">done</span> A smaller language,
+          <code>if let</code> on results, <code>if</code> and <code>switch</code> values,
+          top-level <code>let</code></li>
       </ul>
     </div>
     <div>
       <h2>Milestones</h2>
       <ul class="timeline">
-        <li class="next"><span class="tag next">next</span> <strong>v0.2 Instant</strong> — speed and scripts<br>
-          Incremental builds (a function cache, the build key, parallel linking), cached binaries for <code>rill run</code>, <code>#!/usr/bin/env rill</code>, fast start. <em>Showcase: Scripts replace shell and Python one-offs.</em></li>
-        <li class=""><span class="tag planned">planned</span> <strong>v0.3 Foundations</strong> — language for libraries<br>
-          Error types, <code>Char</code> and Unicode strings, byte arrays, explicit type arguments, <code>if let</code> on results, UFCS across modules, test helpers with diffs.</li>
+        <li class="next"><span class="tag next">next</span> <strong>v0.3 Foundations</strong> — language for libraries<br>
+          Error types, <code>Char</code> and Unicode strings, byte arrays, explicit type arguments, struct equality, default field values and field visibility, UFCS across modules, test helpers with diffs. <em>Showcase: A library published as a package and updated with <code>rill update</code>.</em></li>
         <li class=""><span class="tag planned">planned</span> <strong>v0.4 Encode</strong> — data in and out<br>
           Encoding derived by the compiler for every type; typed JSON, TOML and CSV; config structs from files, environment and flags; file embedding; time zones. <em>Showcase: A CLI tool with a config file.</em></li>
         <li class=""><span class="tag planned">planned</span> <strong>v0.5 Concurrency</strong> — the network runtime<br>
@@ -96,7 +101,7 @@
         <li class=""><span class="tag planned">planned</span> <strong>v0.10 Services</strong> — production services<br>
           A Redis/Valkey client, a Postgres job queue, metrics, health checks and graceful shutdown. <em>Showcase: The package proxy runs on Rill.</em></li>
         <li class=""><span class="tag planned">planned</span> <strong>v0.11 x86-64</strong> — servers<br>
-          An x86-64 backend for Linux and macOS, cross-compiling, container images. <em>Showcase: The proxy on an x86-64 server.</em></li>
+          An x86-64 backend for Linux (a spike already runs) and macOS, cross-compiling, container images. <em>Showcase: The proxy on an x86-64 server.</em></li>
         <li class=""><span class="tag planned">planned</span> <strong>v0.12 Beta DX</strong> — public beta<br>
           <code>rill doc</code>, completion and code actions, a VS Code extension, <code>rill new</code> templates, better diagnostics, a package index, an installer, <code>rill tour</code>, a playground. <em>Showcase: The public beta.</em></li>
         <li class=""><span class="tag planned">planned</span> <strong>v0.13 FFI</strong> — native libraries<br>
