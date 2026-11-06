@@ -61,7 +61,25 @@ test "a failing test reports every failed expect" {
   `PANIC` with the panic message, and the tests after it as not run.
 
 There is no special assertion library: `expect(a == b)` with Rill's structural `==` covers
-structs, enums, arrays and optionals.
+structs, enums, arrays, maps and optionals (a map shows as `["a": 1, "b": 2]`, in insertion
+order).
+
+Table tests are a loop over an array of structs; the message names the failing row, and
+since `expect` continues, one run reports every failing row:
+
+```swift
+struct Case { name: String, input: String, want: Int? }
+
+test "parse" {
+  let cases = [
+    Case(name: "plain", input: "42", want: 42),
+    Case(name: "junk", input: "x1", want: nil),
+  ]
+  for c in cases {
+    expect(c.input.toInt() == c.want, "case ${c.name}")
+  }
+}
+```
 
 ## Packages and flags
 
