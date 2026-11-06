@@ -1,0 +1,6 @@
+code 3
+stdout: hello from /
+stderr: oops
+cat: piped in
+timed out true, code -1
+cannot run no-such-program
