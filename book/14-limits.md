@@ -15,7 +15,7 @@ way. Items marked **planned** have a spec or are on the roadmap.
 - Packages work (chapter 7); GPG signers are not supported yet (SSH keys are). The [standard library](15-standard-library.md) is a first version (no
   networking).
 - A `String` is bytes without a UTF-8 guarantee (`s.isValidUTF8()` checks); `len()` counts bytes.
-- No string formatting beyond interpolation (widths, precision); no `replace`, `toUpper`.
+- Formatting beyond interpolation lives in the library: `std/fmt` (precision, bases, padding), `strings.padLeft` / `padRight` (display width). `strings.toUpper` / `toLower` are ASCII only; `std/unicode` maps single `Char`s, and `strings.equalFold` uses simple case folding (no `ß` to `SS`).
 - No optional chaining (`a?.b`), no closed ranges (`a...b`),
   no tuples.
 - Arrays have no `pop`, `contains`, `reduce`, `reverse`; maps cannot remove keys and

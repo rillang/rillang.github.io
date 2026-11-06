@@ -10,7 +10,7 @@ the compiler's. Import a module by its path under `std/`:
 | Module | Contents |
 |---|---|
 | `std/strings` | `join`, `split`, `lines`, `trim`, `replace`, `index`, `lastIndex`, `contains`, `hasPrefix/Suffix`, `trimPrefix/Suffix`, `repeat`, `toUpper/Lower` (ASCII), `equalFold`, `padLeft`, `padRight` (to a display width) |
-| `std/utf8` | `decode(s, i)` (rune and width), `encode`, `runes`, `runeCount`, `isValid` |
+| `std/utf8` | `decode(s, i)` (character and width), `encode(c)`, `chars(s) -> [Char]`, `fromBytes(b) -> String!`, `isValid` (`s.charCount()` counts characters) |
 | `std/fmt` | `pad(s, width:, align:)`, `int(n, base:)`, `hex`, `zero(n, width:)`, `float(x, prec:)` |
 | `std/slices` | `sort`, `sortBy`, `binarySearch`, `reverse`, `index`, `contains`, `unique`, `min`, `max` (generic) |
 | `std/math` | `sqrt`, `floor`, `ceil`, `round`, `abs`, `powi`, `min`, `max`, `pi`, `e`, `inf`, `isNaN` |
