@@ -31,7 +31,7 @@ fn main() -> Void! {
 2 lines, starts with first
 true false
 empty.txt notes.txt
-cannot open file: /tmp/rill-by-example/missing.txt
+read /tmp/rill-by-example/missing.txt: no such file
 ```
 
 [Index](README.md)
