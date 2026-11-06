@@ -28,6 +28,8 @@ Run any of them with `rill run book/by-example/examples/<name>.rl`.
 - [Arrays](arrays.md)
 - [Maps](maps.md)
 - [Strings](strings.md)
+- [Strings and characters](characters.md)
+- [Bytes](bytes.md)
 - [StringBuilder](string-builder.md)
 
 ## Types

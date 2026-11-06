@@ -23,6 +23,7 @@ global names (`readFile`, `args`, …) is error E0039, which names the replaceme
 | Expression | Type |
 |---|---|
 | `StringBuilder()` | `StringBuilder` |
+| `Bytes(n)`, `Bytes()`, `Bytes([1, 2])` | `Bytes` |
 | `[T](repeating: x, count: n)` | `[T]` (n copies, allocated at once) |
 | `Map<K, V>()`, `[:]` | `Map<K, V>` |
 | `Channel<T>(capacity: n)` | `Channel<T>` |
@@ -37,7 +38,9 @@ global names (`readFile`, `args`, …) is error E0039, which names the replaceme
 | `String` | `len() -> Int` (bytes), `slice(from, to) -> String`, `byteAt(i) -> Int`, `split(sep) -> [String]`, `lines() -> [String]`, `trim() -> String`, `startsWith(s) -> Bool`, `contains(s) -> Bool`, `toInt() -> Int?`, `toFloat() -> Float?` |
 | `[T]` | `len()`, `push(x)` (needs a `var`), `slice(from, to)`, `map { … } -> [U]`, `filter { … } -> [T]`, `sortBy { a, b in … } -> [T]` (`true` if `a` comes first), `parMap { … } -> [U]`, `join(sep)` (only `[String]`) |
 | `Map<K, V>` | `len()`, `has(k)`, `keys() -> [K]`; `m[k] -> V?`, `m[k] = v` |
-| `StringBuilder` | `add(s)`, `addInt(n)`, `addByte(b)`, `len()`, `build() -> String` |
+| `Char` | one Unicode scalar; `Int(c)` its code point, `Char(i) -> Char?`; `charAt(i)` and `charCount()` on a `String` |
+| `Bytes` | `len()`, `push(b)`, `slice(from, to)`, `b[i]` (0–255), `for x in b`, `==`; `s.bytes() -> Bytes`, `String(b: b)` (no check), `String(utf8: b) -> String!` |
+| `StringBuilder` | `add(s)`, `addInt(n)`, `addByte(b)`, `addChar(c)`, `len()`, `build() -> String` |
 | `Channel<T>` | `send(x)`, `recv() -> T?`, `close()` |
 | `Mutex<T>` | `lock { v in … }`, `get() -> T` |
 | `Atomic<T>` | `load()`, `store(x)`, `compareSwap(old, new) -> Bool`, `add(n) -> Int` (Int only, returns the new value) |

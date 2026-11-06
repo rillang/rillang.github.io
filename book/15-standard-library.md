@@ -9,7 +9,7 @@ the compiler's. Import a module by its path under `std/`:
 
 | Module | Contents |
 |---|---|
-| `std/strings` | `join`, `split`, `lines`, `trim`, `replace`, `index`, `lastIndex`, `contains`, `hasPrefix/Suffix`, `trimPrefix/Suffix`, `repeat`, `toUpper/Lower` (ASCII) |
+| `std/strings` | `join`, `split`, `lines`, `trim`, `replace`, `index`, `lastIndex`, `contains`, `hasPrefix/Suffix`, `trimPrefix/Suffix`, `repeat`, `toUpper/Lower` (ASCII), `equalFold`, `padLeft`, `padRight` (to a display width) |
 | `std/utf8` | `decode(s, i)` (rune and width), `encode`, `runes`, `runeCount`, `isValid` |
 | `std/fmt` | `pad(s, width:, align:)`, `int(n, base:)`, `hex`, `zero(n, width:)`, `float(x, prec:)` |
 | `std/slices` | `sort`, `sortBy`, `binarySearch`, `reverse`, `index`, `contains`, `unique`, `min`, `max` (generic) |
@@ -17,7 +17,7 @@ the compiler's. Import a module by its path under `std/`:
 | `std/path` | `join`, `dir`, `base`, `ext`, `stem`, `clean`, `isAbs` (text only) |
 | `std/fs` | `readFile`, `writeFile`, `exists`, `mkdirAll`, `readDir`, `stat` (`FileInfo`), `remove`, `removeAll`, `rename`, `chmod`, `walk`, `tempDir` |
 | `std/os` | `args`, `env`, `exit`, `cwd`, `run`, `runCapture`, `runCombined` (`Output`: exit code, stdout and stderr), `isTerminal`, `readStdin`, `writeStdout`, `platform` |
-| `std/unicode` | `category` (`Category`), `is`, `inClass`, `isLetter`, `isDigit`, `isSpace`, `isUpper`, `isLower`, `isPunct`, `fold`, `toUpper`, `toLower` (Unicode 16.0) |
+| `std/unicode` | `category` (`Category`), `is`, `inClass`, `isLetter`, `isDigit`, `isSpace`, `isUpper`, `isLower`, `isPunct`, `fold`, `toUpper`, `toLower`, `graphemes(s) -> [String]`, `width(s) -> Int` (Unicode 16.0) |
 | `std/regexp` | `compile` (`Regex!`), `quote`, `matches`, `find`, `findAll` (`Match`), `captures`, `capturesAll` (`Captures`: `text`, `named`, `span`), `replace`, `replaceAll`, `replaceFunc`, `replaceAllFunc`, `split`, `groupNames`, `numGroups` |
 | `std/time` | `now` (Unix ns), `monotonic`, `since`, `sleep`, `Duration` (`milliseconds`, `seconds`, `text`), `rfc3339` |
 | `std/json` | `Json` (`null`, `bool`, `num(Float)`, `str`, `arr`, `obj(Map)`), `parse` (`Json!`), `stringify`, `pretty`, `get`, `at`, `str`, `int`, `num`, `bool`, `items`, `object` |

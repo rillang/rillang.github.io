@@ -53,9 +53,13 @@ fn main() {
 - `Float` is a 64-bit IEEE double. `Float(n)` and `Int(x)` convert (`Int` truncates);
   nothing converts implicitly.
 - `Bool` has `true`, `false`, `&&`, `||`, `!`.
-- `String` is an immutable sequence of UTF-8 bytes. `len()` counts bytes. There is no
-  character type: a character literal like `'A'` is an `Int` (its byte value) and only
-  ASCII characters are allowed in it.
+- `String` is an immutable sequence of bytes, normally UTF-8. `len()` counts bytes.
+  `for c in s` decodes it into `Char`s (`for i, c in s` adds the byte offset); a `Char` is one
+  Unicode scalar (`'é'`, `'\u{1F980}'`). An ASCII character literal also works as its byte
+  value. What a reader calls one character can be several scalars: `unicode.graphemes(s)`
+  splits a string into those.
+- `Bytes` is a byte buffer for binary data (`Bytes(n)`, `b[i]` is 0–255), copy on write;
+  `s.bytes()` and `String(utf8: b)` convert.
 - Interpolation: `"$name"` or `"${expression}"`; `\$` is a literal dollar sign.
 - `str(x)` turns an `Int`, `Float`, `Bool` or `String` into a `String`.
 - Comments are `//` to the end of the line. There are no block comments.
@@ -485,7 +489,8 @@ escapes: "quoted" $5 tab	end
 ```
 
 Strings compare with `==`, `!=`, `<`, `<=`, `>`, `>=` (bytewise). `+` concatenates. More text
-processing (Unicode, formatting widths, `replace`, case conversion) is in the standard
-library: `std/strings`, `std/utf8`, `std/fmt` ([chapter 15](15-standard-library.md)).
+processing (Unicode, graphemes, display widths, `replace`, case conversion) is in the standard
+library: `std/strings`, `std/utf8`, `std/unicode`, `std/fmt` ([chapter 15](15-standard-library.md)).
+See also [Strings and characters](by-example/characters.md) and [Bytes](by-example/bytes.md).
 
 Next: [Structs and enums](03-structs-and-enums.md).
