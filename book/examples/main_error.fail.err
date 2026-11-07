@@ -1,1 +1,1 @@
-error: cannot open file: /nonexistent/rill-book.conf
+error: read /nonexistent/rill-book.conf: no such file
