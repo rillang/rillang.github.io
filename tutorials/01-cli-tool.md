@@ -39,7 +39,7 @@ $ rill run wc1.rl
 error: usage: wc1 <file>
 [exit 1]
 $ rill run wc1.rl missing.txt
-error: cannot open file: missing.txt
+error: read missing.txt: no such file
 [exit 1]
 ```
 
@@ -307,7 +307,7 @@ $ ./wc testdata/fox.txt testdata/rill.txt
       7      20     111 total
 $ ./wc -l testdata/fox.txt missing.txt
       3 testdata/fox.txt
-wc: cannot open file: missing.txt
+wc: read missing.txt: no such file
       3 total
 [exit 1]
 $ printf "one two\nthree\n" | ./wc -w

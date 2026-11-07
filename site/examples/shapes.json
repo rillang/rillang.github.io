@@ -1,1 +1,1 @@
-{"code":"E0011","message":"switch must be exhaustive, missing: .dot","file":"shapes.rl","line":8,"col":3}
+{"code":"E0011","severity":"error","message":"switch must be exhaustive, missing: .dot","file":"shapes.rl","line":8,"col":3}

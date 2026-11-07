@@ -68,17 +68,23 @@ Table tests are a loop over an array of structs; the message names the failing r
 since `expect` continues, one run reports every failing row:
 
 ```swift
-struct Case { name: String, input: String, want: Int? }
+FAIL  book/examples/testing.test.rl    3 tests   0.00s   (1 failed)
 
-test "parse" {
-  let cases = [
-    Case(name: "plain", input: "42", want: 42),
-    Case(name: "junk", input: "x1", want: nil),
-  ]
-  for c in cases {
-    expect(c.input.toInt() == c.want, "case ${c.name}")
-  }
-}
+failures:
+
+--- FAIL book/examples/testing.test.rl: a failing test reports every failed expect
+book/examples/testing.test.rl:30: expect(add(2, 2) == 5)
+    left:  4
+    right: 5
+book/examples/testing.test.rl:32: expect(p == Point(x: 1, y: 3))
+    left:  Point(x: 1, y: 2)
+    right: Point(x: 1, y: 3)
+    message: points differ in y
+book/examples/testing.test.rl:33: expect(clamp(3, low: 0, high: 2) > 2)
+    left:  2
+    right: 2
+
+result: FAIL. 2 passed, 1 failed; 1 module in 0.00s
 ```
 
 ## Packages and flags
