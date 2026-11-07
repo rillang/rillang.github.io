@@ -57,6 +57,7 @@ Run any of them with `rill run book/by-example/examples/<name>.rl`.
 - [Command-line arguments](args.md)
 - [Files](files.md)
 - [Processes and environment](processes.md)
+- [Running a command](command.md)
 
 ## Concurrency
 

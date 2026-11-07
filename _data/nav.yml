@@ -197,6 +197,10 @@ by-example:
       path: book/by-example/processes.md
       url: /book/by-example/processes.html
       group: "Programs"
+    - title: "Running a command"
+      path: book/by-example/command.md
+      url: /book/by-example/command.html
+      group: "Programs"
     - title: "group and spawn"
       path: book/by-example/group-spawn.md
       url: /book/by-example/group-spawn.html

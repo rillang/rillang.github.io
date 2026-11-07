@@ -335,6 +335,46 @@ $ rill cover --html cover.out -o cover.html
 - A cover run is never cached, and a package that panicked has no coverage (`[panicked]`):
   it writes no profile, so the merged profile and the total leave its code out (as Go does).
 
+## Running programs
+
+A test of a command-line tool runs the tool. `os.command` builds the child process, `run` starts it and returns an `ExecResult`: `code`, `stdout` and `stderr` as `Bytes`, apart from each other, and `timedOut`.
+
+<!-- include: examples/command.test.rl -->
+```swift
+import "std/os"
+
+fn text(_ b: Bytes) -> String = String(utf8: b) ?? ""
+
+test "environment, directory and input" {
+  let r = os.command(["sh", "-c", "echo \$GREETING from \$(pwd)"]).env(["GREETING=hello"]).cwd("/").run()?
+  expect(r.code == 0)
+  expect(text(r.stdout).trim() == "hello from /")
+  let echo = os.command(["cat"]).stdin("piped in".bytes()).run()?
+  expect(text(echo.stdout) == "piped in")
+}
+
+test "stdout and stderr apart" {
+  let r = os.command(["sh", "-c", "echo out; echo err >&2; exit 2"]).run()?
+  expect(r.code == 2, "exit ${r.code}")
+  expect(text(r.stdout).trim() == "out")
+  expect(text(r.stderr).trim() == "err")
+}
+
+test "timeout" {
+  let r = os.command(["sleep", "5"]).timeout(100).run()?
+  expect(r.timedOut)
+  expect(r.code == -1)
+}
+```
+
+- `env(["NAME=value"])` adds to or overrides the inherited environment; calls accumulate, a later entry wins.
+- `cwd(dir)` sets the working directory, `stdin(bytes)` is written in full and closed (without it the child reads `/dev/null`).
+- `timeout(ms)` kills the child when it runs out: `timedOut` is true and `code` is -1. Only the child is killed, not what it started.
+- A nonzero exit is a `code`, a signal is 128 + n. Only a program that cannot start (or a bad `cwd`) is an error: `cannot run <program>`.
+- A package whose tests run a command is never cached: `rill test` cannot see what the child reads.
+
+The API is listed in [the standard library](15-standard-library.md).
+
 ## The compiler's own tests
 
 The repository uses golden tests: a program next to its expected output, compiled and
