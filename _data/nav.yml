@@ -185,6 +185,10 @@ by-example:
       path: book/by-example/tests.md
       url: /book/by-example/tests.html
       group: "Programs"
+    - title: "Subtests"
+      path: book/by-example/subtests.md
+      url: /book/by-example/subtests.html
+      group: "Programs"
     - title: "Command-line arguments"
       path: book/by-example/args.md
       url: /book/by-example/args.html

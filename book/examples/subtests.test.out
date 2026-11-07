@@ -1,0 +1,16 @@
+FAIL  book/examples/subtests.test.rl    5 tests   0.00s   (3 failed)
+
+failures:
+
+--- FAIL book/examples/subtests.test.rl: sign per row/zero
+book/examples/subtests.test.rl:23: expect(sign(r.input) == r.want)
+    left:  1
+    right: 0
+
+--- FAIL book/examples/subtests.test.rl: sign in one loop
+book/examples/subtests.test.rl:30: expect(sign(r.input) == r.want)
+    left:  1
+    right: 0
+    message: zero
+
+result: FAIL. 2 passed, 3 failed; 1 module in 0.00s
