@@ -227,6 +227,52 @@ fn main() {
   (`let v: Int? = if c { 1 } else { nil }`), otherwise the first branch's.
 - `if let` is not a value: use `guard let` or `??` (E0124).
 
+### `defer`
+
+`defer { … }` runs cleanup when the enclosing block is left, whichever way: falling off its
+end, `return`, `break`, `continue`, `?` or a failing `guard`. Several defers of a block run
+last first. A defer is not a closure: its block reads variables as they are when it runs.
+
+<!-- include: examples/defer.rl -->
+```swift
+fn work(_ fail: Bool) -> Int {
+  print("open")
+  defer { print("close") }
+  defer { print("flush") }
+  if fail {
+    print("early exit")
+    return 1
+  }
+  print("done")
+  return 0
+}
+
+fn main() {
+  let a = work(false)
+  let b = work(true)
+  print("$a $b")
+}
+```
+
+```text
+open
+done
+flush
+close
+open
+early exit
+flush
+close
+0 1
+```
+
+- A `return x` computes `x` before the defers run; a defer that changes `x` does not change
+  the returned value.
+- A defer in a loop body runs at the end of every iteration; one in a `group` body runs after
+  the group has waited for its tasks. A panic does not run defers.
+- `return`, `break`, `continue` and `?` inside a defer block are E0140. Like any statement,
+  a dropped result is E0040: `defer { let _ = f.close() }`.
+
 ## Functions and argument labels
 
 <!-- include: examples/functions.rl -->
