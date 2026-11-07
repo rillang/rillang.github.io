@@ -58,6 +58,11 @@ true false
 - `==` and `!=` compare field by field (also for enums, arrays and optionals).
 - "Methods" are ordinary functions whose first parameter is the struct, called with
   [UFCS](02-basics.md#ufcs-there-are-no-methods): `l.length2()`.
+- Fields are private to their module unless marked `pub` (`struct Span { pub label: String, ns: Int }`);
+  outside the module a private field cannot be read, written, matched or named in an init (E0138).
+  A struct with a private field that has no default is built by a `pub fn` of its module
+  (`time.seconds(2)`, not `Duration(ns: ...)`). Inside the module, all its files included,
+  nothing changes. `rill fix` adds `pub` where code outside the module uses a field.
 - A struct cannot contain itself directly (E0012); use an array or an enum for recursion.
 
 ## Enums
