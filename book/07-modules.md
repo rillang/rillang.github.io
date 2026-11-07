@@ -6,7 +6,7 @@
 ```swift
 // A module: one file. Only `pub` items are visible to importers.
 
-pub struct Vec2 { x: Int, y: Int }
+pub struct Vec2 { pub x: Int, pub y: Int }
 
 pub enum Shape {
   case square(Int)

@@ -129,6 +129,14 @@ by-example:
       path: book/by-example/strings.md
       url: /book/by-example/strings.html
       group: "Collections"
+    - title: "Strings and characters"
+      path: book/by-example/characters.md
+      url: /book/by-example/characters.html
+      group: "Collections"
+    - title: "Bytes"
+      path: book/by-example/bytes.md
+      url: /book/by-example/bytes.html
+      group: "Collections"
     - title: "StringBuilder"
       path: book/by-example/string-builder.md
       url: /book/by-example/string-builder.html

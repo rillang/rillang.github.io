@@ -2,6 +2,6 @@ $ chmod 000 testdata/hello.txt
 $ ./hashtree testdata
 ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad  testdata/abc.txt
 da81937d4f93a5a66ab373527413914cbaff9955c01e61404e142939343263b9  testdata/sub/deep.txt
-hashtree: cannot open file: testdata/hello.txt
+hashtree: read testdata/hello.txt: permission denied
 2 files, 15 bytes, 4 tasks, <time>
 $ chmod 644 testdata/hello.txt

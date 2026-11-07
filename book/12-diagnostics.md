@@ -29,6 +29,7 @@ The full table of codes with a one-line example each is
 | E0028–E0031 | generics and interfaces |
 | E0036–E0039 | imports (`as`, paths, `internal/`) and moved builtins |
 | E0040–E0043 | a dropped `T!` result; naming conventions (types UpperCamelCase, the rest lowerCamelCase); unused locals and imports |
+| E0135–E0137 | `Char` and `Bytes`: a non-ASCII character literal where an `Int` is expected, a source file that is not UTF-8, a constant byte outside 0–255 |
 | E0127–E0133 | removed forms: `if case`, `guard case`, `for case`, a pattern after `let`/`var`/`for`, functions made of cases, `@` bindings, map patterns |
 | E0100–E0109 | packages: `rill.mod`, downloads, hashes, tags, signatures, `vendor/` |
 

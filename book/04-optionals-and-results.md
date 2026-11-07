@@ -144,7 +144,8 @@ empty input: not a number:
 ```
 
 - `T!` holds a `T` or an `Error`. `Void!` is a result without a value.
-- `fail("message")` creates an error. `Error` has one field, `msg: String`.
+- `fail("message")` creates an error; `e.msg` is its message, the whole chain of
+  context (next section).
 - `e?` returns the error from the enclosing function (which must return a result,
   otherwise E0015); otherwise it is the value. In a test it fails the test instead
   ([chapter 8](08-testing.md)).
@@ -157,6 +158,65 @@ empty input: not a number:
 - Skipping an error, with `??` or `if let`, is right only when the fallback is a correct
   answer (an optional settings file that is missing). Otherwise propagate it with `?` or
   handle `.err(e)` in a `switch`.
+
+## Context, causes and sentinels
+
+<!-- include: examples/error_causes.rl -->
+```swift
+import "std/fs"
+
+// a sentinel: one error value that callers can recognize
+let badPort = Error("port is not a number")
+
+fn loadPort(_ path: String) -> Int! {
+  // a missing file means the default; anything else gets context and propagates
+  let text = switch fs.readFile(path) {
+    case .ok(t): t
+    case .err(fs.notFound): "8080"
+    case .err(e): return e.context("load $path")
+  }
+  guard let n = text.trim().toInt() else {
+    return fail("load $path", cause: badPort)
+  }
+  return n
+}
+
+fn main() -> Void! {
+  print("${loadPort("/nonexistent/app.conf")?}")
+  let dir = fs.tempDir("book")?
+  fs.writeFile("$dir/app.conf", "eighty")?
+  switch loadPort("$dir/app.conf") {
+  case .ok(n): print("port $n")
+  case .err(e):
+    print("${e.is(badPort)} ${e.cause != nil}")
+  }
+  // context on a result adds a layer only when it holds an error
+  let n = loadPort("/nonexistent/x").context("start")?
+  print("$n")
+  fs.removeAll(dir)?
+}
+```
+
+<!-- include: examples/error_causes.out -->
+```text
+8080
+true true
+8080
+```
+
+- `r.context("load $path")` adds what the caller was doing to an error, and passes a value
+  through untouched; `e.context(…)` does the same on an `Error`. The message becomes
+  `"load a.conf: read a.conf: no such file"`.
+- `fail("msg", cause: e)` builds such an error by hand; `e.cause` is the error underneath
+  (`Error?`).
+- A top-level `let x = Error("…")` is a **sentinel**: one value that callers recognize.
+  `e.is(x)` asks whether `e` or any error in its chain is that value; two errors with the
+  same text are still different errors. `==` does not apply to errors.
+- `case .err(fs.notFound):` matches a sentinel of another module anywhere in the chain. A
+  bare name in a pattern binds a new name, so inside the declaring module write `e.is(x)`.
+  A `switch` still needs `.err(e)` or `default` for the other errors.
+- `std/fs` fails with `fs.notFound`, `fs.alreadyExists`, `fs.permission`, `fs.isDir`,
+  `fs.notDir` and `fs.notEmpty`. Never look at `e.msg` to tell errors apart.
 
 ## Errors in `main`
 
@@ -182,7 +242,7 @@ fn main() -> Void! {
 
 <!-- include: examples/main_error.fail.err -->
 ```text
-error: cannot open file: /nonexistent/rill-book.conf
+error: read /nonexistent/rill-book.conf: no such file
 ```
 
 ## Panics are for bugs

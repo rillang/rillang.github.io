@@ -85,25 +85,25 @@
       <h2>Milestones</h2>
       <ul class="timeline">
         <li class="next"><span class="tag next">next</span> <strong>v0.3 Foundations</strong> — language for libraries<br>
-          Error types, <code>Char</code> and Unicode strings, byte arrays, explicit type arguments, struct equality, default field values and field visibility, UFCS across modules, test helpers with diffs. <em>Showcase: A library published as a package and updated with <code>rill update</code>.</em></li>
+          Error types, <code>Char</code> and Unicode strings, byte arrays, explicit type arguments, struct equality, default field values and field visibility, UFCS across modules, test helpers with diffs, snapshot tests, <code>rill bench compare</code>, I/O streams. <em>Showcase: A library published as a package and updated with <code>rill update</code>.</em></li>
         <li class=""><span class="tag planned">planned</span> <strong>v0.4 Encode</strong> — data in and out<br>
-          Encoding derived by the compiler for every type; typed JSON, TOML and CSV; config structs from files, environment and flags; file embedding; time zones. <em>Showcase: A CLI tool with a config file.</em></li>
+          Encoding derived by the compiler for every type; typed JSON, TOML and CSV; config structs from files, environment and flags; file embedding; time zones; structured logging (<code>std/log</code>); processes, random numbers, collections, terminal output; build info in binaries; scripts with dependencies. <em>Showcase: A CLI tool with a config file.</em></li>
         <li class=""><span class="tag planned">planned</span> <strong>v0.5 Concurrency</strong> — the network runtime<br>
-          A netpoller and <code>std/net</code>, <code>select</code>, timers, one cancellation and deadline model, task groups. <em>Showcase: A TCP chat server.</em></li>
+          A netpoller and <code>std/net</code>, <code>select</code>, timers, one cancellation and deadline model, task groups, signals; runtime metrics, deadlock detection, block and mutex profiles and an execution trace (<code>rill trace</code>). <em>Showcase: A TCP chat server.</em></li>
         <li class=""><span class="tag planned">planned</span> <strong>v0.6 Crypto</strong> — security in Rill<br>
-          Hashes, HMAC, AEADs, signatures, X.509 and TLS 1.3, written in Rill; password hashing, UUIDs. <em>Showcase: An HTTPS request without system libraries.</em></li>
+          Hashes, HMAC, AEADs, signatures, X.509 and TLS 1.3, written in Rill; big integers; password hashing, UUIDs. <em>Showcase: An HTTPS request without system libraries.</em></li>
         <li class=""><span class="tag planned">planned</span> <strong>v0.7 Web</strong> — HTTP<br>
-          <code>std/http</code>: HTTP/1.1 and HTTP/2 server and client, router, middleware, typed handlers; logging, compression, <code>rill watch</code>. <em>Showcase: A static file server and reverse proxy.</em></li>
+          <code>std/http</code>: HTTP/1.1 and HTTP/2 server and client, router, middleware, typed handlers; compression, archives, file watching, URLs and templates, <code>rill watch</code>. <em>Showcase: A static file server and reverse proxy.</em></li>
         <li class=""><span class="tag planned">planned</span> <strong>v0.8 API</strong> — web APIs<br>
           OpenAPI and a docs page generated from the handlers, problem details, validation, JWT, WebSockets and server-sent events. <em>Showcase: A web service with a JSON API.</em></li>
         <li class=""><span class="tag planned">planned</span> <strong>v0.9 Data</strong> — databases<br>
           <code>std/sql</code>, a native Postgres driver, SQL checked at build time against the migrations, <code>rill db</code> migrations, <code>Decimal</code>, database test fixtures. <em>Showcase: A CRUD service on Postgres.</em></li>
         <li class=""><span class="tag planned">planned</span> <strong>v0.10 Services</strong> — production services<br>
-          A Redis/Valkey client, a Postgres job queue, metrics, health checks and graceful shutdown. <em>Showcase: The package proxy runs on Rill.</em></li>
+          A Redis/Valkey client, a Postgres job queue, metrics, health checks and graceful shutdown, SBOMs and license checks. <em>Showcase: The package proxy runs on Rill.</em></li>
         <li class=""><span class="tag planned">planned</span> <strong>v0.11 x86-64</strong> — servers<br>
           An x86-64 backend for Linux (a spike already runs) and macOS, cross-compiling, container images. <em>Showcase: The proxy on an x86-64 server.</em></li>
         <li class=""><span class="tag planned">planned</span> <strong>v0.12 Beta DX</strong> — public beta<br>
-          <code>rill doc</code>, completion and code actions, a VS Code extension, <code>rill new</code> templates, better diagnostics, a package index, an installer, <code>rill tour</code>, a playground. <em>Showcase: The public beta.</em></li>
+          <code>rill doc</code>, completion and code actions, a VS Code extension, a debugger that knows tasks, vet-style checks, <code>rill explain</code>, <code>rill new</code> templates, better diagnostics, a package index, an installer, <code>rill tour</code>, a playground. <em>Showcase: The public beta.</em></li>
         <li class=""><span class="tag planned">planned</span> <strong>v0.13 FFI</strong> — native libraries<br>
           A foreign function interface: C libraries, callbacks, <code>rill bind</code>; SQLite. <em>Showcase: SQLite from Rill.</em></li>
         <li class=""><span class="tag planned">planned</span> <strong>v0.14 Metal</strong> — as deep as Rust<br>
