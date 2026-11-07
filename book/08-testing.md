@@ -217,6 +217,42 @@ variance.
   `"benches"` in the `package` and `result` events).
 - A benchmark runs about its benchtime: the last batch is sized to the remaining time.
 
+## Comparing benchmarks
+
+Did a change make the code faster? `rill bench compare` answers it from the `--json` output
+of two runs: save one run before the change and one after, then compare them.
+
+```sh
+git stash
+rill test --bench . --run '^$' --count 10 --json ./parser > old.json
+git stash pop
+rill test --bench . --run '^$' --count 10 --json ./parser > new.json
+rill bench compare old.json new.json
+```
+
+```
+pkg: parser
+        │ old.json │             new.json              │
+        │ time/op  │  time/op    vs base               │
+parse       12.3µ ± 2%   10.1µ ± 1%  -17.89% (p=0.000 n=10)
+tokens      4.01µ ± 1%   4.03µ ± 2%        ~ (p=0.426 n=10)
+geomean     7.02µ        6.38µ        -9.15%
+```
+
+Each bench shows its median and the 95 % confidence interval of it. `vs base` is the change
+against the first file, `p` the probability of seeing such a difference if nothing changed
+(Mann-Whitney U test), `n` the number of runs. The command prints one block per package, and
+in it the sections time/op, B/op and allocs/op, each with a geomean over its benches. With
+one file it prints only the medians.
+
+Run with `--count 10`: one run of a bench varies by a few percent, and the statistics need
+the samples to tell a change from noise. With fewer than 6 runs there is no confidence
+interval (`± ∞`).
+
+- `~` means no significant difference (`p` of 0.05 or more): the two medians are as close as
+  noise makes them. Do not read the percentage of such a row.
+- `?` means too few runs for the test: use `--count 4` or more, 10 recommended.
+
 ## Parallel tests
 
 A slow test (files, the network, large inputs) can run next to the others: mark it
