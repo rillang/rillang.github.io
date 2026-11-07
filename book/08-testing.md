@@ -87,6 +87,35 @@ book/examples/testing.test.rl:33: expect(clamp(3, low: 0, high: 2) > 2)
 result: FAIL. 2 passed, 1 failed; 1 module in 0.00s
 ```
 
+## Snapshots and golden files
+
+For output that is long or tedious to write by hand (a rendered report, generated code, a
+binary format), compare it with a file instead of a literal.
+
+```swift
+test "report" {
+  expectSnapshot(render(items))            // testdata/snapshots/report.snap
+  expectSnapshot(render([]), "empty")      // testdata/snapshots/report.empty.snap
+  expectGolden(render(items), "testdata/report.txt")
+}
+```
+
+Both take a `String` or `Bytes`.
+
+| | `expectSnapshot(value, label)` | `expectGolden(value, path)` |
+|---|---|---|
+| File | `testdata/snapshots/<test name>[.<label>].snap`, named for you | the path you give, relative to the package |
+| Use for | output only this test cares about | a file that is also an input or documentation elsewhere |
+| Several calls | unlabeled ones count (`name`, `name-2`); a label may be used once per test | one path per call |
+
+- A missing file fails: `snapshot testdata/snapshots/report.snap missing; run rill test --update`.
+  CI never accepts output nobody has seen.
+- A difference fails with a unified diff of the file (`-`) against the value (`+`).
+- `rill test --update` writes the missing and changed files (`RILL_TEST_UPDATE=1` does the
+  same). It bypasses the test cache and reports `(updated N)`.
+- **Read the diff of the `.snap` files before you commit.** `--update` makes every test
+  pass; reviewing the changed files is the check that the new output is the right one.
+
 ## Packages and flags
 
 ```sh
