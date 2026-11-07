@@ -232,11 +232,11 @@ rill bench compare old.json new.json
 
 ```
 pkg: parser
-        │ old.json │             new.json              │
-        │ time/op  │  time/op    vs base               │
-parse       12.3µ ± 2%   10.1µ ± 1%  -17.89% (p=0.000 n=10)
-tokens      4.01µ ± 1%   4.03µ ± 2%        ~ (p=0.426 n=10)
-geomean     7.02µ        6.38µ        -9.15%
+        │  old.json  │              new.json              │
+        │  time/op   │  time/op    vs base                │
+parse     12.3µ ± 2%   10.1µ ± 1%  -17.81% (p=0.000 n=10)
+tokens    4.01µ ± 1%   4.00µ ± 2%        ~ (p=1.000 n=10)
+geomean   7.01µ        6.35µ        -9.35%
 ```
 
 Each bench shows its median and the 95 % confidence interval of it. `vs base` is the change
