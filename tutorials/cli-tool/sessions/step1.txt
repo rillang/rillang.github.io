@@ -4,5 +4,5 @@ $ rill run wc1.rl
 error: usage: wc1 <file>
 [exit 1]
 $ rill run wc1.rl missing.txt
-error: cannot open file: missing.txt
+error: read missing.txt: no such file
 [exit 1]
