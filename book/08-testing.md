@@ -249,8 +249,7 @@ Run with `--count 10`: one run of a bench varies by a few percent, and the stati
 the samples to tell a change from noise. With fewer than 6 runs there is no confidence
 interval (`± ∞`).
 
-- `~` means no significant difference (`p` of 0.05 or more): the two medians are as close as
-  noise makes them. Do not read the percentage of such a row.
+- `~` means no significant difference (`p` of 0.05 or more): the difference is within noise.
 - `?` means too few runs for the test: use `--count 4` or more, 10 recommended.
 
 ## Parallel tests
