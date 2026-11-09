@@ -161,6 +161,71 @@ test "sign in one loop" {
 }
 ```
 
+## Snapshots and golden files
+
+For output that is long or tedious to write by hand (a rendered report, generated code, a
+binary format), compare it with a file instead of a literal.
+
+```swift
+test "report" {
+  expectSnapshot(render(items))            // testdata/snapshots/report.snap
+  expectSnapshot(render([]), "empty")      // testdata/snapshots/report.empty.snap
+  expectGolden(render(items), "testdata/report.txt")
+}
+```
+
+Both take a `String` or `Bytes`.
+
+| | `expectSnapshot(value, label)` | `expectGolden(value, path)` |
+|---|---|---|
+| File | `testdata/snapshots/<test name>[.<label>].snap`, named for you | the path you give, relative to the package |
+| Use for | output only this test cares about | a file that is also an input or documentation elsewhere |
+| Several calls | unlabeled ones count (`name`, `name-2`); a label may be used once per test | one path per call |
+
+- A missing file fails: `snapshot testdata/snapshots/report.snap missing; run rill test --update`.
+  CI never accepts output nobody has seen.
+- A difference fails with a unified diff of the file (`-`) against the value (`+`).
+- `rill test --update` writes the missing and changed files (`RILL_TEST_UPDATE=1` does the
+  same). It bypasses the test cache and reports `(updated N)`.
+- **Read the diff of the `.snap` files before you commit.** `--update` makes every test
+  pass; reviewing the changed files is the check that the new output is the right one.
+
+## Fixtures
+
+Three helpers in `std/testing` set up what a test needs and undo it when the test (or subtest)
+ends:
+
+```swift
+import "std/testing"
+
+test "export" {
+  let dir = testing.tempDir()              // new empty directory, removed afterwards
+  testing.setenv("EXPORT_FORMAT", "csv")   // the old value comes back afterwards
+  testing.cleanup { closeConnections() }   // any closure
+  // ...
+}
+```
+
+- `tempDir()` returns a new empty directory named after the test, removed with everything in it.
+- `setenv(name, value)` sets the variable; the old value, or its absence, is restored. The test
+  owns the variable: it is not an input of the test cache. Outside tests, `os.setenv` and
+  `os.unsetenv` change the environment of the process and the children it starts later.
+- `cleanup(f)` runs `f` at the end. A test's cleanups run in reverse order of registration, so
+  what was set up last is torn down first. A subtest has its own list, run when the subtest ends.
+- Cleanups run before the verdict, also when an `expect` failed or `?` ended the test. An
+  `expect` that fails inside a cleanup fails the test. A panic ends the process: no cleanups.
+- Fixtures belong to tests: `rill test` runs fuzz seeds as tests, so fixtures work there; in a benchmark or under `rill fuzz` there is no running test and they panic with `called outside a test`.
+
+**`cleanup` versus `defer`.** `defer` runs when the function that wrote it returns; `cleanup`
+runs when the test ends. A helper `fn newServer() -> Server` cannot `defer` the server's
+shutdown (it would stop it on return), but it can register `testing.cleanup { server.stop() }`,
+and the test does not have to remember. Inside the test body, `defer` is fine for what
+belongs to one block.
+
+The environment belongs to the whole process, and `setenv` is not safe while other tasks read
+it. Tests without the `parallel` marker run one after another and restore it between tests; a
+`parallel` test runs in a process of its own, so its `setenv` does not reach the others.
+
 ## Packages and flags
 
 ```sh

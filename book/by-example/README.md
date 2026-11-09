@@ -55,6 +55,8 @@ Run any of them with `rill run book/by-example/examples/<name>.rl`.
 - [Modules](modules.md)
 - [Tests](tests.md)
 - [Subtests](subtests.md)
+- [Snapshots and golden files](snapshots.md)
+- [Test fixtures](fixtures.md)
 - [Command-line arguments](args.md)
 - [Files](files.md)
 - [Processes and environment](processes.md)

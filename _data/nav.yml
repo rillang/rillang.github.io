@@ -189,6 +189,14 @@ by-example:
       path: book/by-example/subtests.md
       url: /book/by-example/subtests.html
       group: "Programs"
+    - title: "Snapshots and golden files"
+      path: book/by-example/snapshots.md
+      url: /book/by-example/snapshots.html
+      group: "Programs"
+    - title: "Test fixtures"
+      path: book/by-example/fixtures.md
+      url: /book/by-example/fixtures.html
+      group: "Programs"
     - title: "Command-line arguments"
       path: book/by-example/args.md
       url: /book/by-example/args.html
