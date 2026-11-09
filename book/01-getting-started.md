@@ -119,6 +119,7 @@ Environment variables tune a compiled program; the defaults need no tuning.
 | Variable | Meaning |
 |---|---|
 | `RILL_GC` | heap growth between collections in percent (default `100`), `off`, or `stress[:N]` |
+| `RILL_MEMLIMIT` | a soft heap limit (`512MiB`, `2GiB`): collections start earlier near it; with `RILL_GC=off` only there |
 | `RILL_WORKERS` | threads that run tasks (default: number of cores) |
 | `RILL_STACK` | stack size per task in bytes (default 1 MiB) |
 | `RILL_BACKTRACE` | `1`: a panic prints the call chain |

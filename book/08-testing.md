@@ -43,6 +43,25 @@ test "a failing test reports every failed expect" {
 `rill test testing.test.rl` prints:
 
 <!-- include: examples/testing.test.out -->
+```text
+FAIL  book/examples/testing.test.rl    3 tests   0.00s   (1 failed)
+
+failures:
+
+--- FAIL book/examples/testing.test.rl: a failing test reports every failed expect
+book/examples/testing.test.rl:30: expect(add(2, 2) == 5)
+    left:  4
+    right: 5
+book/examples/testing.test.rl:32: expect(p == Point(x: 1, y: 3))
+    left:  Point(x: 1, y: 2)
+    right: Point(x: 1, y: 3)
+    message: points differ in y
+book/examples/testing.test.rl:33: expect(clamp(3, low: 0, high: 2) > 2)
+    left:  2
+    right: 2
+
+result: FAIL. 2 passed, 1 failed; 1 module in 0.00s
+```
 
 - `test "name" { … }` declares a test. Tests see private (non-`pub`) declarations.
 - `expect(condition)` records a failure and continues the test, so one run reports every
@@ -64,27 +83,82 @@ There is no special assertion library: `expect(a == b)` with Rill's structural `
 structs, enums, arrays, maps and optionals (a map shows as `["a": 1, "b": 2]`, in insertion
 order).
 
-Table tests are a loop over an array of structs; the message names the failing row, and
-since `expect` continues, one run reports every failing row:
+### Subtests and table tests
 
+A `test` statement inside a test declares a subtest. For a table, one subtest per row is the
+main form: each row passes or fails on its own, and the report names it.
+
+<!-- include: examples/subtests.test.rl 12-26 -->
 ```swift
-FAIL  book/examples/testing.test.rl    3 tests   0.00s   (1 failed)
+struct Row { name: String, input: Int, want: Int }
+
+fn rows() -> [Row] = [
+  Row(name: "negative", input: -4, want: -1),
+  Row(name: "zero", input: 0, want: 0),
+  Row(name: "positive", input: 9, want: 1),
+]
+
+test "sign per row" {
+  for r in rows() {
+    test r.name {
+      expect(sign(r.input) == r.want)
+    }
+  }
+}
+```
+
+`rill test subtests.test.rl` prints (the file's `sign` is wrong for `0`):
+
+<!-- include: examples/subtests.test.out -->
+```text
+FAIL  book/examples/subtests.test.rl    5 tests   0.00s   (3 failed)
 
 failures:
 
---- FAIL book/examples/testing.test.rl: a failing test reports every failed expect
-book/examples/testing.test.rl:30: expect(add(2, 2) == 5)
-    left:  4
-    right: 5
-book/examples/testing.test.rl:32: expect(p == Point(x: 1, y: 3))
-    left:  Point(x: 1, y: 2)
-    right: Point(x: 1, y: 3)
-    message: points differ in y
-book/examples/testing.test.rl:33: expect(clamp(3, low: 0, high: 2) > 2)
-    left:  2
-    right: 2
+--- FAIL book/examples/subtests.test.rl: sign per row/zero
+book/examples/subtests.test.rl:23: expect(sign(r.input) == r.want)
+    left:  1
+    right: 0
 
-result: FAIL. 2 passed, 1 failed; 1 module in 0.00s
+--- FAIL book/examples/subtests.test.rl: sign in one loop
+book/examples/subtests.test.rl:30: expect(sign(r.input) == r.want)
+    left:  1
+    right: 0
+    message: zero
+
+result: FAIL. 2 passed, 3 failed; 1 module in 0.00s
+```
+
+- The name is any `String` expression (`test r.name`). A string literal is the common case.
+  The expression ends at the `{`, so a trailing closure is not parsed there, as in an `if`
+  condition.
+- The full name joins the levels with `/`: `sign per row/zero`. A `/` inside a name stays.
+  Equal full names under one parent get `#01`, `#02`, ...: the first keeps its name.
+- The body is a closure, run in place when the statement is reached. `return` ends the
+  subtest and passes it if nothing failed before. A failing `?` fails the subtest and ends
+  its body. The parent goes on.
+- A failed `expect` or `?` in a subtest fails it, and, once it ends, its parent. A parent
+  whose only failure is a child shows no failure of its own: the failures-only report
+  (agent mode) lists the failing subtests, not the parent.
+- Every test and subtest counts once in `N passed, M failed` and in the JSON `package`
+  event. The JSON `start` and `end` events carry the full name; a parent's `end` follows
+  its children's.
+- Subtests nest. `test` outside a test body is E0020, also inside an ordinary closure in a
+  test; in a `bench` body it is E0020 too.
+- A panic in a subtest ends the package's run as in any test: the innermost test is
+  reported as panicked, its open parents as failed, and the later tests as not run.
+
+The light option is the loop with `expect` and a message naming the row. It is a single
+test: `expect` continues, so one run reports every failing row, but the rows are not
+counted or listed as tests of their own:
+
+<!-- include: examples/subtests.test.rl 28-32 -->
+```swift
+test "sign in one loop" {
+  for r in rows() {
+    expect(sign(r.input) == r.want, r.name)
+  }
+}
 ```
 
 ## Snapshots and golden files
@@ -281,6 +355,41 @@ variance.
   `allocsPerOp`, `result`. Benches are counted apart from tests (`3 passed, 2 benches`;
   `"benches"` in the `package` and `result` events).
 - A benchmark runs about its benchtime: the last batch is sized to the remaining time.
+
+## Comparing benchmarks
+
+Did a change make the code faster? `rill bench compare` answers it from the `--json` output
+of two runs: save one run before the change and one after, then compare them.
+
+```sh
+git stash
+rill test --bench . --run '^$' --count 10 --json ./parser > old.json
+git stash pop
+rill test --bench . --run '^$' --count 10 --json ./parser > new.json
+rill bench compare old.json new.json
+```
+
+```
+pkg: parser
+        │  old.json  │              new.json              │
+        │  time/op   │  time/op    vs base                │
+parse     12.3µ ± 2%   10.1µ ± 1%  -17.81% (p=0.000 n=10)
+tokens    4.01µ ± 1%   4.00µ ± 2%        ~ (p=1.000 n=10)
+geomean   7.01µ        6.35µ        -9.35%
+```
+
+Each bench shows its median and the 95 % confidence interval of it. `vs base` is the change
+against the first file, `p` the probability of seeing such a difference if nothing changed
+(Mann-Whitney U test), `n` the number of runs. The command prints one block per package, and
+in it the sections time/op, B/op and allocs/op, each with a geomean over its benches. With
+one file it prints only the medians.
+
+Run with `--count 10`: one run of a bench varies by a few percent, and the statistics need
+the samples to tell a change from noise. With fewer than 6 runs there is no confidence
+interval (`± ∞`).
+
+- `~` means no significant difference (`p` of 0.05 or more): the difference is within noise.
+- `?` means too few runs for the test: use `--count 4` or more, 10 recommended.
 
 ## Parallel tests
 
