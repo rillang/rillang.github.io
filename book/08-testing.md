@@ -140,7 +140,7 @@ test "export" {
   what was set up last is torn down first. A subtest has its own list, run when the subtest ends.
 - Cleanups run before the verdict, also when an `expect` failed or `?` ended the test. An
   `expect` that fails inside a cleanup fails the test. A panic ends the process: no cleanups.
-- Fixtures belong to tests: in a benchmark or a fuzz target they panic with `called outside a test`.
+- Fixtures belong to tests: `rill test` runs fuzz seeds as tests, so fixtures work there; in a benchmark or under `rill fuzz` there is no running test and they panic with `called outside a test`.
 
 **`cleanup` versus `defer`.** `defer` runs when the function that wrote it returns; `cleanup`
 runs when the test ends. A helper `fn newServer() -> Server` cannot `defer` the server's

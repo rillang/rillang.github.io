@@ -23,7 +23,13 @@ test "environment is restored" {
 }
 
 test "cleanup" {
-  testing.cleanup { print("second") }
-  testing.cleanup { print("first") }
-  print("body")
+  fs.writeFile("fixtures.lock", "held")?
+  testing.cleanup {
+    let _ = fs.remove("fixtures.lock")
+  }
+  expect(fs.exists("fixtures.lock"))
+}
+
+test "cleanup ran" {
+  expect(!fs.exists("fixtures.lock"))
 }

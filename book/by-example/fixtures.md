@@ -31,9 +31,15 @@ test "environment is restored" {
 }
 
 test "cleanup" {
-  testing.cleanup { print("second") }
-  testing.cleanup { print("first") }
-  print("body")
+  fs.writeFile("fixtures.lock", "held")?
+  testing.cleanup {
+    let _ = fs.remove("fixtures.lock")
+  }
+  expect(fs.exists("fixtures.lock"))
+}
+
+test "cleanup ran" {
+  expect(!fs.exists("fixtures.lock"))
 }
 ```
 
@@ -41,9 +47,9 @@ test "cleanup" {
 
 <!-- include: examples/fixtures.test.out -->
 ```text
-ok    book/by-example/examples/fixtures.test.rl    4 tests   0.00s
+ok    book/by-example/examples/fixtures.test.rl    5 tests   0.00s
 
-result: ok. 4 passed; 1 module in 0.00s
+result: ok. 5 passed; 1 module in 0.00s
 ```
 
 Cleanups run in reverse order, before the verdict, also when the test failed. A failing
