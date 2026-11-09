@@ -116,6 +116,42 @@ Both take a `String` or `Bytes`.
 - **Read the diff of the `.snap` files before you commit.** `--update` makes every test
   pass; reviewing the changed files is the check that the new output is the right one.
 
+## Fixtures
+
+Three helpers in `std/testing` set up what a test needs and undo it when the test (or subtest)
+ends:
+
+```swift
+import "std/testing"
+
+test "export" {
+  let dir = testing.tempDir()              // new empty directory, removed afterwards
+  testing.setenv("EXPORT_FORMAT", "csv")   // the old value comes back afterwards
+  testing.cleanup { closeConnections() }   // any closure
+  // ...
+}
+```
+
+- `tempDir()` returns a new empty directory named after the test, removed with everything in it.
+- `setenv(name, value)` sets the variable; the old value, or its absence, is restored. The test
+  owns the variable: it is not an input of the test cache. Outside tests, `os.setenv` and
+  `os.unsetenv` change the environment of the process and the children it starts later.
+- `cleanup(f)` runs `f` at the end. A test's cleanups run in reverse order of registration, so
+  what was set up last is torn down first. A subtest has its own list, run when the subtest ends.
+- Cleanups run before the verdict, also when an `expect` failed or `?` ended the test. An
+  `expect` that fails inside a cleanup fails the test. A panic ends the process: no cleanups.
+- Fixtures belong to tests: in a benchmark or a fuzz target they panic with `called outside a test`.
+
+**`cleanup` versus `defer`.** `defer` runs when the function that wrote it returns; `cleanup`
+runs when the test ends. A helper `fn newServer() -> Server` cannot `defer` the server's
+shutdown (it would stop it on return), but it can register `testing.cleanup { server.stop() }`,
+and the test does not have to remember. Inside the test body, `defer` is fine for what
+belongs to one block.
+
+The environment belongs to the whole process, and `setenv` is not safe while other tasks read
+it. Tests without the `parallel` marker run one after another and restore it between tests; a
+`parallel` test runs in a process of its own, so its `setenv` does not reach the others.
+
 ## Packages and flags
 
 ```sh
