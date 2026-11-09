@@ -1,7 +1,7 @@
 # 16. Files and streams
 
-**Partly planned.** `std/io` (this page) exists; buffered readers and writers (`std/bufio`),
-file handles and `stdin`/`stdout` as streams come in later phases of
+**Partly planned.** `std/io` and files (`fs.File`) exist; buffered readers and writers
+(`std/bufio`) come in a later phase of
 [RFC 0019](https://github.com/rillang/rill/blob/main/docs/rfcs/0019-io-streams.md).
 
 A stream moves bytes. `std/io` defines what readers and writers look like and a few
@@ -83,3 +83,85 @@ readFull: true
 A `Buffer` never compacts: bytes already read stay in memory until the buffer goes.
 `io.copy` uses one 32 KiB buffer; a reader that returns short counts (pipes, terminals)
 costs one 32 KiB allocation per short read.
+
+## Files
+
+`fs.open` opens a file for reading, `fs.create` for writing (empty, mode 0644 before the
+umask), `fs.append` for writing at the end (created when missing). Each returns a `File`:
+a `Reader`, a `Writer` and a `Closer`. Close it on every exit with `defer`; `close` is
+idempotent. A `File` is a descriptor: copies share it and its closed state, so closing one
+closes all.
+
+<!-- include: examples/files.rl -->
+```swift
+import "std/fs"
+import "std/io"
+
+// Writes a file, reads it back and copies it to stdout. defer closes the file at every exit.
+fn save(_ path: String, _ text: String) -> Void! {
+  var f = fs.create(path)?
+  defer { let _ = f.close() }
+  io.writeString(&f, text)?
+}
+
+fn show(_ path: String) -> Void! {
+  var f = fs.open(path)?
+  defer { let _ = f.close() }
+  var out = io.stdout()
+  io.copy(&out, &f)?
+}
+
+fn main() -> Void! {
+  let dir = fs.tempDir("files")?
+  let path = "$dir/hello.txt"
+  save(path, "hello, files\n")?
+  show(path)?
+
+  // errors name the operation and the file and carry the fs sentinel as cause
+  switch fs.open("$dir/missing.txt") {
+  case .ok(_): print("opened?")
+  case .err(e): print("notFound: ${e.is(fs.notFound)}")
+  }
+
+  // a closed file reports io.closed
+  var f = fs.open(path)?
+  f.close()?
+  var buf = Bytes(8)
+  switch f.read(&buf) {
+  case .ok(_): print("read?")
+  case .err(e): print("closed: ${e.is(io.closed)}")
+  }
+}
+```
+
+<!-- include: examples/files.out -->
+```text
+hello, files
+notFound: true
+closed: true
+```
+
+Every error of a `File` names the operation and the file (`open /tmp/x: no such file`). When
+the operating system's error has a sentinel it is the cause (`fs.notFound`, `fs.permission`,
+`fs.isDir`, `fs.notDir`), so `e.is(fs.notFound)` works through the context. A read or write
+after `close` fails with `fs.closed`; `io.closed` is the same value.
+
+## Standard streams
+
+`io.stdin()`, `io.stdout()` and `io.stderr()` are `File`s on descriptors 0, 1 and 2 (also
+`fs.stdin()` and so on). They are functions because a top-level `let` must be a constant.
+Each call returns a new `File`, and closing one closes the process's descriptor: close a
+standard stream at most once, or not at all. `cat` is three lines:
+
+```swift
+import "std/io"
+
+fn main() -> Void! {
+  var i = io.stdin()
+  var o = io.stdout()
+  io.copy(&o, &i)?
+}
+```
+
+A task blocked reading standard input does not stop the other tasks. `print` is unchanged
+and unbuffered; `os.readStdin` still works, but prefer `io.stdin()` for streaming.
