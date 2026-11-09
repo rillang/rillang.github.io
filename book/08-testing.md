@@ -191,7 +191,7 @@ their values, then a result line; the exit code is 0 only when every test passed
 
 | Flag | |
 |---|---|
-| `--run <regex>` | only the tests whose name matches (`std/regexp` syntax, unanchored) |
+| `--run <regex>` | only the tests whose name matches (`std/regexp` syntax, unanchored); split at `/` (outside `[]` and `()`), part *i* matches subtest level *i*: `--run 'sign per row/zero'` |
 | `-v` | one line per test, with its output |
 | `-p N` | packages tested in parallel (default: the number of cores) |
 | `--count N` | run the tests N times; never from the cache |
@@ -313,6 +313,35 @@ test "parses the big fixture" parallel {
   coverage and the test cache include the parallel tests.
 - `--parallel 1`, and `--count N` with N > 1, run every test in one process, in order.
 - A process costs a few milliseconds to start: mark tests that take longer than that.
+
+### Parallel subtests
+
+`parallel` works on a subtest too:
+
+```rill
+test "fixtures" {
+  for name in fs.readDir("testdata") ?? [] {
+    test name parallel {
+      // the work is here
+    }
+  }
+}
+```
+
+- A parallel subtest runs in a process of its own, after the serial run of its package has
+  ended, `--parallel N` at a time together with the parallel top-level tests.
+- **The parent's body runs again once per parallel subtest**, in that subtest's process,
+  with the parent silent: what it prints before reaching the subtest is dropped there. Keep
+  enumeration (a directory listing, a table) in the parent and the work in the subtests. A
+  parent that does not reach the subtest again (a different listing) makes it panic with
+  `subtest not reached on rerun`.
+- The report and `--json` put each subtest inside its parent, in the order of the source.
+  The parent fails if a parallel child fails.
+- A panic or `os.exit` in one parallel subtest ends only that one: its siblings still
+  report `ok`.
+- A parallel subtest inside a parallel subtest runs in place, in the outer one's process.
+  `--parallel 1` and `--count N` run every parallel subtest in place, in one process.
+- `--run 'a/b'` runs `a`, and in it only `b` with its subtests; `--run '/b'` runs every `b`.
 
 ## Fuzzing
 
