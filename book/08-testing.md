@@ -331,8 +331,9 @@ test "fixtures" {
 - A parallel subtest runs in a process of its own, after the serial run of its package has
   ended, `--parallel N` at a time together with the parallel top-level tests.
 - **The parent's body runs again once per parallel subtest**, in that subtest's process,
-  with the parent silent: what it prints before reaching the subtest is dropped there. Keep
-  enumeration (a directory listing, a table) in the parent and the work in the subtests. A
+  with the parent silent: what it prints before and after the subtest is dropped there, and
+  a crash in the parent's code after the subtest is not reported (the serial run reports the
+  parent). Keep enumeration (a directory listing, a table) in the parent and the work in the subtests. A
   parent that does not reach the subtest again (a different listing) makes it panic with
   `subtest not reached on rerun`.
 - The report and `--json` put each subtest inside its parent, in the order of the source.
@@ -340,7 +341,8 @@ test "fixtures" {
 - A panic or `os.exit` in one parallel subtest ends only that one: its siblings still
   report `ok`.
 - A parallel subtest inside a parallel subtest runs in place, in the outer one's process.
-  `--parallel 1` and `--count N` run every parallel subtest in place, in one process.
+  `--parallel 1`, `--count N` and the profiles (`--cpuprofile`, `--memprofile`) run every
+  parallel subtest in place, in one process; so does a fuzz body, whose input need not repeat.
 - `--run 'a/b'` runs `a`, and in it only `b` with its subtests; `--run '/b'` runs every `b`.
 
 ## Fuzzing
