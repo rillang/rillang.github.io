@@ -1,9 +1,5 @@
 # 16. Files and streams
 
-**Partly planned.** `std/io` and files (`fs.File`) exist; buffered readers and writers
-(`std/bufio`) come in a later phase of
-[RFC 0019](https://github.com/rillang/rill/blob/main/docs/rfcs/0019-io-streams.md).
-
 A stream moves bytes. `std/io` defines what readers and writers look like and a few
 functions that work with any of them:
 
@@ -145,6 +141,34 @@ Every error of a `File` names the operation and the file (`open /tmp/x: no such 
 the operating system's error has a sentinel it is the cause (`fs.notFound`, `fs.permission`,
 `fs.isDir`, `fs.notDir`), so `e.is(fs.notFound)` works through the context. A read or write
 after `close` fails with `fs.closed`; `io.closed` is the same value.
+
+## Buffered streams
+
+`bufio.reader` and `bufio.writer` buffer any `io.Reader` and `io.Writer`. Pass buffered
+streams as `inout` rather than copying them: their buffers are values, while an inner
+file descriptor is shared. A buffered writer around a closable stream must be closed on
+the success path to report flush errors; a writer around a plain `io.Writer` uses `flush`.
+
+`bufio.scanner` reads lines without their newline (or CRLF). `scan()?` advances and
+`text()` returns the current line; a line longer than 64 KiB returns `bufio.tooLong`.
+`scannerSize(reader, max)` changes the limit. Text and bytes are valid until the next scan.
+
+```swift
+import "std/bufio"
+import "std/fs"
+
+fn copyLines(_ src: String, _ dst: String) -> Void! {
+  var input = fs.open(src)?
+  defer { let _ = input.close() }
+  var output = bufio.writer(fs.create(dst)?)
+  defer { let _ = output.close() }
+  var lines = bufio.scanner(input)
+  while lines.scan()? {
+    let _ = output.write("${lines.text()}\n".bytes())?
+  }
+  output.close()?
+}
+```
 
 ## Standard streams
 
