@@ -308,6 +308,17 @@ ok    lexer      12 tests   (cached)
 
 With `--count` above 1, `start`, `output`, `expect` and `end` carry `run` (from 1).
 
+### Stale snapshots
+
+A snapshot that no `expectSnapshot` uses any more (a renamed test, a removed label) stays on
+disk and is never read. `rill test --update` removes such `*.snap` files under the package's
+`testdata/snapshots/`, drops directories left empty and prints `removed testdata/snapshots/old.snap`
+(on stderr under `--json`). It does so only after a full, passing run of a directory module:
+no `--run`, no `--fuzz`, no failed, panicked or skipped test (it may have stopped before its
+snapshots), and no source file for another target (`x_linux.rl` on macOS). Single-file
+packages never remove, since their files share one `testdata/snapshots/`; golden files are
+never removed. `RILL_TEST_UPDATE=1` writes snapshots but removes nothing.
+
 ## Benchmarks
 
 A `bench` block measures code. Setup runs once; the body of `while loop()` is the measured
