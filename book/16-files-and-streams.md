@@ -149,9 +149,11 @@ streams as `inout` rather than copying them: their buffers are values, while an 
 file descriptor is shared. A buffered writer around a closable stream must be closed on
 the success path to report flush errors; a writer around a plain `io.Writer` uses `flush`.
 
-`bufio.scanner` reads lines without their newline (or CRLF). `scan()?` advances and
-`text()` returns the current line; a line longer than 64 KiB returns `bufio.tooLong`.
-`scannerSize(reader, max)` changes the limit. Text and bytes are valid until the next scan.
+`bufio.scanner` reads lines without their newline (or CRLF; a `\r` at the very end goes
+too, as in Go). `scan()?` advances and `text()` returns the current line; the last line
+needs no newline. A line longer than 64 KiB fails with `bufio.tooLong`, and so does every
+scan after it. `scannerSize(reader, max)` changes the limit. Text and bytes are valid until
+the next scan.
 
 ```swift
 import "std/bufio"
