@@ -66,6 +66,10 @@ book:
       path: book/15-standard-library.md
       url: /book/15-standard-library.html
       group: "Contents"
+    - title: "16. Files and streams"
+      path: book/16-files-and-streams.md
+      url: /book/16-files-and-streams.html
+      group: "Contents"
 by-example:
   title: "Rill by Example"
   pages:
