@@ -29,19 +29,35 @@
 <main class="wrap">
   <div class="page-head">
     <h1>Get started</h1>
-    <p>There are no releases yet: you build Rill from source. It takes one command and
+    <p>Download a release, or build Rill from source: that takes one command and
       nothing but the repository.</p>
   </div>
 
   <h2>Requirements</h2>
   <ul>
-    <li>An <strong>arm64</strong> computer running <strong>macOS</strong> (Apple silicon)
-      or <strong>Linux</strong>.</li>
-    <li>Git, to get the source. No C compiler, linker, Python or package manager.</li>
+    <li><strong>macOS</strong> on Apple silicon, or <strong>Linux</strong> on arm64 or
+      x86-64.</li>
+    <li>For a source build: Git. No C compiler, linker, Python or package manager.</li>
   </ul>
-  <p>x86-64 and Windows are not supported.</p>
+  <p>Windows and Intel Macs are not supported.</p>
 
-  <h2>Build</h2>
+  <h2>Download</h2>
+  <p>The current release is <a href="https://github.com/rillang/rill/releases/tag/v0.3.0">v0.3.0</a>.
+    Each archive holds the <code>rill</code> binary, the licenses and the README.</p>
+  <div class="code">
+    <div class="file">shell</div>
+    <pre><code>v=0.3.0 target=macos-arm64   # or linux-arm64, linux-amd64
+curl -LO https://github.com/rillang/rill/releases/download/v$v/rill-$v-$target.tar.gz
+curl -LO https://github.com/rillang/rill/releases/download/v$v/SHA256SUMS
+shasum -a 256 --ignore-missing -c SHA256SUMS
+tar xzf rill-$v-$target.tar.gz
+export PATH="$PWD/rill-$v-$target:$PATH"</code></pre>
+  </div>
+  <p><code>SHA256SUMS</code> is signed with the release key (<code>SHA256SUMS.sig</code>);
+    <a href="https://github.com/rillang/rill/blob/main/docs/governance/keys/README.md">docs/governance/keys</a>
+    shows how to verify it. The Linux binaries are static and rebuild byte for byte.</p>
+
+  <h2>Build from source</h2>
   <div class="code">
     <div class="file">shell</div>
     <pre><code>git clone &lt;repository&gt; rill
@@ -116,8 +132,6 @@ args = ["lsp"]</code></pre>
 
   <h2>Coming</h2>
   <ul>
-    <li><span class="tag">planned</span> Downloadable releases with signed checksums for
-      macOS and Linux.</li>
     <li><span class="tag">planned</span> A toolchain version manager built into
       <code>rill</code>, and integration with tools like mise (version files).</li>
   </ul>
