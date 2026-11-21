@@ -11,7 +11,8 @@ fn average(_ total: Int, _ count: Int) -> String! {
 }
 
 fn main() {
-  print("${divide(10, by: 2) ?? -1} ${divide(1, by: 0) ?? -1}")
+  let none = -1
+  print("${divide(10, by: 2) ?? none} ${divide(1, by: 0) ?? none}")
   switch average(10, 0) {
   case .ok(s): print(s)
   case .err(e): print("failed: ${e.msg}")

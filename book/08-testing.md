@@ -257,15 +257,26 @@ their values, then a result line; the exit code is 0 only when every test passed
 | Flag | |
 |---|---|
 | `--run <regex>` | only the tests whose name matches (`std/regexp` syntax, unanchored); split at `/` (outside `[]` and `()`), part *i* matches subtest level *i*: `--run 'sign per row/zero'` |
+| `--skip <regex>` | do not run the tests whose name matches (not reported); split at `/` like `--run` |
 | `-v` | one line per test, with its output |
 | `-p N` | packages tested in parallel (default: the number of cores) |
 | `--count N` | run the tests N times; never from the cache |
+| `--retries N` | rerun a failed test up to N times; one that passes on a later try is reported `FLAKY` (exit 0), never as a plain pass |
+| `--timeout D` | stop a test binary after D (`10s`, `500ms`; default `10m`; `0`: never) |
+| `--shuffle S` | run the top-level tests of each package in random order: `on` (a seed from the clock), `off` (default) or a seed; prints `shuffle seed N` |
+| `--shard i/n` | run only the i-th of n parts of the tests, split by a hash of each test's name |
+| `--failfast` | after the first failure no other test or package starts; they are reported not run |
+| `--slowest N` | after the report, list the N slowest tests and how many test processes ran at once on average |
+| `--update` | write the files of `expectSnapshot` and `expectGolden` (also `RILL_TEST_UPDATE=1`); never uses the cache |
 | `--json` | one JSON event per line instead of the report |
 | `--bench <regex>` | after the tests, run the benchmarks whose name matches (`.` = all) |
 | `--benchtime D` | time per benchmark (`1s`, the default; `500ms`) or iterations (`100x`) |
+| `--fuzz <regex>` | fuzz the one fuzz target that matches, in each package; `--fuzztime D` is how long (`10s`) or how many inputs (`5000x`) |
+| `--cover`, `--coverprofile F`, `--coverpkg P,Q`, `--covermode M` | coverage, see [Coverage](#coverage) |
+| `--cpuprofile F`, `--memprofile F`, `--memprofilerate N` | profiles of the test binary (one package), see [chapter 11](11-tooling.md); `--memprofilerate` is the bytes per heap sample (default 524288; `1`: all) |
 | `--opt=0`, `--target=…`, `--deny-warnings` | as for `rill build` |
 
-Output a test prints is shown with its failure (and always with `-v`). Colours are used only
+Flags for a run that goes wrong are explained in [When tests misbehave](#when-tests-misbehave). Output a test prints is shown with its failure (and always with `-v`). Colours are used only
 when the output is a terminal (and `NO_COLOR` is unset).
 
 ### The test cache
@@ -300,13 +311,84 @@ ok    lexer      12 tests   (cached)
 |---|---|
 | `build` | the build failed: `ok` (false), `output` (diagnostics) |
 | `start` | `test` |
-| `output` | `text`: a test's output (with `test`) or text outside tests |
+| `output` | `text`: a test's output (with `test`, or `bench`) or text outside tests (build warnings, the panic text of a test binary that died) |
 | `expect` | a failed expectation: `file`, `line`, `source`, `left`, `right`, `msg` (absent ones left out); for a `?` that met an error, `source` is the expression and `msg` the error |
-| `end` | `test`, `result` (`ok`, `fail`, `panic`, `notrun`), `ns`, `panic` (its text) |
-| `package` | `result` (`ok`, `fail`, `panic`, `buildfail`, `notests`), counts, `ns`, `cached` |
-| `result` | the totals over all packages |
+| `end` | `test`, `result` (`ok`, `fail`, `panic`, `notrun`), `ns`, `panic` (its text; also the timeout report), `timeout` (true: the test was running when `--timeout` stopped its binary), `tries` and `flaky` (see below) |
+| `bench` | a benchmark (`bench` instead of `test`): `result`, and when it passed `n`, `nsPerOp`, `bytesPerOp`, `allocsPerOp`; `panic` after a panic |
+| `fuzz` | a `--fuzz` run: `target`, `result`, `execs`, `corpus`, `ns`; for a failure `file` (the saved input), `input` and `failure` |
+| `package` | `result` (`ok`, `fail`, `panic`, `buildfail`, `notests`, `notrun`: `--failfast` did not start it), `passed`, `benches`, `flaky`, `failed`, `panicked`, `notRun`, `ns`, `cached`, `coverage` (percent, under `--cover`) |
+| `result` | the totals over all packages: `result` (`ok`, `fail`), the counts of `package`, `packages`, `ns`, `coverage`, `shuffle`, `shard`, `slowest`, `testNs`, `tailNs` |
 
-With `--count` above 1, `start`, `output`, `expect` and `end` carry `run` (from 1).
+Every event has `event`; all but `result` have `pkg`. Absent fields are left out, so a script reads
+`flaky` or `benches` as 0 when it is missing. The count fields are `passed`, `failed`, `panicked`
+and `notRun`, always present; `benches` (benchmarks that ran) and `flaky` (of the passed, on a later
+try) only when above 0. `ns` is nanoseconds.
+
+- `run` (from 1) is on `start`, `output`, `expect`, `end` and `bench` with `--count` above 1.
+- `tries` is on the `end` of a test that failed its first try under `--retries`: the number of runs.
+  `flaky` (true) is added when it passed on a later one; `result` stays `ok`, `panic` holds the
+  first try's text. A leaf that never passed has `tries` and `result` `fail`.
+- `shuffle` on `result` is the seed (a number) that reproduces the order, present under `--shuffle`.
+- `shard` on `result` is the part (`"1/2"`) under `--shard`.
+- `slowest` on `result`, under `--slowest N`, is an array of `{pkg, test, ns}` for the N slowest
+  leaf tests, slowest first; `testNs` is the sum of the test times, `tailNs` the time the run lasted
+  after its last test started.
+
+```
+{"event":"end","pkg":"lexer","test":"flaky","result":"ok","ns":900,"tries":2,"flaky":true}
+{"event":"end","pkg":"lexer","test":"spins","result":"fail","ns":1000000000,"timeout":true,"panic":"panic: test timed out after 1s\n..."}
+{"event":"result","result":"ok","passed":2,"flaky":1,"failed":0,"panicked":0,"notRun":0,"packages":1,"shard":"1/2","ns":130000000}
+```
+
+## When tests misbehave
+
+What to reach for, by what you see.
+
+**Run a subset.** `--run` selects by name, `--skip` removes by name; both are unanchored
+regular expressions split at `/`, one part per subtest level (`--skip 'parse/slow'` skips the
+subtest `slow` of `parse` and runs its siblings). Skipped tests are not reported.
+
+**A test hangs.** `--timeout 30s` stops a test binary that runs longer (default `10m`; `0` turns it off). The binary
+prints `panic: test timed out after 30s`, the running tests with their age and the call chain of
+every task, and the running tests fail (`timeout: true` in `--json`); tests that did not start
+are reported not run, and the rest of the package continues in a new process, with its own full
+timeout. A test still running after 60 s prints a `SLOW` line on stderr first.
+
+**A test is flaky.** Three flags find it, one tolerates it:
+
+- `--shuffle on` runs the top-level tests of each package in random order and prints
+  `shuffle seed N`. A failure that appears only in some orders means a test depends on state
+  another test left behind. `--shuffle N` repeats that order; with `--count`, every repetition
+  uses the same seed.
+- `--count N` runs the tests N times (never cached).
+- `--retries N` reruns a failed test, alone, up to N times. A test that passes on a later try is
+  reported `FLAKY` with the first try's failure and output, counts as passed, and the exit code
+  stays 0. It is never shown as a plain pass: `result: ok. 2 passed (1 flaky)`. Use it to keep CI
+  moving while you fix the test, not to hide it.
+
+**Stop early.** `--failfast` starts no further test or package after the first failure; they are
+reported `not run`. Panic continuation is off under it.
+
+**Find slow tests.** `--slowest 5` lists the five slowest tests after the report and a `busy:` line:
+how many test processes ran at once on average. A low number with a long run means one
+package or `parallel` test dominates; mark independent slow tests `parallel`.
+
+**Snapshots changed on purpose.** `--update` rewrites the files of `expectSnapshot` and
+`expectGolden` ([Snapshots and golden files](#snapshots-and-golden-files)); review the diff.
+
+**Split CI over machines.** `--shard i/n` runs the i-th of n parts. A leaf test (one without
+subtests) belongs to the part its name's hash selects (FNV-1a of the full name, for a subtest
+`parent/child`), so every leaf runs in exactly one of the n parts. A test with subtests runs in every
+part, with only its selected subtests, so its setup is repeated, not skipped. Run each part on its own machine:
+
+```sh
+rill test --shard 1/4 ./...    # machine 1
+rill test --shard 2/4 ./...    # machine 2, and so on
+```
+
+The result line names the part (`result: ok. 11 passed; shard 1/2; 1 module in 0.00s`), and so does
+`result` in `--json` (`"shard":"1/2"`). A part can be empty; benches and fuzz seeds are split the
+same way. The cache keys include the shard, so changing the split does not reuse an old verdict.
 
 ## Benchmarks
 
@@ -390,6 +472,10 @@ interval (`± ∞`).
 
 - `~` means no significant difference (`p` of 0.05 or more): the difference is within noise.
 - `?` means too few runs for the test: use `--count 4` or more, 10 recommended.
+
+`--json` prints one event per bench and metric, then a result line. `--fail-above P` exits 1 when
+a significant change makes a metric more than P % worse (`5`, `5%`, `2.5`); it needs two files,
+so a CI job can gate on it: `rill bench compare --fail-above 5 old.json new.json`.
 
 ## Parallel tests
 

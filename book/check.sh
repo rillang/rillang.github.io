@@ -3,6 +3,7 @@
 #   - runs it and compares the output with the expected file next to it
 #   - rill fmt --check and rill lsp --check on every source
 #   - the code blocks copied into pages are up to date (sync.sh --check)
+#   - every flag in `rill help test` and `rill help bench` appears in the book
 #
 # File conventions (as in tests/, AGENTS.md):
 #   name.rl       + name.out   run, exit 0, stdout
@@ -114,6 +115,15 @@ fi
 if [ -n "$filter" ]; then :; elif sh book/sync.sh --check >"$tmp/out" 2>&1; then ok; else
   bad "pages out of date (run sh book/sync.sh):"
   sed 's/^/  /' "$tmp/out"
+fi
+
+# Drift: a flag of `rill help <cmd>` the book does not mention. The help is the source.
+if [ -z "$filter" ]; then
+  for cmd in test bench; do
+    for flag in $("$RILL" help $cmd 2>/dev/null | grep -oE -- '--[a-z][a-z0-9-]*' | sort -u); do
+      if grep -qF -- "$flag" book/*.md; then ok; else bad "book: rill $cmd $flag not documented"; fi
+    done
+  done
 fi
 
 rm -rf "$tmp"
