@@ -28,5 +28,6 @@ fn main() {
     case .dot: 0
   }
   print("$width $size ${sign(-4)} ${name(.dot)}")
-  print("${half(10) ?? -1} ${half(7) ?? -1}")
+  let none = -1
+  print("${half(10) ?? none} ${half(7) ?? none}")
 }
