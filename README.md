@@ -8,6 +8,7 @@ programming language, published with GitHub Pages at <https://rillang.github.io>
 | [`site/`](site) | the website: plain HTML and CSS, no build step |
 | [`book/`](book) | The Rill Book and Rill by Example; every example runs |
 | [`tutorials/`](tutorials) | hands-on tutorials; every command's output is checked |
+| `std/<version>/` | the std reference of a release, generated (see below), not committed here by hand |
 
 The Markdown pages need no front matter: GitHub Pages renders them with
 [`_layouts/doc.html`](_layouts/doc.html) (the website's header, `site/style.css` and
@@ -35,6 +36,25 @@ sh tools/nav.sh           # regenerate the navigation after changing an index pa
 
 CI runs both checks on every pull request and nightly against the newest compiler; a
 nightly failure opens an issue. Pages are deployed from `main`.
+
+## Std reference
+
+One page per std module (overview, items with signature, doc, examples with their output,
+doc links resolved to anchors), generated from `rill doc --json std/<module>` by the Rill
+program [`tools/stdref/`](tools/stdref); the compiler renders no HTML.
+
+```sh
+sh tools/stdref.sh v0.3.0      # writes std/v0.3.0/: <module>.md pages, README.md (index with
+                               # a search box), search.json; every std module the compiler has
+sh tools/stdref.sh --check     # snapshot of std/strings against tools/stdref/testdata/strings.md
+UPDATE=1 sh tools/stdref.sh --check   # after an intended change: rewrite it, review the diff
+rill test tools/stdref         # unit tests of the link rewriting
+```
+
+`RILL` names the compiler (default `../rill/out/rill`), `RILL_SRC` the checkout whose `std/`
+is documented (default: the compiler's checkout, else `../rill`). The pages are plain
+Markdown rendered with `_layouts/doc.html` (no sidebar). Generated `std/<version>/` pages are
+not written by hand; how a release publishes them is open.
 
 ## License
 

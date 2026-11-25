@@ -15,3 +15,6 @@ defaults:
     values: { layout: doc, nav: by-example }
   - scope: { path: "tutorials" }
     values: { layout: doc, nav: tutorials }
+  # the std reference (tools/stdref.sh): no sidebar, the layout works without a nav
+  - scope: { path: "std" }
+    values: { layout: doc }
