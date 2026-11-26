@@ -20,7 +20,7 @@ module github.com/ada/greeter
 rill 0.1
 require github.com/ada/textkit v1.0.0
 $ cat rill.sum
-github.com/ada/textkit v1.0.0 commit=3b6f18f015ebdcbf6838ccaff5815f8c167208cf tree=sha256:f75fc8b671037c0ca4eb525b1d7ddbec1124415734e089f0a024ee2861b4fa3b
+github.com/ada/textkit v1.0.0 commit=f0e765f629787384065ab8d404b692a62760f17d tree=sha256:b18150e885804cbd72f8831cd9f5524e4d2621d8033f0e13b865f686c080b346
 github.com/ada/textkit v1.0.0/rill.mod sha256:a4bb9152af35730505a7f44d294036a9b92d4e1e9060be1a578e9d97c6d7a17a
 $ rill run .
 /posts/packages-in-rill-a-hands-on-tour (7 words)

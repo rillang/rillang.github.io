@@ -95,12 +95,12 @@ compress: bool true
 exclude: array of 2
 port: 2222
 $ rill run explore.rl broken.json
-error: invalid JSON at byte 58
+error: invalid JSON at line 3, column 32: unexpected character ']'
 [exit 1]
 ```
 
 A syntax error is an ordinary `Error` (the trailing comma in
-[`broken.json`](json-config/broken.json)); the message gives the byte offset.
+[`broken.json`](json-config/broken.json)); the message gives its line and column.
 
 ## Step 2: defaults and validation
 
@@ -383,8 +383,6 @@ bad.json: invalid configuration:
 ## Exercises
 
 - Expand a leading `~/` in `sources` with `os.env("HOME")`.
-- Turn the byte offset of a syntax error into a line and column (count `'\n'` bytes
-  before it).
 - Suggest the closest known key for an unknown one (edit distance).
 
 Next: [4. Packages](04-packages.md).

@@ -1,4 +1,4 @@
-// textkit: small text helpers.
+//! textkit: small text helpers.
 import "internal/ascii"
 
 /// `s` as a slug: lower-case letters and digits, runs of anything else as one `sep`.
