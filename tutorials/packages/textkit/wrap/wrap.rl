@@ -1,4 +1,4 @@
-// wrap: a second package of the module (import "github.com/ada/textkit/wrap").
+//! wrap: a second package of the module (import "github.com/ada/textkit/wrap").
 
 /// The words of `s` as lines of at most `width` bytes (longer words get a line each).
 pub fn lines(_ s: String, width: Int) -> [String] {

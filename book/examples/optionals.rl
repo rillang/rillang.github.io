@@ -25,7 +25,8 @@ fn main() {
   let b = firstEven([1, 3])
 
   // ?? supplies a default
-  print("${a ?? -1} ${b ?? -1}")
+  let none = -1
+  print("${a ?? none} ${b ?? none}")
 
   // if let unwraps
   if let x = a {

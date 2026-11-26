@@ -15,7 +15,8 @@ fn find(_ xs: [String], _ want: String) -> Int? {
 
 fn main() {
   let names = ["ana", "bo"]
-  print("${find(names, "bo") ?? -1} ${find(names, "cy") ?? -1}")
+  let none = -1
+  print("${find(names, "bo") ?? none} ${find(names, "cy") ?? none}")
   if let i = find(names, "ana") {
     print("ana at $i")
   }
