@@ -43,6 +43,25 @@ test "a failing test reports every failed expect" {
 `rill test testing.test.rl` prints:
 
 <!-- include: examples/testing.test.out -->
+```text
+FAIL  book/examples/testing.test.rl    3 tests   0.00s   (1 failed)
+
+failures:
+
+--- FAIL book/examples/testing.test.rl: a failing test reports every failed expect
+book/examples/testing.test.rl:30: expect(add(2, 2) == 5)
+    left:  4
+    right: 5
+book/examples/testing.test.rl:32: expect(p == Point(x: 1, y: 3))
+    left:  Point(x: 1, y: 2)
+    right: Point(x: 1, y: 3)
+    message: points differ in y
+book/examples/testing.test.rl:33: expect(clamp(3, low: 0, high: 2) > 2)
+    left:  2
+    right: 2
+
+result: FAIL. 2 passed, 1 failed; 1 module in 0.00s
+```
 
 - `test "name" { … }` declares a test. Tests see private (non-`pub`) declarations.
 - `expect(condition)` records a failure and continues the test, so one run reports every
@@ -64,28 +83,148 @@ There is no special assertion library: `expect(a == b)` with Rill's structural `
 structs, enums, arrays, maps and optionals (a map shows as `["a": 1, "b": 2]`, in insertion
 order).
 
-Table tests are a loop over an array of structs; the message names the failing row, and
-since `expect` continues, one run reports every failing row:
+### Subtests and table tests
 
+A `test` statement inside a test declares a subtest. For a table, one subtest per row is the
+main form: each row passes or fails on its own, and the report names it.
+
+<!-- include: examples/subtests.test.rl 12-26 -->
 ```swift
-FAIL  book/examples/testing.test.rl    3 tests   0.00s   (1 failed)
+struct Row { name: String, input: Int, want: Int }
+
+fn rows() -> [Row] = [
+  Row(name: "negative", input: -4, want: -1),
+  Row(name: "zero", input: 0, want: 0),
+  Row(name: "positive", input: 9, want: 1),
+]
+
+test "sign per row" {
+  for r in rows() {
+    test r.name {
+      expect(sign(r.input) == r.want)
+    }
+  }
+}
+```
+
+`rill test subtests.test.rl` prints (the file's `sign` is wrong for `0`):
+
+<!-- include: examples/subtests.test.out -->
+```text
+FAIL  book/examples/subtests.test.rl    5 tests   0.00s   (3 failed)
 
 failures:
 
---- FAIL book/examples/testing.test.rl: a failing test reports every failed expect
-book/examples/testing.test.rl:30: expect(add(2, 2) == 5)
-    left:  4
-    right: 5
-book/examples/testing.test.rl:32: expect(p == Point(x: 1, y: 3))
-    left:  Point(x: 1, y: 2)
-    right: Point(x: 1, y: 3)
-    message: points differ in y
-book/examples/testing.test.rl:33: expect(clamp(3, low: 0, high: 2) > 2)
-    left:  2
-    right: 2
+--- FAIL book/examples/subtests.test.rl: sign per row/zero
+book/examples/subtests.test.rl:23: expect(sign(r.input) == r.want)
+    left:  1
+    right: 0
 
-result: FAIL. 2 passed, 1 failed; 1 module in 0.00s
+--- FAIL book/examples/subtests.test.rl: sign in one loop
+book/examples/subtests.test.rl:30: expect(sign(r.input) == r.want)
+    left:  1
+    right: 0
+    message: zero
+
+result: FAIL. 2 passed, 3 failed; 1 module in 0.00s
 ```
+
+- The name is any `String` expression (`test r.name`). A string literal is the common case.
+  The expression ends at the `{`, so a trailing closure is not parsed there, as in an `if`
+  condition.
+- The full name joins the levels with `/`: `sign per row/zero`. A `/` inside a name stays.
+  Equal full names under one parent get `#01`, `#02`, ...: the first keeps its name.
+- The body is a closure, run in place when the statement is reached. `return` ends the
+  subtest and passes it if nothing failed before. A failing `?` fails the subtest and ends
+  its body. The parent goes on.
+- A failed `expect` or `?` in a subtest fails it, and, once it ends, its parent. A parent
+  whose only failure is a child shows no failure of its own: the failures-only report
+  (agent mode) lists the failing subtests, not the parent.
+- Every test and subtest counts once in `N passed, M failed` and in the JSON `package`
+  event. The JSON `start` and `end` events carry the full name; a parent's `end` follows
+  its children's.
+- Subtests nest. `test` outside a test body is E0020, also inside an ordinary closure in a
+  test; in a `bench` body it is E0020 too.
+- A panic in a subtest ends the package's run as in any test: the innermost test is
+  reported as panicked, its open parents as failed, and the later tests as not run.
+
+The light option is the loop with `expect` and a message naming the row. It is a single
+test: `expect` continues, so one run reports every failing row, but the rows are not
+counted or listed as tests of their own:
+
+<!-- include: examples/subtests.test.rl 28-32 -->
+```swift
+test "sign in one loop" {
+  for r in rows() {
+    expect(sign(r.input) == r.want, r.name)
+  }
+}
+```
+
+## Snapshots and golden files
+
+For output that is long or tedious to write by hand (a rendered report, generated code, a
+binary format), compare it with a file instead of a literal.
+
+```swift
+test "report" {
+  expectSnapshot(render(items))            // testdata/snapshots/report.snap
+  expectSnapshot(render([]), "empty")      // testdata/snapshots/report.empty.snap
+  expectGolden(render(items), "testdata/report.txt")
+}
+```
+
+Both take a `String` or `Bytes`.
+
+| | `expectSnapshot(value, label)` | `expectGolden(value, path)` |
+|---|---|---|
+| File | `testdata/snapshots/<test name>[.<label>].snap`, named for you | the path you give, relative to the package |
+| Use for | output only this test cares about | a file that is also an input or documentation elsewhere |
+| Several calls | unlabeled ones count (`name`, `name-2`); a label may be used once per test | one path per call |
+
+- A missing file fails: `snapshot testdata/snapshots/report.snap missing; run rill test --update`.
+  CI never accepts output nobody has seen.
+- A difference fails with a unified diff of the file (`-`) against the value (`+`).
+- `rill test --update` writes the missing and changed files (`RILL_TEST_UPDATE=1` does the
+  same). It bypasses the test cache and reports `(updated N)`.
+- **Read the diff of the `.snap` files before you commit.** `--update` makes every test
+  pass; reviewing the changed files is the check that the new output is the right one.
+
+## Fixtures
+
+Three helpers in `std/testing` set up what a test needs and undo it when the test (or subtest)
+ends:
+
+```swift
+import "std/testing"
+
+test "export" {
+  let dir = testing.tempDir()              // new empty directory, removed afterwards
+  testing.setenv("EXPORT_FORMAT", "csv")   // the old value comes back afterwards
+  testing.cleanup { closeConnections() }   // any closure
+  // ...
+}
+```
+
+- `tempDir()` returns a new empty directory named after the test, removed with everything in it.
+- `setenv(name, value)` sets the variable; the old value, or its absence, is restored. The test
+  owns the variable: it is not an input of the test cache. Outside tests, `os.setenv` and
+  `os.unsetenv` change the environment of the process and the children it starts later.
+- `cleanup(f)` runs `f` at the end. A test's cleanups run in reverse order of registration, so
+  what was set up last is torn down first. A subtest has its own list, run when the subtest ends.
+- Cleanups run before the verdict, also when an `expect` failed or `?` ended the test. An
+  `expect` that fails inside a cleanup fails the test. A panic ends the process: no cleanups.
+- Fixtures belong to tests: `rill test` runs fuzz seeds as tests, so fixtures work there; in a benchmark or under `rill fuzz` there is no running test and they panic with `called outside a test`.
+
+**`cleanup` versus `defer`.** `defer` runs when the function that wrote it returns; `cleanup`
+runs when the test ends. A helper `fn newServer() -> Server` cannot `defer` the server's
+shutdown (it would stop it on return), but it can register `testing.cleanup { server.stop() }`,
+and the test does not have to remember. Inside the test body, `defer` is fine for what
+belongs to one block.
+
+The environment belongs to the whole process, and `setenv` is not safe while other tasks read
+it. Tests without the `parallel` marker run one after another and restore it between tests; a
+`parallel` test runs in a process of its own, so its `setenv` does not reach the others.
 
 ## Packages and flags
 
@@ -117,7 +256,7 @@ their values, then a result line; the exit code is 0 only when every test passed
 
 | Flag | |
 |---|---|
-| `--run <regex>` | only the tests whose name matches (`std/regexp` syntax, unanchored) |
+| `--run <regex>` | only the tests whose name matches (`std/regexp` syntax, unanchored); split at `/` (outside `[]` and `()`), part *i* matches subtest level *i*: `--run 'sign per row/zero'` |
 | `-v` | one line per test, with its output |
 | `-p N` | packages tested in parallel (default: the number of cores) |
 | `--count N` | run the tests N times; never from the cache |
@@ -217,6 +356,41 @@ variance.
   `"benches"` in the `package` and `result` events).
 - A benchmark runs about its benchtime: the last batch is sized to the remaining time.
 
+## Comparing benchmarks
+
+Did a change make the code faster? `rill bench compare` answers it from the `--json` output
+of two runs: save one run before the change and one after, then compare them.
+
+```sh
+git stash
+rill test --bench . --run '^$' --count 10 --json ./parser > old.json
+git stash pop
+rill test --bench . --run '^$' --count 10 --json ./parser > new.json
+rill bench compare old.json new.json
+```
+
+```
+pkg: parser
+        │  old.json  │              new.json              │
+        │  time/op   │  time/op    vs base                │
+parse     12.3µ ± 2%   10.1µ ± 1%  -17.81% (p=0.000 n=10)
+tokens    4.01µ ± 1%   4.00µ ± 2%        ~ (p=1.000 n=10)
+geomean   7.01µ        6.35µ        -9.35%
+```
+
+Each bench shows its median and the 95 % confidence interval of it. `vs base` is the change
+against the first file, `p` the probability of seeing such a difference if nothing changed
+(Mann-Whitney U test), `n` the number of runs. The command prints one block per package, and
+in it the sections time/op, B/op and allocs/op, each with a geomean over its benches. With
+one file it prints only the medians.
+
+Run with `--count 10`: one run of a bench varies by a few percent, and the statistics need
+the samples to tell a change from noise. With fewer than 6 runs there is no confidence
+interval (`± ∞`).
+
+- `~` means no significant difference (`p` of 0.05 or more): the difference is within noise.
+- `?` means too few runs for the test: use `--count 4` or more, 10 recommended.
+
 ## Parallel tests
 
 A slow test (files, the network, large inputs) can run next to the others: mark it
@@ -239,6 +413,37 @@ test "parses the big fixture" parallel {
   coverage and the test cache include the parallel tests.
 - `--parallel 1`, and `--count N` with N > 1, run every test in one process, in order.
 - A process costs a few milliseconds to start: mark tests that take longer than that.
+
+### Parallel subtests
+
+`parallel` works on a subtest too:
+
+```rill
+test "fixtures" {
+  for name in fs.readDir("testdata") ?? [] {
+    test name parallel {
+      // the work is here
+    }
+  }
+}
+```
+
+- A parallel subtest runs in a process of its own, after the serial run of its package has
+  ended, `--parallel N` at a time together with the parallel top-level tests.
+- **The parent's body runs again once per parallel subtest**, in that subtest's process,
+  with the parent silent: what it prints before and after the subtest is dropped there, and
+  a crash in the parent's code after the subtest is not reported (the serial run reports the
+  parent). Keep enumeration (a directory listing, a table) in the parent and the work in the subtests. A
+  parent that does not reach the subtest again (a different listing) makes it panic with
+  `subtest not reached on rerun`.
+- The report and `--json` put each subtest inside its parent, in the order of the source.
+  The parent fails if a parallel child fails.
+- A panic or `os.exit` in one parallel subtest ends only that one: its siblings still
+  report `ok`.
+- A parallel subtest inside a parallel subtest runs in place, in the outer one's process.
+  `--parallel 1`, `--count N` and the profiles (`--cpuprofile`, `--memprofile`) run every
+  parallel subtest in place, in one process; so does a fuzz body, whose input need not repeat.
+- `--run 'a/b'` runs `a`, and in it only `b` with its subtests; `--run '/b'` runs every `b`.
 
 ## Fuzzing
 

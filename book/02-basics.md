@@ -34,7 +34,8 @@ fn main() {
     case .dot: 0
   }
   print("$width $size ${sign(-4)} ${name(.dot)}")
-  print("${half(10) ?? -1} ${half(7) ?? -1}")
+  let none = -1
+  print("${half(10) ?? none} ${half(7) ?? none}")
 }
 ```
 
@@ -205,7 +206,8 @@ fn main() {
     case .dot: 0
   }
   print("$width $size ${sign(-4)} ${name(.dot)}")
-  print("${half(10) ?? -1} ${half(7) ?? -1}")
+  let none = -1
+  print("${half(10) ?? none} ${half(7) ?? none}")
 }
 ```
 
@@ -226,6 +228,52 @@ fn main() {
 - The branches have one type: the declared type when there is one
   (`let v: Int? = if c { 1 } else { nil }`), otherwise the first branch's.
 - `if let` is not a value: use `guard let` or `??` (E0124).
+
+### `defer`
+
+`defer { … }` runs cleanup when the enclosing block is left, whichever way: falling off its
+end, `return`, `break`, `continue`, `?` or a failing `guard`. Several defers of a block run
+last first. A defer is not a closure: its block reads variables as they are when it runs.
+
+<!-- include: examples/defer.rl -->
+```swift
+fn work(_ fail: Bool) -> Int {
+  print("open")
+  defer { print("close") }
+  defer { print("flush") }
+  if fail {
+    print("early exit")
+    return 1
+  }
+  print("done")
+  return 0
+}
+
+fn main() {
+  let a = work(false)
+  let b = work(true)
+  print("$a $b")
+}
+```
+
+```text
+open
+done
+flush
+close
+open
+early exit
+flush
+close
+0 1
+```
+
+- A `return x` computes `x` before the defers run; a defer that changes `x` does not change
+  the returned value.
+- A defer in a loop body runs at the end of every iteration; one in a `group` body runs after
+  the group has waited for its tasks. A panic does not run defers.
+- `return`, `break`, `continue` and `?` inside a defer block are E0140. Like any statement,
+  a dropped result is E0040: `defer { let _ = f.close() }`.
 
 ## Functions and argument labels
 
@@ -468,7 +516,8 @@ fn main() {
   print("${s.len()} ${s.slice(0, 5)} ${s.startsWith("Hell")} ${s.contains("Rill")}")
   print("a,b,,c".split(",").join("|"))
   print("${"one\ntwo\n".lines().len()} lines")
-  print("${"42".toInt() ?? 0} ${"x".toInt() ?? -1} ${"2.5".toFloat() ?? 0.0}")
+  let none = -1
+  print("${"42".toInt() ?? 0} ${"x".toInt() ?? none} ${"2.5".toFloat() ?? 0.0}")
   print("${"abc" < "abd"} ${"abc" == "abc"}")
   // byteAt returns a byte as an Int; an ASCII character literal is an Int here
   print("${"#x".byteAt(0) == '#'}")

@@ -82,6 +82,10 @@ crossing into a task are deep copies ([chapter 9](09-concurrency.md)).
   last one. `RILL_GC=off` disables collection, `RILL_GC=stress:N` collects every N
   allocations and poisons freed memory (for testing the runtime). A program can set the
   percentage itself with `runtime.setGcPercent` (`std/runtime`); the compiler uses 200.
+- `RILL_MEMLIMIT=512MiB` (units `B`, `KiB`, `MiB`, `GiB`, `TiB`) is a soft limit on the
+  heap: collections start earlier as the heap nears it, and with `RILL_GC=off` only there.
+  It counts the collector's heap, not stacks or the binary, so leave a margin below a
+  container limit.
 - `RILL_GCTRACE=1` prints every collection, `RILL_ALLOCPROF=1` the allocation sites with
   the most bytes at exit.
 

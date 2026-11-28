@@ -1,12 +1,15 @@
 // A module: one file. Only `pub` items are visible to importers.
 
+/// A vector on the integer grid.
 pub struct Vec2 { pub x: Int, pub y: Int }
 
+/// A shape with integer sides.
 pub enum Shape {
   case square(Int)
   case rect(Int, Int)
 }
 
+/// The area of `s`.
 pub fn area(_ s: Shape) -> Int {
   switch s {
   case .square(n): return square(n)
@@ -14,8 +17,10 @@ pub fn area(_ s: Shape) -> Int {
   }
 }
 
+/// `n` squared.
 pub fn square(_ n: Int) -> Int = n * n
 
+/// The squared length of `v`.
 pub fn length2(_ v: Vec2) -> Int = square(v.x) + square(v.y)
 
 fn helper() -> Int = 1

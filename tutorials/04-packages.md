@@ -49,7 +49,7 @@ importers. `textkit` has three:
 
 <!-- include: packages/textkit/textkit.rl -->
 ```swift
-// textkit: small text helpers.
+//! textkit: small text helpers.
 import "internal/ascii"
 
 /// `s` as a URL slug: lower-case letters and digits, runs of anything else as one "-".
@@ -99,7 +99,7 @@ test "words" {
 
 <!-- include: packages/textkit/wrap/wrap.rl -->
 ```swift
-// wrap: a second package of the module (import "github.com/ada/textkit/wrap").
+//! wrap: a second package of the module (import "github.com/ada/textkit/wrap").
 
 /// The words of `s` as lines of at most `width` bytes (longer words get a line each).
 pub fn lines(_ s: String, width: Int) -> [String] {
@@ -132,12 +132,15 @@ test "lines" {
 
 <!-- include: packages/textkit/internal/ascii/ascii.rl -->
 ```swift
-// Byte classes. Under internal/: only textkit itself may import this.
+//! Byte classes. Under internal/: only textkit itself may import this.
 
+/// Whether `b` is an ASCII letter.
 pub fn isLetter(_ b: Int) -> Bool = (b >= 'a' && b <= 'z') || (b >= 'A' && b <= 'Z')
 
+/// Whether `b` is an ASCII digit.
 pub fn isDigit(_ b: Int) -> Bool = b >= '0' && b <= '9'
 
+/// `b` lower-cased if it is an ASCII capital.
 pub fn lower(_ b: Int) -> Int {
   if b >= 'A' && b <= 'Z' {
     return b + 32
@@ -266,7 +269,7 @@ module github.com/ada/greeter
 rill 0.1
 require github.com/ada/textkit v1.0.0
 $ cat rill.sum
-github.com/ada/textkit v1.0.0 commit=3b6f18f015ebdcbf6838ccaff5815f8c167208cf tree=sha256:f75fc8b671037c0ca4eb525b1d7ddbec1124415734e089f0a024ee2861b4fa3b
+github.com/ada/textkit v1.0.0 commit=f0e765f629787384065ab8d404b692a62760f17d tree=sha256:b18150e885804cbd72f8831cd9f5524e4d2621d8033f0e13b865f686c080b346
 github.com/ada/textkit v1.0.0/rill.mod sha256:a4bb9152af35730505a7f44d294036a9b92d4e1e9060be1a578e9d97c6d7a17a
 $ rill run .
 /posts/packages-in-rill-a-hands-on-tour (7 words)
@@ -322,7 +325,7 @@ is now deprecated, and implemented by calling `slugify`:
 
 <!-- include: packages/v1.1/textkit.rl -->
 ```swift
-// textkit: small text helpers.
+//! textkit: small text helpers.
 import "internal/ascii"
 
 /// `s` as a slug: lower-case letters and digits, runs of anything else as one `sep`.

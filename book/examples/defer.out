@@ -1,0 +1,9 @@
+open
+done
+flush
+close
+open
+early exit
+flush
+close
+0 1

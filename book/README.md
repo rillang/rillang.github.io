@@ -23,6 +23,7 @@ that are designed but not built yet are marked **planned** and link to their spe
 13. [Built-in reference](13-builtins.md): every builtin function and method
 14. [Known limits](14-limits.md): what is missing today
 15. [The standard library](15-standard-library.md)
+16. [Files and streams](16-files-and-streams.md): `std/io` (partly planned)
 
 Also: **[Rill by Example](by-example/README.md)**, short runnable programs, one topic each.
 

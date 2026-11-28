@@ -17,8 +17,12 @@
 # site/examples/shapes.err.rl), so the output on the landing page reads as a session.
 #
 # Usage: sh book/check.sh            (RILL=... for another compiler, default ../rill/out/rill)
+#        sh book/check.sh <regex>    only the examples whose path matches (grep -E); skips
+#                                    the sync check
 #        UPDATE=1 sh book/check.sh   rewrite the expected files (review the diff!)
 cd "$(dirname "$0")/.." || exit 1
+export RILL_AGENT=0 # expected files hold the human output, also when an agent runs this
+filter=${1:-}
 RILL=${RILL:-../rill/out/rill} # the compiler: a checkout of rillang/rill next to this one
 case "$RILL" in */*) RILL="$(cd "$(dirname "$RILL")" && pwd)/$(basename "$RILL")" ;; esac
 tmp=$(mktemp -d)
@@ -65,6 +69,7 @@ check() {
 for d in $dirs; do
   for f in "$d"/*.rl; do
     [ -e "$f" ] || continue
+    [ -z "$filter" ] || echo "$f" | grep -Eq "$filter" || continue
     base="${f%.rl}"
     src="$f"
     where=.
@@ -90,6 +95,7 @@ for d in $dirs; do
   done
   for f in "$d"/lib/*.rl; do
     [ -e "$f" ] || continue
+    [ -z "$filter" ] || echo "$f" | grep -Eq "$filter" || continue
     grep -q '^test "' "$f" || continue
     if "$RILL" test "$f" >"$tmp/out" 2>&1; then ok; else bad "$f (tests)"; fi
   done
@@ -105,7 +111,7 @@ if "$RILL" lsp --check $(echo "$srcs" | grep -v '\.err\.rl$') >"$tmp/out" 2>&1; 
   bad "language server diagnostics:"
   sed 's/^/  /' "$tmp/out"
 fi
-if sh book/sync.sh --check >"$tmp/out" 2>&1; then ok; else
+if [ -n "$filter" ]; then :; elif sh book/sync.sh --check >"$tmp/out" 2>&1; then ok; else
   bad "pages out of date (run sh book/sync.sh):"
   sed 's/^/  /' "$tmp/out"
 fi
