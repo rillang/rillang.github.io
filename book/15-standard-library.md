@@ -20,10 +20,21 @@ the compiler's. Import a module by its path under `std/`:
 | `std/unicode` | `category` (`Category`), `is`, `inClass`, `isLetter`, `isDigit`, `isSpace`, `isUpper`, `isLower`, `isPunct`, `fold`, `toUpper`, `toLower`, `graphemes(s) -> [String]`, `width(s) -> Int` (Unicode 16.0) |
 | `std/regexp` | `compile` (`Regex!`), `quote`, `matches`, `find`, `findAll` (`Match`), `captures`, `capturesAll` (`Captures`: `text`, `named`, `span`), `replace`, `replaceAll`, `replaceFunc`, `replaceAllFunc`, `split`, `groupNames`, `numGroups` |
 | `std/time` | `now` (Unix ns), `monotonic`, `since`, `sleep`, `Duration` (`milliseconds`, `seconds`, `text`), `rfc3339` |
+| `std/encoding` | `Value`, a format-neutral tree; `decoder`, `encoder`, `transcode` |
 | `std/json` | `Json` (`null`, `bool`, `num(Float)`, `str`, `arr`, `obj(Map)`), `parse` (`Json!`), `stringify`, `pretty`, `get`, `at`, `str`, `int`, `num`, `bool`, `items`, `object` |
 | `std/hash/sha256` | `sum(String)` (hex), `sumBytes`, `sumRange`, `hex` |
 | `std/pprof` | `startCpu`, `stopCpu`, `writeHeap`, `setMemProfileRate`, `writeTasks`: profiles for `rill pprof` and Go's pprof ([tooling](11-tooling.md#profiling-rill-pprof)) |
 | `std/runtime` | `setGcPercent` (the collector's target, returns the previous value), `numCpu` |
+
+## Encoding
+
+`encoding.Value` holds null, bool, int, float, string, bytes, arrays and ordered
+objects. `v.decoder()` reads a tree through the `Decoder` interface;
+`encoding.encoder()` builds one through `Encoder`, and `e.value()` returns it.
+`encoding.transcode(&d, &e)` copies one value between a decoder and an encoder.
+Integer and float values remain distinct. Pattern-match a `Value` to inspect it;
+it has no accessors or datetime case. `ValueDecoder.bytes()` reads bytes, not
+base64 strings.
 
 ## Regular expressions
 
